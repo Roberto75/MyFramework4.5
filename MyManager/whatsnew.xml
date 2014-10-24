@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<whatsnew>
+<!-- 
+  type => bug
+  type => changes
+ -->
+
+  <release number="1.0.2.0" data="17/12/2010" >
+    <item data="17/12/2010"  owner="Rutigliano" type="changes"  >
+      La classe Manager gestisce anche la connessione Npgsql is a .Net Data Provider for the PostgreSQL Database Server.
+    </item>
+
+
+
+  </release>
+   
+  
+  <release number="1.0.1.0" data="16/03/2010" >
+
+    <item data="21/10/2009"  owner="Rutigliano" type="changes"  >
+      Aggiunto WhoisResolver
+    </item>
+        
+    <item data="21/10/2009"  owner="Rutigliano" type="changes"  >
+      il costruttore di Manager con la connessione gestisce _Factory
+    </item>
+
+    <item data="01/10/2009"  owner="Rutigliano" >
+      DbCommandBuilder
+    </item>
+
+
+    <item data="21/09/2009"  owner="Rutigliano"  type="changes" >
+      Aggiunto MapDriveManager
+    </item>
+  </release>
+
+</whatsnew>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<whatsnew>
+  <!-- 
+  type => bug
+  type => changes
+-->
+
+
+
+  <release number="1.0.5" data="" >
+    <item data="10/12/2013"  owner="Rutigliano" type="changes" display="false"  >
+      disabilitato il pulsante add connect drive
+    </item>
+    
+    <item data="22/11/2013"  owner="Rutigliano" type="changes" display="false"  >
+      modifica del path della cache con l'utente
+    </item>
+    <item data="22/11/2013"  owner="Rutigliano" type="changes" display="false"  >
+      passaggio a suttenant
+    </item>
+    
+  </release>
+  
+   
+</whatsnew>

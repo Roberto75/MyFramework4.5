@@ -1,0 +1,486 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{351B091E-FCE0-4147-812C-CEC11BB58B8A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MyFormsLibrary</RootNamespace>
+    <AssemblyName>MyFormsLibrary</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>On</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>MyFormsLibrary.xml</DocumentationFile>
+    <DefineConstants>_MYFORMS=True</DefineConstants>
+    <NoWarn>42353,42354,42355</NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>MyFormsLibrary.xml</DocumentationFile>
+    <DefineConstants>_MYFORMS=True</DefineConstants>
+    <NoWarn>42353,42354,42355</NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>_MYFORMS=True</DefineConstants>
+    <DocumentationFile>MyFormsLibrary.xml</DocumentationFile>
+    <NoWarn>42353,42354,42355</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <CodeAnalysisLogFile>bin\Debug\MyFormsLibrary.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.vb</CodeAnalysisModuleSuppressionsFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>_MYFORMS=True</DefineConstants>
+    <DocumentationFile>MyFormsLibrary.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42353,42354,42355</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <CodeAnalysisLogFile>bin\Release\MyFormsLibrary.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.vb</CodeAnalysisModuleSuppressionsFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="acclListBar, Version=1.0.1326.27884, Culture=neutral, PublicKeyToken=6e1b8f817e866f76">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\acclListBar.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\MyManager\FileSystemManager.vb">
+      <Link>FileSystemManager.vb</Link>
+    </Compile>
+    <Compile Include="FormAbout.Designer.vb">
+      <DependentUpon>FormAbout.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormAbout.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBackgroundWorker_1.Designer.vb">
+      <DependentUpon>FormBackgroundWorker_1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBackgroundWorker_1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBackgroundWorker_2.Designer.vb">
+      <DependentUpon>FormBackgroundWorker_2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBackgroundWorker_2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseDetailWithLog.Designer.vb">
+      <DependentUpon>FormBaseDetailWithLog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseDetailWithLog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseDetail_0.Designer.vb">
+      <DependentUpon>FormBaseDetail_0.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseDetail_0.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseDetail_1.Designer.vb">
+      <DependentUpon>FormBaseDetail_1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseDetail_1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseDetail_1_1.Designer.vb">
+      <DependentUpon>FormBaseDetail_1_1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseDetail_1_1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseDetail_1_2.Designer.vb">
+      <DependentUpon>FormBaseDetail_1_2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseDetail_1_2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseDetail_2.Designer.vb">
+      <DependentUpon>FormBaseDetail_2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseDetail_2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseDetail_3.Designer.vb">
+      <DependentUpon>FormBaseDetail_3.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseDetail_3.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseDetail_4.Designer.vb">
+      <DependentUpon>FormBaseDetail_4.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseDetail_4.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseImportFile_0.Designer.vb">
+      <DependentUpon>FormBaseImportFile_0.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseImportFile_0.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseOptions_0.Designer.vb">
+      <DependentUpon>FormBaseOptions_0.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseOptions_0.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBasePopup.Designer.vb">
+      <DependentUpon>FormBasePopup.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBasePopup.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseReport.Designer.vb">
+      <DependentUpon>FormBaseReport.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseReport.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseSearch.Designer.vb">
+      <DependentUpon>FormBaseSearch.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseSearch.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseSearch_0.Designer.vb">
+      <DependentUpon>FormBaseSearch_0.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseSearch_0.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseSearch_1.Designer.vb">
+      <DependentUpon>FormBaseSearch_1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseSearch_1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseSearch_2.Designer.vb">
+      <DependentUpon>FormBaseSearch_2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseSearch_2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBaseSearch_3.Designer.vb">
+      <DependentUpon>FormBaseSearch_3.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseSearch_3.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBackgroundWorker_0.Designer.vb">
+      <DependentUpon>FormBackgroundWorker_0.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBackgroundWorker_0.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormClickOnce.Designer.vb">
+      <DependentUpon>FormClickOnce.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormClickOnce.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormHome.Designer.vb">
+      <DependentUpon>FormHome.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormHome.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLog.Designer.vb">
+      <DependentUpon>FormLog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormLog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMaster.Designer.vb">
+      <DependentUpon>FormMaster.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormMaster.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMessageBox.Designer.vb">
+      <DependentUpon>FormMessageBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormMessageBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSendEmail.Designer.vb">
+      <DependentUpon>FormSendEmail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormSendEmail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormWizard.Designer.vb">
+      <DependentUpon>FormWizard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormWizard.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IFormMaster.vb" />
+    <Compile Include="IFormReport.vb" />
+    <Compile Include="IFormSearch.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="SplashScreenBase.Designer.vb">
+      <DependentUpon>SplashScreenBase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SplashScreenBase.vb">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FormAbout.resx">
+      <DependentUpon>FormAbout.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBackgroundWorker_2.resx">
+      <DependentUpon>FormBackgroundWorker_2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseDetailWithLog.resx">
+      <DependentUpon>FormBaseDetailWithLog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseDetail_0.resx">
+      <DependentUpon>FormBaseDetail_0.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseDetail_1.resx">
+      <DependentUpon>FormBaseDetail_1.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseDetail_1_1.resx">
+      <DependentUpon>FormBaseDetail_1_1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseDetail_1_2.resx">
+      <DependentUpon>FormBaseDetail_1_2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseDetail_2.resx">
+      <DependentUpon>FormBaseDetail_2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseDetail_3.resx">
+      <DependentUpon>FormBaseDetail_3.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseOptions_0.resx">
+      <DependentUpon>FormBaseOptions_0.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseReport.resx">
+      <DependentUpon>FormBaseReport.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseSearch.resx">
+      <DependentUpon>FormBaseSearch.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseSearch_0.resx">
+      <DependentUpon>FormBaseSearch_0.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseSearch_1.resx">
+      <DependentUpon>FormBaseSearch_1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseSearch_2.resx">
+      <DependentUpon>FormBaseSearch_2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBackgroundWorker_0.resx">
+      <DependentUpon>FormBackgroundWorker_0.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormClickOnce.resx">
+      <DependentUpon>FormClickOnce.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormLog.resx">
+      <DependentUpon>FormLog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMaster.resx">
+      <DependentUpon>FormMaster.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormWizard.resx">
+      <DependentUpon>FormWizard.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reload1_16x16.gif" />
+    <Content Include="whatsnew.xml" />
+    <EmbeddedResource Include="FormBaseDetail_4.resx">
+      <DependentUpon>FormBaseDetail_4.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseImportFile_0.resx">
+      <DependentUpon>FormBaseImportFile_0.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBasePopup.resx">
+      <DependentUpon>FormBasePopup.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseSearch_3.resx">
+      <DependentUpon>FormBaseSearch_3.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormHome.resx">
+      <DependentUpon>FormHome.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMessageBox.resx">
+      <DependentUpon>FormMessageBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSendEmail.resx">
+      <DependentUpon>FormSendEmail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplashScreenBase.resx">
+      <DependentUpon>SplashScreenBase.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="whatsnew.xsl">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyControlsLibrary\MyControlsLibrary.vbproj">
+      <Project>{51F7FE01-A10B-4FB3-8804-137E084B8646}</Project>
+      <Name>MyControlsLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

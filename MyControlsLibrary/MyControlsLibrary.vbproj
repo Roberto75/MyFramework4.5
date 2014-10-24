@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{51F7FE01-A10B-4FB3-8804-137E084B8646}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MyControlsLibrary</RootNamespace>
+    <AssemblyName>MyControlsLibrary</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>MyControlsLibrary.xml</DocumentationFile>
+    <DefineConstants>_MYFORMS=True</DefineConstants>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>MyControlsLibrary.xml</DocumentationFile>
+    <DefineConstants>_MYFORMS=True</DefineConstants>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>_MYFORMS=True</DefineConstants>
+    <DocumentationFile>MyControlsLibrary.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\MyControlsLibrary.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.vb</CodeAnalysisModuleSuppressionsFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>_MYFORMS=True</DefineConstants>
+    <DocumentationFile>MyControlsLibrary.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\MyControlsLibrary.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.vb</CodeAnalysisModuleSuppressionsFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="acclListBar, Version=1.0.1326.27884, Culture=neutral, PublicKeyToken=6e1b8f817e866f76">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\acclListBar.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\MyManager\CSVManager.vb">
+      <Link>CSVManager.vb</Link>
+    </Compile>
+    <Compile Include="..\MyManager\DataTableManager.vb">
+      <Link>DataTableManager.vb</Link>
+    </Compile>
+    <Compile Include="CheckInputManager.vb" />
+    <Compile Include="CmbBase.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CmbItem.vb" />
+    <Compile Include="DataGridViewAutoFilterColumnHeaderCell.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataGridViewAutoFilterTextBoxColumn.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MenuLeft.Designer.vb">
+      <DependentUpon>MenuLeft.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MenuLeft.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="MyButton.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MyDataGridView.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MyDateTimePicker.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MyEventArgs.vb" />
+    <Compile Include="MyException.vb" />
+    <Compile Include="MyResource.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MyResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="MyTextBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="MyYear.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UcBrowseFileSystem.Designer.vb">
+      <DependentUpon>UcBrowseFileSystem.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcBrowseFileSystem.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcDataGridView.Designer.vb">
+      <DependentUpon>UcDataGridView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcDataGridView.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcDataInizioDataFine.Designer.vb">
+      <DependentUpon>UcDataInizioDataFine.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcDataInizioDataFine.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcGiornoMeseAnno.Designer.vb">
+      <DependentUpon>UcGiornoMeseAnno.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcGiornoMeseAnno.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcLogin.Designer.vb">
+      <DependentUpon>UcLogin.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcLogin.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcMenuLeftStack.Designer.vb">
+      <DependentUpon>UcMenuLeftStack.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcMenuLeftStack.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcMenuLeftTreeView.Designer.vb">
+      <DependentUpon>UcMenuLeftTreeView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcMenuLeftTreeView.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcPeriodoCompetenza.Designer.vb">
+      <DependentUpon>UcPeriodoCompetenza.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcPeriodoCompetenza.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcPreviewDataTable.Designer.vb">
+      <DependentUpon>UcPreviewDataTable.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcPreviewDataTable.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcPreviewDataTableWithFilter.Designer.vb">
+      <DependentUpon>UcPreviewDataTableWithFilter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UcPreviewDataTableWithFilter.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MenuLeft.resx">
+      <DependentUpon>MenuLeft.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyButton.resx">
+      <DependentUpon>MyButton.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyResource.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>MyResource.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcBrowseFileSystem.resx">
+      <DependentUpon>UcBrowseFileSystem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcDataGridView.resx">
+      <DependentUpon>UcDataGridView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcDataInizioDataFine.resx">
+      <DependentUpon>UcDataInizioDataFine.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcGiornoMeseAnno.resx">
+      <DependentUpon>UcGiornoMeseAnno.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcLogin.resx">
+      <DependentUpon>UcLogin.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcMenuLeftStack.resx">
+      <DependentUpon>UcMenuLeftStack.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcMenuLeftTreeView.resx">
+      <DependentUpon>UcMenuLeftTreeView.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcPeriodoCompetenza.resx">
+      <DependentUpon>UcPeriodoCompetenza.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcPreviewDataTable.resx">
+      <DependentUpon>UcPreviewDataTable.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcPreviewDataTableWithFilter.resx">
+      <DependentUpon>UcPreviewDataTableWithFilter.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit1_16x16.png" />
+    <None Include="Resources\elimina_16x16.gif" />
+    <None Include="Resources\email1_16x16.gif" />
+    <None Include="Resources\empty.gif" />
+    <None Include="Resources\error1_16x16.gif" />
+    <None Include="Resources\bullet2.gif" />
+    <None Include="Resources\ok1_16x16.gif" />
+    <None Include="Resources\zoom1_16x16.gif" />
+    <None Include="Resources\red2_16x16.png" />
+    <None Include="Resources\amber_16x16.png" />
+    <None Include="Resources\green2_16x16.png" />
+    <None Include="Resources\yellow2_16x16.png" />
+    <None Include="Resources\info1_16x16.gif" />
+    <None Include="Resources\info2_16x16.gif" />
+    <None Include="Resources\copy_16x16.gif" />
+    <None Include="Resources\email_22x22.png" />
+    <None Include="Resources\elimina2_16x16.png" />
+    <None Include="Resources\down.png" />
+    <None Include="Resources\Connecting.gif" />
+    <None Include="Resources\connecting_16x16.gif" />
+    <None Include="Resources\back_16x16.gif" />
+    <Content Include="Resources\filtroActive_20x20.png" />
+    <Content Include="Resources\filtroRemove_20x20.png" />
+    <Content Include="Resources\filtro_20x20.png" />
+    <Content Include="Resources\info1_16x16.png" />
+    <None Include="Resources\unknown2_16x16.png" />
+    <None Include="Resources\sendEmail_16x32.png" />
+    <None Include="Resources\save.png" />
+    <None Include="Resources\new.png" />
+    <None Include="Resources\wizard_16x16.png" />
+    <None Include="Resources\wizard_24x24.png" />
+    <None Include="Resources\next_16x16.gif" />
+    <None Include="Resources\play_16x16.png" />
+    <Content Include="Resources\reload1_16x16.gif" />
+    <None Include="Resources\stop_16x16.gif" />
+    <None Include="Resources\stop3_16x16.png" />
+    <Content Include="whatsnew.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

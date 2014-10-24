@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<whatsnew>
+  <!-- 
+  type => bug
+  type => changes
+ -->
+
+
+
+  <release number="1.0.0.5" data="" >
+    <item data="13/09/2010"     owner="Rutigliano"  type="changes" >
+      aggiunta FormBaseDetail_4
+    </item>
+  </release >
+
+
+    <release number="1.0.0.4" data="" >
+    <item data="16/03/2010"     owner="Rutigliano"  type="changes" >
+      FormCatProvi corretta inserimento e cancellazione
+    </item>
+
+    <item data="02/10/2009"     owner="Rutigliano"  type="changes"  >
+      FormWizard
+    </item>
+
+    <item data="02/10/2009" owner="Rutigliano"  type="changes" >
+      Eliminata FormBaseDetail_1_1
+    </item>
+    <item data="23/09/2009"  owner="Rutigliano"  type="changes" >
+      ErrorProvider nella FormBaseDetail_0
+    </item>
+    <item data="21/09/2009"  owner="Rutigliano"  type="changes" >
+      Fix path file di log in FormMaster
+    </item>
+    
+  </release>
+
+
+ 
+
+
+
+ 
+</whatsnew>

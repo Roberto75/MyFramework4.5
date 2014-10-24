@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<whatsnew>
+  <!-- 
+  type => bug
+  type => changes
+ -->
+   <release number="1.0.2.5" data="14/04/2011" >
+    <item data="14/04/2011"   owner="Rutigliano"  type="changes" >
+      UcPeriodoCompetenza, TextBox 'anno' -> convertito in NumericUpDown
+    </item>
+  </release>	
+  <release number="1.0.2.4" data="12/03/2010" >
+    <item data="16/03/2010"   owner="Rutigliano"  type="changes" >
+      UcPreviewDataTable con auto filter column
+    </item>
+    <item data="17/09/2009"   owner="Rutigliano"  type="changes" >
+      Aggunti bottoni Open, Preview, Report
+    </item>
+  </release>
+  
+ 
+</whatsnew>

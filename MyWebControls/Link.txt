@@ -1,0 +1,17 @@
+
+Procedura dettagliata: sviluppo e utilizzo di un controllo server personalizzato
+http://msdn2.microsoft.com/it-it/library/yhzc935f(VS.80).aspx
+
+
+public key token for a .NET DLL or assembly
+sn -T D:\Documenti\Programmazione\dotNet\vb_net\MyWebControls\bin\Debug\MyWebControls.dll
+
+
+
+C:\Program Files\Microsoft Visual Studio 10.0\VC>sn -T D:\Documenti\Programmazio
+ne\dotNet\vb_net\MyWebControls\bin\Debug\MyWebControls.dll
+
+Microsoft (R) .NET Framework Strong Name Utility  Version 4.0.30319.1
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Public key token is 7b98d9c4ec3a9b92
