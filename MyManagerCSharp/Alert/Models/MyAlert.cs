@@ -12,6 +12,13 @@ namespace MyManagerCSharp.Alert.Models
         public string nome { get; set; }
         public string descrizione { get; set; }
         public bool isEnabled { get; set; }
+        public bool isSelected { get; set; }
+        public double? valoreMinimo { get; set; }
+
+        public MyAlert()
+        {
+
+        }
 
         public MyAlert(long valore)
         {
@@ -25,6 +32,32 @@ namespace MyManagerCSharp.Alert.Models
             nome = (row["nome"] is DBNull) ? "" : row["nome"].ToString();
             descrizione = (row["descrizione"] is DBNull) ? "" : row["descrizione"].ToString();
             isEnabled = bool.Parse(row["is_enabled"].ToString());
+
+            if (row.Table.Columns.Contains("valore_minimo"))
+            {
+                if (row["valore_minimo"] is DBNull)
+                {
+                    valoreMinimo = null;
+                }
+                else
+                {
+                    valoreMinimo = int.Parse(row["valore_minimo"].ToString());
+                }
+            }
+
+
+
+            if (row.Table.Columns.Contains("is_selected"))
+            {
+                if (row["is_selected"] is DBNull)
+                {
+                    isSelected  = false;
+                }
+                else
+                {
+                    isSelected = true;
+                }
+            }
         }
     }
 }

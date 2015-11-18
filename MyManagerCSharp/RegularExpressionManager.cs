@@ -8,7 +8,23 @@ namespace MyManagerCSharp
 {
     public class RegularExpressionManager
     {
+        //Appllicazione di test on line: http://gskinner.com/RegExr/
+        //http://www.regular-expressions.info
+        //http://regexlib.com/Search.aspx?k=URL
 
+
+
+        public static bool isValidEmail(string value)
+        {
+            //his expression matches email addresses, and checks that they are of the proper form. It checks to ensure the top level domain is between 2 and 4 characters long, but does not check the specific domain against a list (especially since there are so many of them now).
+            //Matches	        joe@aol.com | joe@wrox.co.uk | joe@domain.info
+            //Non-Matches	    a@b | notanemail | joe@@.
+
+            //http://regexlib.com/REDetails.aspx?regexp_id=21
+
+            System.Text.RegularExpressions.Regex pattern = new System.Text.RegularExpressions.Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+            return pattern.IsMatch(value);
+        }
 
         public static bool isMobileDevice(string UserAgent)
         {
@@ -29,7 +45,6 @@ namespace MyManagerCSharp
             //MSIE 7.0	Windows Internet Explorer 7 or IE7 Compatibility View/Browser Mode
             //MSIE 6.0	Microsoft Internet Explorer 6
 
-
             if (UserAgent.IndexOf("MSIE 8.0") != -1 || UserAgent.IndexOf("MSIE 7.0") != -1 || UserAgent.IndexOf("MSIE 6.0") != -1)
             {
                 return true;
@@ -43,8 +58,6 @@ namespace MyManagerCSharp
 
         public static bool isStrongPassword(string value)
         {
-
-
             //http://msdn.microsoft.com/library/ITA/jscript7/html/jsreconIntroductionToRegularExpressions.asp
 
             //At least 8 charcaters long
@@ -86,7 +99,6 @@ namespace MyManagerCSharp
 
 
             return System.Text.RegularExpressions.Regex.IsMatch(value, passwordStrengthRegularExpression);
-
         }
 
         public static string replaceCharactersInRegularExplression(string value)
@@ -99,7 +111,6 @@ namespace MyManagerCSharp
             temp = value.Replace("$", "\\$").Replace("(", "\\(").Replace(")", "\\)").Replace("*", "\\*").Replace("+", "\\+").Replace("-", "\\-").Replace("[", "\\[").Replace("]", "\\]").Replace("?", "\\?").Replace("/", "\\/").Replace("^", "\\^").Replace("{", "\\{").Replace("}", "\\}").Replace("|", "\\|");
 
             return temp;
-
         }
 
 
@@ -118,18 +129,38 @@ namespace MyManagerCSharp
 
 
 
+
+        public static string isPartitaIva(string value)
+        {
+            string esito = "";
+            value = value.ToUpper().Trim();
+
+            if (value.Length != 11)
+            {
+                esito = String.Format("La partita iva inserita è lunga {0:NO} caratteri invece di 11", value.Length);
+                return esito;
+            }
+            System.Text.RegularExpressions.Regex pattern = new System.Text.RegularExpressions.Regex(@"[0-9]");
+
+            if (!pattern.IsMatch(value))
+            {
+                esito = "La partita iva digitata non è sintatticamente corretta";
+                return esito;
+            }
+            
+            return "";
+        }
+
         public static string isValidCodiceFiscale(string value)
         {
             //'Return System.Text.RegularExpressions.Regex.IsMatch(value, "[A-Za-z]{6}[0-9]{2}[A-Za-z]{1}[0-9]{2}[A-Za-z]{1}[0-9]{3}[A-Za-z]{1}$")
 
             value = value.ToUpper().Trim();
-
             string esito = "";
-
 
             if (value.Length != 16)
             {
-                esito = "Il codice fiscale digitato non è sintatticamente corretto";
+                esito = String.Format("Il codice fiscale inserito è lungo {0:NO} caratteri invece di 16", value.Length);
                 return esito;
             }
 

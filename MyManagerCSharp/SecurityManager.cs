@@ -5,11 +5,75 @@ using System.Text;
 
 using System.Security.Cryptography;
 using System.IO;
+using System.Security;
+using System.Runtime.InteropServices;
 
 namespace MyManagerCSharp
 {
     public class SecurityManager
     {
+
+
+        public static SecureString getSecureString(string Source)
+        {
+            if (String.IsNullOrWhiteSpace(Source))
+            {
+                return null;
+            }
+
+            SecureString result = new SecureString();
+
+            foreach (char c in Source.ToCharArray())
+            {
+                result.AppendChar(c);
+            }
+
+            return result;
+        }
+
+
+
+        public static string getStringFromSecureString(SecureString ss)
+        {
+            string password;
+
+            IntPtr bstr = Marshal.SecureStringToBSTR(ss);
+
+            try
+            {
+                password = Marshal.PtrToStringUni(bstr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeBSTR(bstr);
+            }
+
+            return password;
+        }
+
+
+
+        public static string getMD5Hash(FileInfo fi)
+        {
+
+            byte[] hash;
+
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(fi.FullName))
+                {
+                    hash = md5.ComputeHash(stream);
+                }
+            }
+
+            string temp;
+            temp = BitConverter.ToString(hash).Replace("-", "").ToUpper();
+
+            return temp;
+        }
+
+
+
 
         public static string getMD5Hash(string input)
         {

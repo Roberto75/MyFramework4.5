@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="pdfforge.PDFCreator.Views.UserControls.TitleTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:validation="clr-namespace:pdfforge.PDFCreator.ViewModels.Validation"
+             xmlns:userControls="clr-namespace:pdfforge.PDFCreator.ViewModels.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" 
+             d:DesignWidth="500">
+    <UserControl.DataContext>
+        <userControls:TitleTabViewModel/>
+    </UserControl.DataContext>
+    <HeaderedContentControl Name="TitleReplacementControl" Margin="5" Template="{StaticResource HeaderPanelTemplate}" Header="Title Replacement">
+
+        <Grid Margin="0 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" MaxWidth="300"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button Grid.Column="0" Grid.Row="0" Margin="0 25 5 2" Padding="5" Command="{Binding TitleMoveUpCommand}">
+                <Viewbox Height="8">
+                    <Path Data="{StaticResource UpArrow}" Fill="Black"></Path>
+                </Viewbox>
+            </Button>
+            <Button Grid.Column="0" Grid.Row="1" Margin="0 0 5 5" Padding="5" Command="{Binding TitleMoveDownCommand}">
+                <Viewbox Height="8">
+                    <Path Data="{StaticResource DownArrow}" Fill="Black"></Path>
+                </Viewbox>
+            </Button>
+            <Button Grid.Column="0" Grid.Row="2" Margin="0 5 5 2" Padding="5 1" Command="{Binding TitleAddCommand}" Content="+" />
+            <Button Grid.Column="0" Grid.Row="3" Margin="0 0 5 5" Padding="5 1" Command="{Binding TitleDeleteCommand}" Content="-" />
+            <DataGrid       Grid.Column="1" Grid.Row="0" Grid.RowSpan="5"
+                            ItemsSource="{Binding TitleReplacements}"
+                            IsSynchronizedWithCurrentItem="True"
+                            AutoGenerateColumns="False"
+                            AutoGeneratingColumn="DataGrid_OnAutoGeneratingColumn"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Stretch"
+                            Height="330"
+                            >
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="SearchColumn" Header="Search text" Width="*" >
+                        <DataGridTextColumn.Binding>
+                            <Binding Path="Search" NotifyOnValidationError="True" ValidatesOnExceptions="True" UpdateSourceTrigger="PropertyChanged" >
+                                <Binding.ValidationRules>
+                                    <validation:NonEmptyStringValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn x:Name="ReplaceColumn" Header="Replace with" Width="*" Binding="{Binding Replace}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </HeaderedContentControl>
+</UserControl>

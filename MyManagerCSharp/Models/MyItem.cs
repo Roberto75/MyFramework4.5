@@ -14,11 +14,25 @@ namespace MyManagerCSharp.Models
         {
         }
 
+
+        public MyItem(long value, string text)
+        {
+            Value = value.ToString();
+            Text = text;
+        }
+
+        public MyItem(int value, string text)
+        {
+            Value = value.ToString();
+            Text = text;
+        }
+
         public MyItem(string value, string text)
         {
             Value = value;
             Text = text;
         }
+
 
     }
 }

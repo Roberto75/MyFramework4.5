@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A3E50678-CEAE-4DA6-8937-D4EB7F9FE56B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PDFCreator.Core.Test</RootNamespace>
+    <AssemblyName>PDFCreator.Core.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BitMiracle.LibTiff.NET">
+      <HintPath>..\Libraries\External\LibTiff\BitMiracle.LibTiff.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="DataStorage, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\DataStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="ftplib, Version=1.0.1.2, Culture=neutral, PublicKeyToken=b8d596a139dca8bf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\PDFCreator\ftplib.dll</HintPath>
+    </Reference>
+    <Reference Include="ImapX, Version=2.0.0.6, Culture=neutral, PublicKeyToken=5992873d65130d1f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\External\ImapX.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\..\..\..\Program Files\PDFCreator\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\Libraries\External\NUnit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfFileAnalyzerLibrary">
+      <HintPath>..\Libraries\External\PdfFileAnalyzerLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="SystemInterface">
+      <HintPath>..\..\..\..\Program Files\PDFCreator\SystemInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="SystemWrapper, Version=0.5.5379.20028, Culture=neutral, PublicKeyToken=9861416082383a00, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\PDFCreator\SystemWrapper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionResultTest.cs" />
+    <Compile Include="Actions\EmailClientActionTest.cs" />
+    <Compile Include="AutoSaveTest.cs" />
+    <Compile Include="Ghostscript\GhostscriptDiscoveryTest.cs" />
+    <Compile Include="Jobs\TitleReplacerTest.cs" />
+    <Compile Include="OutputDevices\DevicesGeneralTests.cs" />
+    <Compile Include="OutputDevices\JpegDeviceTest.cs" />
+    <Compile Include="OutputDevices\PdfDeviceTest.cs" />
+    <Compile Include="OutputDevices\PngDeviceTest.cs" />
+    <Compile Include="OutputDevices\TiffDeviceTest.cs" />
+    <Compile Include="GhostscriptJobTest.cs" />
+    <Compile Include="PageOrientationTest.cs" />
+    <Compile Include="BasicTest.cs" />
+    <Compile Include="CompressionAndResolutionTest.cs" />
+    <Compile Include="CoverAndAttachmentTest.cs" />
+    <Compile Include="Actions\FtpTest.cs" />
+    <Compile Include="Jobs\JobInfoTest.cs" />
+    <Compile Include="JpegTest.cs" />
+    <Compile Include="Jobs\MetadataTest.cs" />
+    <Compile Include="PdfMetadataTest.cs" />
+    <Compile Include="OutputFormatHelperTest.cs" />
+    <Compile Include="PdfTest.cs" />
+    <Compile Include="OutputDevices\PrintingDeviceTest.cs" />
+    <Compile Include="ProfileCheckerTest.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Actions\ScriptActionTest.cs" />
+    <Compile Include="SettingsTest.cs" />
+    <Compile Include="Actions\SmtpEMailTest.cs" />
+    <Compile Include="TiffTest.cs" />
+    <Compile Include="UniqueFilenameTest.cs" />
+    <Compile Include="ViewerSettingsTest.cs" />
+    <Compile Include="PngTest.cs" />
+    <Compile Include="SignAndSecurityTest.cs" />
+    <Compile Include="BackgroundPageTest.cs" />
+    <Compile Include="XMPMetadataUpdateTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PDFCreator.Core\PDFCreator.Core.csproj">
+      <Project>{18354054-45F6-4F51-8730-D05643A400A3}</Project>
+      <Name>PDFCreator.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PDFCreator.Mail\PDFCreator.Mail.csproj">
+      <Project>{884D14EB-6D78-41D8-B022-968209DD6CE4}</Project>
+      <Name>PDFCreator.Mail</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PDFCreator.Settings\PDFCreator.Settings.csproj">
+      <Project>{94936199-c9c7-4a5f-a58e-6123158e84f3}</Project>
+      <Name>PDFCreator.Settings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PDFCreator.TestHelper\PDFCreator.TestUtilities.csproj">
+      <Project>{083D9318-F02A-44A1-8AD9-A82413B85655}</Project>
+      <Name>PDFCreator.TestUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PDFCreator.Utilities\PDFCreator.Utilities.csproj">
+      <Project>{EA29538B-89A5-4FB3-AE0F-5E2370E852F8}</Project>
+      <Name>PDFCreator.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PDFCreator\PDFCreator.csproj">
+      <Project>{28A624EA-10C1-4178-BB3A-6A2BB6AA159D}</Project>
+      <Name>PDFCreator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -8,7 +8,6 @@ namespace MyManagerCSharp.RGraph
     //https://twitter.com/_RGraph
 
 
-
     public class RGraphManager : ManagerDB
     {
         public enum ReportType
@@ -30,7 +29,8 @@ namespace MyManagerCSharp.RGraph
             None,
             Palette01,
             Palette02,
-            RedOrangeGreen
+            RedOrangeGreen,
+            RedOrangeGreenV2
         }
 
         public enum LabelType
@@ -46,7 +46,7 @@ namespace MyManagerCSharp.RGraph
         //public LabelType Label { get; set; }
 
         //public bool ShowPercentuale { get; set; }
-        public bool ShowLegend { get; set; }
+        //public bool ShowLegend { get; set; }
         // public bool ShowLabels { get; set; }
         //public PaletteType SetPalette { get; set; }
 
@@ -54,7 +54,7 @@ namespace MyManagerCSharp.RGraph
 
         // public string _titolo = "";
 
-        public bool EnableOnClick { get; set; }
+        // public bool EnableOnClick { get; set; }
 
 
         private List<string> _palette1 = new List<string> {"ffc363", "eb6033", "307ea9", "d1ccd1", "425c86" 
@@ -68,7 +68,11 @@ namespace MyManagerCSharp.RGraph
                                                           , "FF6500"};
 
         //private List<string> _palette3 = new List<string> { "red", "green", "orange", "gray" };
-        private List<string> _palette3 = new List<string> { "eb6033", "92CD00", "ffe384", "DFDFDF" };
+        private List<string> _paletteRedOrangeGreen = new List<string> { "eb6033", "ffe384", "92CD00", "DFDFDF" };
+
+        //red - orange - green 
+        private List<string> _paletteRedOrangeGreen_V2 = new List<string> { "FF4013", "F7CF3D", "447F1A" };
+
 
 
         private List<string> _palette;
@@ -122,8 +126,6 @@ namespace MyManagerCSharp.RGraph
         public System.Data.DataTable rotateRigheToColonne(System.Data.DataTable dataTable)
         {
 
-
-
             System.Data.DataTable table = new System.Data.DataTable();
             string columnName;
 
@@ -170,8 +172,322 @@ namespace MyManagerCSharp.RGraph
             return table;
         }
 
+
+        public void getChartV2(Models.RGraphModel report)
+        {
+            int indexColor = 0;
+
+            string strJavaScript = "";
+            string strData = "";
+            string strColors = "";
+            string strLegend = "";
+            string strLabel = "";
+
+
+            string strMyKeys = "";
+
+
+            decimal totale = 0;
+
+
+            int paletteColors;
+
+            switch (report.Colors)
+            {
+                case PaletteType.Palette01:
+                    _palette = _palette1;
+                    break;
+                case PaletteType.Palette02:
+                    _palette = _palette2;
+                    break;
+                case PaletteType.RedOrangeGreen:
+                    _palette = _paletteRedOrangeGreen;
+                    break;
+                case PaletteType.RedOrangeGreenV2:
+                    _palette = _paletteRedOrangeGreen_V2;
+                    break;
+            }
+
+            paletteColors = _palette.Count;
+
+            strColors = String.Format("{0}.Set('colors', [", report.Id);
+            strLegend = String.Format("{0}.Set('key', [", report.Id);
+            strLabel = String.Format("{0}.Set('labels', ", report.Id);
+
+
+            switch (report.Tipo)
+            {
+                case ReportType.Pie:
+                    strData = String.Format("var {0} = new RGraph.Pie('{0}', [", report.Id);
+                    break;
+                case ReportType.HBar:
+                    strData = String.Format("var {0} = new RGraph.HBar('{0}', [", report.Id);
+                    break;
+                case ReportType.Bar:
+                    strData = String.Format("var {0} = new RGraph.Bar('{0}', [", report.Id);
+                    break;
+                case ReportType.Line:
+                    strData = String.Format("var {0} = new RGraph.Line('{0}', [", report.Id);
+                    break;
+                case ReportType.Scatter:
+                    strData = String.Format("var {0} = new RGraph.Scatter('{0}', [", report.Id);
+                    break;
+                default:
+                    throw new MyManagerCSharp.MyException("tipo di report non gestito: " + report.Tipo.ToString());
+            }
+
+
+            #region "___ DATA ___"
+
+            if (report.Series != null && report.Series.Count > 0)
+            {
+                if (report.Series.Count == 1)
+                {
+                    //SINGOLA SERIE
+
+                    bool isMultiLabel;
+                    if (report.Tipo == ReportType.Pie || report.Tipo == ReportType.Bar)
+                    {
+                        isMultiLabel = true;
+                    }
+                    else
+                    {
+                        isMultiLabel = false;
+                    }
+
+                    MyManagerCSharp.Models.MySeries serie = report.Series[0];
+                    int numeroRecord = serie.Values.Count;
+
+                    for (int i = 0; i < numeroRecord; i++)
+                    {
+                        strData += String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-GB"), "{0:0.0},", serie.Values[i].getValue());
+
+
+                        if (isMultiLabel)
+                        {
+                            strColors += String.Format("'#{0}',", _palette[indexColor % paletteColors]);
+                            indexColor = indexColor + 1;
+
+                            strLegend += String.Format("'{0}',", serie.Label.Replace("'", "\'"));
+                        }
+
+
+                    }
+
+                    if (!isMultiLabel)
+                    {
+                        strColors += String.Format("'#{0}',", _palette[0]);
+                        strLegend += String.Format("'{0}',", serie.Label.Replace("'", "\'"));
+                    }
+
+
+
+                    strData = strData.Substring(0, strData.Length - 1);
+                    strData += "]);";
+                }
+                else
+                {
+
+                    //MULTISERIE
+                    //tutte le serie hanno lo stesso numero di punti
+                    int numeroRecord = report.Series[0].Values.Count;
+                    string temp;
+                    for (int i = 0; i < numeroRecord; i++)
+                    {
+                        temp = "";
+                        foreach (MyManagerCSharp.Models.MySeries s in report.Series)
+                        {
+                            temp += String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-GB"), "{0:0.0},", s.Values[i].getValue());
+                        }
+
+                        temp = temp.Substring(0, temp.Length - 1);
+                        temp = String.Format("[{0}]", temp);
+
+                        strData += temp + ",";
+                    }
+                    strData = strData.Substring(0, strData.Length - 1);
+                    strData += "]);";
+
+                }
+            }
+
+
+
+            #endregion
+
+            if (report.Series != null && report.Series.Count > 0)
+            {
+                if (report.Series.Count == 1)
+                {
+                    strLabel += report.Series[0].getArrayLabels();
+                }
+                else
+                {
+                    foreach (MyManagerCSharp.Models.MySeries s in report.Series)
+                    {
+                        strColors += String.Format("'#{0}',", _palette[indexColor % paletteColors]);
+                        indexColor = indexColor + 1;
+
+                        strLegend += String.Format("'{0}',", s.Label.Replace("'", "\'"));
+                    }
+
+
+                    strLabel += report.Series[0].getArrayLabels();
+                }
+            }
+
+
+
+            //foreach (MyManagerCSharp.Models.MyItemV2 item in report.Series[0].Values)
+            //{
+            //    strColors += String.Format("'#{0}',", _palette[indexColor % paletteColors]);
+            //    indexColor = indexColor + 1;
+            //}
+
+
+
+            // CLOSE 
+
+
+            strColors = strColors.Substring(0, strColors.Length - 1);
+            strColors += "]);";
+
+            strLegend = strLegend.Substring(0, strLegend.Length - 1);
+            strLegend += "]);";
+
+            strLabel = strLabel.Substring(0, strLabel.Length - 1);
+            strLabel += "]);";
+
+            //strMyKeys = strMyKeys.Substring(0, strMyKeys.Length - 1);
+            //strMyKeys += "];";
+
+            strJavaScript = strData + Environment.NewLine;
+
+            //if (report.Colors != PaletteType.None)
+            //{
+            //    strJavaScript += strColors + Environment.NewLine;
+            //    strJavaScript += String.Format("{0}.set('colors.sequential', 'true');", report.Id) + Environment.NewLine;
+            //}
+
+
+
+            //if (report.ShowPercentuale)
+            //{
+            //    decimal percentuale;
+
+            //    foreach (System.Data.DataRow row in _dt.Rows)
+            //    {
+            //        percentuale = 0;
+            //        if (decimal.Parse(row["valore"].ToString()) != 0)
+            //        {
+            //            percentuale = (decimal.Parse(row["valore"].ToString()) / totale) * 100;
+            //        }
+
+            //        strLabel = strLabel.Replace(String.Format("'{0}'", row["label"].ToString().Replace("'", "\'")), String.Format("'{0} {1:N2}%'", row["label"].ToString().Replace("'", "\'"), percentuale));
+            //        strLegend = strLegend.Replace(String.Format("'{0}'", row["label"].ToString().Replace("'", "\'")), String.Format("'{0} {1:N2}%'", row["label"].ToString().Replace("'", "\'"), percentuale));
+            //    }
+            //}
+
+
+
+            if (report.ShowLegend)
+            {
+                strJavaScript += Environment.NewLine + strLegend;
+                //strJavaScript += String.Format("{0}.Set('key.background', 'white');", report.Id);
+                strJavaScript += String.Format("{0}.Set('key.interactive', true);", report.Id) + Environment.NewLine;
+            }
+
+
+
+            if (report.Label != LabelType.None)
+            {
+                if (report.Label == LabelType.LabelAndValore)
+                {
+                    strJavaScript += String.Format("{0}.set('labels.above', 'true');", report.Id) + Environment.NewLine;
+                }
+
+                strJavaScript += strLabel + Environment.NewLine;
+            }
+
+
+            if (report.Colors != PaletteType.None)
+            {
+                strJavaScript += strColors + Environment.NewLine;
+                strJavaScript += String.Format("{0}.set('colors.sequential', 'true');", report.Id) + Environment.NewLine;
+            }
+
+            //' strJavaScript &= String.Format("{0}.Set('chart.gutter.left', 400);", name)
+
+
+            //'strJavaScript &= String.Format("{0}.Set('chart.colors.sequential', true);", name)
+
+
+            //'strJavaScript &= String.Format("{0}.Set('chart.labels.above', true);", name)
+
+            //'strJavaScript &= String.Format("{0}.Set('chart.zoom.factor',1.5);", name)
+
+            strJavaScript += String.Format("{0}.Set('text.size', 8);", report.Id) + Environment.NewLine;
+            strJavaScript += String.Format("{0}.Set('scale.thousand', '.');", report.Id) + Environment.NewLine;
+            strJavaScript += String.Format("{0}.Set('scale.point', ',');", report.Id) + Environment.NewLine;
+
+
+            if (report.EnableOnClick)
+            {
+                //strJavaScript += String.Format("{0}.Set('events.click', {1});", report.Id, "myEventListener" + report.Id) + Environment.NewLine;
+                strJavaScript += String.Format("{0}.Set('events.click', {1});", report.Id, report.Id + "OnClickEventListener") + Environment.NewLine;
+                strJavaScript += String.Format("{0}.Set('events.mousemove', function (e, bar) {{e.target.style.cursor = 'pointer';}} );", report.Id) + Environment.NewLine;
+                //'strJavaScript &= String.Format("{0}.Set('chart.events.mousemove', myMousemove );", name)
+            }
+
+
+
+
+            foreach (string custom in report.Settings)
+            {
+                strJavaScript += custom + Environment.NewLine;
+            }
+
+
+
+            //'strJavaScript &= String.Format("{0}.Set('chart.key.position', 'gutter');", name)
+            strJavaScript += String.Format("{0}.Draw();", report.Id) + Environment.NewLine;
+
+
+            //if (_dt.Columns.Contains("my_key"))
+            //{
+            //    //strJavaScript += strMyKeys + Environment.NewLine;
+            //    report.MyKeys = strMyKeys;
+            //}
+
+
+            report.Html = strJavaScript + Environment.NewLine;
+        }
+
+
+
+
+
+
+
+
+
         public void getChart(Models.RGraphModel report, bool rotateDataSet, bool includeTable)
         {
+
+            if (report.Id == null)
+            {
+                throw new ApplicationException("report.id è obbligatorio");
+            }
+
+            if (report.Width == null)
+            {
+                throw new ApplicationException("report.Width è obbligatorio");
+            }
+
+            if (report.Height == null)
+            {
+                throw new ApplicationException("report.Height è obbligatorio");
+            }
 
             //'If isIndicatore(tipo) Then
             //'    Throw New MyManager.ManagerException("Con questi parametri NON è possibile creare report di tipo indicatore")
@@ -219,7 +535,7 @@ namespace MyManagerCSharp.RGraph
                     _palette = _palette2;
                     break;
                 case PaletteType.RedOrangeGreen:
-                    _palette = _palette3;
+                    _palette = _paletteRedOrangeGreen;
                     break;
             }
 
@@ -359,6 +675,8 @@ namespace MyManagerCSharp.RGraph
             }
 
 
+
+
             ////'cancello l'ultima ,
             //if (report.Tipo == ReportType.Scatter)
             //{
@@ -410,7 +728,7 @@ namespace MyManagerCSharp.RGraph
 
 
 
-            if (ShowLegend)
+            if (report.ShowLegend)
             {
                 strJavaScript += Environment.NewLine + strLegend;
                 strJavaScript += String.Format("{0}.Set('key.background', 'white');", report.Id);
@@ -450,7 +768,7 @@ namespace MyManagerCSharp.RGraph
 
 
 
-            if (EnableOnClick)
+            if (report.EnableOnClick)
             {
                 //strJavaScript += String.Format("{0}.Set('events.click', {1});", report.Id, "myEventListener" + report.Id) + Environment.NewLine;
                 strJavaScript += String.Format("{0}.Set('events.click', {1});", report.Id, report.Id + "OnClickEventListener") + Environment.NewLine;

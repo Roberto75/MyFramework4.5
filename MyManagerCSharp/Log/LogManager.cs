@@ -18,7 +18,7 @@ namespace MyManagerCSharp.Log
             Exception
         }
 
-       
+
 
 
         public LogManager(string connectionName)
@@ -40,7 +40,7 @@ namespace MyManagerCSharp.Log
 
             string strWHERE = "";
 
-            strWHERE = getWhereConditionByDate("date_added", days); 
+            strWHERE = getWhereConditionByDate("date_added", days);
 
             _strSQL = _strSQL + strWHERE;
 
@@ -78,6 +78,15 @@ namespace MyManagerCSharp.Log
             insert(tipo, nota, referenceId, referenceType, Level.Error);
         }
 
+        public void exception(Exception ex, string referenceId, string referenceType, string tipo)
+        {
+            string nota;
+            nota = ex.Message;
+
+            insert(tipo, nota, referenceId, referenceType, Level.Exception);
+        }
+
+
         public void exception(string tipo, Exception ex)
         {
             string nota;
@@ -89,7 +98,7 @@ namespace MyManagerCSharp.Log
 
 
 
-        private void insert(string tipo, string nota, string referenceId, string referenceType, Level level)
+        public void insert(string tipo, string nota, string referenceId, string referenceType, Level level)
         {
             string strSQLParametri;
 
@@ -164,7 +173,7 @@ namespace MyManagerCSharp.Log
         {
 
             List<MyManagerCSharp.Log.Models.MyLog> risultato = new List<MyManagerCSharp.Log.Models.MyLog>();
-           
+
             _strSQL = " FROM MyLog ";
 
             System.Data.Common.DbCommand command;
@@ -203,28 +212,6 @@ namespace MyManagerCSharp.Log
                 strWHERE += " AND " + temp;
             }
 
-            //switch (model.days)
-            //{
-            //    case Days.Oggi:
-            //        //strWHERE += " AND FORMAT (date_added,'yyyy-MM-dd') = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'";
-            //        strWHERE += String.Format(" AND (DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3}) ", "date_added", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
-            //        break;
-            //    case Days.Ieri:
-            //        //strWHERE += " AND ( FORMAT (date_added,'yyyy-MM-dd') <= '" + DateTime.Now.ToString("yyyy-MM-dd") + "' AND  FORMAT (date_added,'yyyy-MM-dd') >= '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "')";
-            //        strWHERE += String.Format(" AND (DAY({0})<{1} AND  MONTH({0})<={2} AND YEAR({0})<={3}) ", "date_added", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
-            //        strWHERE += String.Format(" AND (DAY({0})>={1} AND  MONTH({0})>={2} AND YEAR({0})>={3}) ", "date_added", DateTime.Now.AddDays(-1).Day, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Year);
-            //        break;
-            //    case Days.UltimaSettimana:
-            //        //strWHERE += " AND ( FORMAT (date_added,'yyyy-MM-dd') <= '" + DateTime.Now.ToString("yyyy-MM-dd") + "' AND  FORMAT (date_added,'yyyy-MM-dd') >= '" + DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") + "')";
-            //        strWHERE += String.Format(" AND (DAY({0})<={1} AND  MONTH({0})<={2} AND YEAR({0})<={3}) ", "date_added", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
-            //        strWHERE += String.Format(" AND (DAY({0})>={1} AND  MONTH({0})>={2} AND YEAR({0})>={3}) ", "date_added", DateTime.Now.AddDays(-7).Day, DateTime.Now.AddDays(-7).Month, DateTime.Now.AddDays(-7).Year);
-            //        break;
-            //    case Days.UltimoMese:
-            //        //strWHERE += " AND ( FORMAT (date_added,'yyyy-MM-dd') <= '" + DateTime.Now.ToString("yyyy-MM-dd") + "' AND  FORMAT (date_added,'yyyy-MM-dd') >= '" + DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd") + "')";
-            //        strWHERE += String.Format(" AND (DAY({0})<={1} AND  MONTH({0})<={2} AND YEAR({0})<={3}) ", "date_added", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
-            //        strWHERE += String.Format(" AND (DAY({0})>={1} AND  MONTH({0})>={2} AND YEAR({0})>={3}) ", "date_added", DateTime.Now.AddDays(-30).Day, DateTime.Now.AddDays(-30).Month, DateTime.Now.AddDays(-30).Year);
-            //        break;
-            //}
 
             strWHERE += getWhereConditionByDate("date_added", model.Days);
 
@@ -234,7 +221,7 @@ namespace MyManagerCSharp.Log
             command.CommandText = temp;
             model.TotalRows = int.Parse(_executeScalar(command));
 
-      
+
 
             temp = "SELECT * " + _strSQL + " ORDER BY " + model.Sort + " " + model.SortDir;
 
@@ -245,17 +232,15 @@ namespace MyManagerCSharp.Log
             }
 
 
-            // Esegue la query e mette gli n record (n numero dato da model.PageNumber) in un oggetto DataTable:
             command.CommandText = temp;
             _dt = _fillDataTable(command);
 
-            // Per ogni riga dentro il DataRow crea un oggetto VulnSmall e lo aggiunge alla collezione risultato:
             foreach (System.Data.DataRow row in _dt.Rows)
             {
                 risultato.Add(new MyManagerCSharp.Log.Models.MyLog(row));
             }
 
-            model.LogsList= risultato;
+            model.LogsList = risultato;
 
         }
 
@@ -304,6 +289,46 @@ namespace MyManagerCSharp.Log
             }
 
             return risultato;
+        }
+
+
+
+        public System.Data.DataTable getSummary()
+        {
+            //_strSQL = "SELECT my_level , count(*) as conta from MyLog";
+            //_strSQL += getWhereConditionByDate("date_added", days);
+            //_strSQL += " group by my_level order by my_level";
+
+            _strSQL = " select count(*) as TOT " +
+                " , my_level " +
+                ",sum(case when DAY(date_added) =  DAY(GetDate()) and MONTH(date_added) =  MONTH(GetDate())  and YEAR(date_added) = YEAR(GetDate()) then 1 else 0 end) as 'Oggi' " +
+                ",sum(case when DAY(date_added) =  DAY( DATEADD( day , -1 ,GETDATE() )) and MONTH(date_added) =  MONTH( DATEADD( day , -1 ,GETDATE() ))  and YEAR(date_added) = YEAR( DATEADD( day , -1 ,GETDATE() )) then 1 else 0 end) as 'Ieri'  " +
+                ",sum(case when CONVERT(date, date_added )  Between CONVERT(date, GetDate() - 7)  AND  CONVERT(date, GetDate())  then 1 else 0 end) as 'Ultimi 7 giorni' " +
+                ",sum(case when CONVERT(date, date_added )  Between CONVERT(date, GetDate() - 30)  AND  CONVERT(date, GetDate())  then 1 else 0 end) as 'Ultimi 30 giorni' " +
+                " from mylog " +
+                " group by my_level";
+
+
+            return _fillDataTable(_strSQL);
+        }
+
+
+
+        public System.Data.DataTable getSummaryV2(MyManagerCSharp.Log.LogManager.Days days)
+        {
+
+            _strSQL = "select reference_id , my_type,MIN (date_added) as data_inizio, MAX(date_added) as data_fine " +
+                ",sum(case when my_level =  'Exception' then 1 else 0 end) as 'Exception'" +
+                ",sum(case when my_level =  'Error' then 1 else 0 end) as 'Error'" +
+                ",sum(case when my_level =  'Warning' then 1 else 0 end) as 'Warning'" +
+                ",sum(case when my_level =  'Info' then 1 else 0 end) as 'Info'" +
+                " from mylog";
+
+            _strSQL += " WHERE (1=1)" + getWhereConditionByDate("date_added", days);
+
+            _strSQL += " group by reference_id,  my_type" +
+                " order by MIN (date_added) desc";
+            return _fillDataTable(_strSQL);
         }
 
     }

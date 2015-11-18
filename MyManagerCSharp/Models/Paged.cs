@@ -21,7 +21,10 @@ namespace MyManagerCSharp.Models
                     return 0;
                 }
 
-                return (TotalRows / PageSize) + 1;
+                int temp;
+                temp = (TotalRows + PageSize - 1) / PageSize;
+
+                return temp;
             }
         }
         public bool HasPreviousPage { get { return (PageNumber > 1); } }

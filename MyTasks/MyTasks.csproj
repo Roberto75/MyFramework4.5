@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EE7B67D4-E414-4AA7-980A-5D1CEF97F28C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MyTasks</RootNamespace>
+    <AssemblyName>MyTasks</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MyTaskBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\EarlyWarning\public\Implementazione\Ver2\ActiveUp.Net\Class Library\ActiveUp.Net.Common\ActiveUp.Net.Common.csproj">
+      <Project>{3a83ae95-c23f-48b4-9f1a-ad4b32c37b93}</Project>
+      <Name>ActiveUp.Net.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EarlyWarning\public\Implementazione\Ver2\ActiveUp.Net\Class Library\ActiveUp.Net.Dns\ActiveUp.Net.Dns.csproj">
+      <Project>{a82ce4dd-9b08-439c-bc28-cb7b2bffa85c}</Project>
+      <Name>ActiveUp.Net.Dns</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EarlyWarning\public\Implementazione\Ver2\ActiveUp.Net\Class Library\ActiveUp.Net.Imap4\ActiveUp.Net.Imap4.csproj">
+      <Project>{6bee77df-2dd2-41c3-ba16-60e20b1eddcc}</Project>
+      <Name>ActiveUp.Net.Imap4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EarlyWarning\public\Implementazione\Ver2\ActiveUp.Net\Class Library\ActiveUp.Net.Pop3\ActiveUp.Net.Pop3.csproj">
+      <Project>{3f01cf20-c49d-44a9-aa57-68f04915fe97}</Project>
+      <Name>ActiveUp.Net.Pop3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyManagerCSharp\MyManagerCSharp.csproj">
+      <Project>{1cfb1797-36c1-4887-b980-747fcc81d6a1}</Project>
+      <Name>MyManagerCSharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

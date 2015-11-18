@@ -49,7 +49,6 @@ namespace MyManagerCSharp
         protected System.Data.Common.DbProviderFactory _factory;
         protected System.Data.Common.DbTransaction _transaction;
 
-
         protected string _connectionName;
 
         private string _provider;
@@ -70,7 +69,6 @@ namespace MyManagerCSharp
             _connection = _factory.CreateConnection();
             _connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
         }
-
 
         public ManagerDB(System.Data.Common.DbConnection connection)
         {
@@ -109,11 +107,14 @@ namespace MyManagerCSharp
             _factory = System.Data.Common.DbProviderFactories.GetFactory(_provider);
         }
 
-
-
         public System.Data.Common.DbConnection getConnection()
         {
             return _connection;
+        }
+
+        public void changeConnectionString(string connectionString)
+        {
+            _connection.ConnectionString = connectionString;
         }
 
         public void openConnection()
@@ -121,7 +122,14 @@ namespace MyManagerCSharp
             if (String.IsNullOrEmpty(_connection.ConnectionString))
             {
                 Debug.WriteLine("ConnectionString IS NULL");
-                _connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[_connectionName].ConnectionString;
+                if (String.IsNullOrEmpty(_connectionName))
+                {
+                    throw new ApplicationException("ConnectionString non inizializzata");
+                }
+                else
+                {
+                    _connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[_connectionName].ConnectionString;
+                }
             }
 
             if (_connection.State != System.Data.ConnectionState.Open)
@@ -136,32 +144,32 @@ namespace MyManagerCSharp
             _connection.Dispose();
         }
 
-
         public DataTable _fillDataTable(System.Data.Common.DbCommand command)
         {
             DataSet dataSet;
             dataSet = new DataSet();
 
-            _fillDataSet(command, dataSet, null);
+            _fillDataSet(command, dataSet, null, -1);
 
             return dataSet.Tables[0];
         }
 
-
-
-
         public DataTable _fillDataTable(string sql)
+        {
+            return _fillDataTable(sql, -1);
+        }
+
+        public DataTable _fillDataTable(string sql, int timeOut)
         {
             DataSet dataSet;
             dataSet = new DataSet();
 
-            _fillDataSet(sql, dataSet, null);
+            _fillDataSet(sql, dataSet, null, timeOut);
 
             return dataSet.Tables[0];
         }
 
-
-        protected DataSet _fillDataSet(string sqlQuery, string dataSetName, string tableName)
+        protected DataSet _fillDataSet(string sqlQuery, string dataSetName, string tableName, int timeOut)
         {
             DataSet dataSet;
 
@@ -174,13 +182,12 @@ namespace MyManagerCSharp
                 dataSet = new DataSet(dataSetName);
             }
 
-            _fillDataSet(sqlQuery, dataSet, tableName);
+            _fillDataSet(sqlQuery, dataSet, tableName, timeOut);
 
             return dataSet;
         }
 
-
-        protected void _fillDataSet(string sqlQuery, DataSet ds, string tableName)
+        protected void _fillDataSet(string sqlQuery, DataSet ds, string tableName, int timeOut)
         {
             System.Data.Common.DbCommand command;
 
@@ -188,11 +195,10 @@ namespace MyManagerCSharp
             command.Connection = _connection;
             command.CommandText = sqlQuery;
 
-            _fillDataSet(command, ds, tableName);
+            _fillDataSet(command, ds, tableName, timeOut);
         }
 
-
-        protected void _fillDataSet(System.Data.Common.DbCommand command, DataSet ds, string tableName)
+        protected void _fillDataSet(System.Data.Common.DbCommand command, DataSet ds, string tableName, int timeOut)
         {
             if (_transaction != null)
             {
@@ -225,7 +231,15 @@ namespace MyManagerCSharp
                 //'    Case Else
                 //'        Throw New ManagerException("Tipo di Adapter non supportato: " & objAdap.GetType().Name)
                 //'End Select
+
+                if (timeOut != -1)
+                {
+                    command.CommandTimeout = timeOut;
+                }
+
                 objAdap = getDataAdapter(command);
+
+
 
                 if (string.IsNullOrEmpty(tableName))
                 {
@@ -464,7 +478,10 @@ namespace MyManagerCSharp
                     return System.Data.SqlDbType.Decimal;
                 case "Char":
                     return System.Data.SqlDbType.Char;
+                case "Guid":
+                    return System.Data.SqlDbType.UniqueIdentifier;
                 default:
+                    Debug.WriteLine("MyException Tipo di dato non supportato: " + value.GetType().Name);
                     throw new MyException("Tipo di dato non supportato: " + value.GetType().Name);
             }
         }
@@ -544,7 +561,6 @@ namespace MyManagerCSharp
 
             int numeroDiRecordAggiornati;
 
-
             try
             {
                 numeroDiRecordAggiornati = command.ExecuteNonQuery();
@@ -567,12 +583,24 @@ namespace MyManagerCSharp
 
         public int _executeNoQuery(string sqlQuery)
         {
+            return _executeNoQuery(sqlQuery, -1);
+        }
+
+        public int _executeNoQuery(string sqlQuery, int timeOut)
+        {
             int numeroDiRecordAggiornati;
             System.Data.Common.DbCommand command;
 
             command = _connection.CreateCommand();
             command.CommandText = sqlQuery;
             command.Connection = _connection;
+
+            if (timeOut != -1)
+            {
+                //Il valore di default è 30 secondi
+                // Valore espresso in secondi
+                command.CommandTimeout = timeOut;
+            }
 
 
             if (_connection.GetType().Name == "OleDbConnection" || _connection.GetType().Name == "OdbcConnection")
@@ -585,11 +613,11 @@ namespace MyManagerCSharp
             }
 
 
-
             if (_transaction != null)
             {
                 command.Transaction = _transaction;
             }
+
 
             try
             {
@@ -734,15 +762,23 @@ namespace MyManagerCSharp
 
 
 
-
-
         public string _executeScalar(string sqlQuery)
+        {
+            return _executeScalar(sqlQuery, -1);
+        }
+
+        public string _executeScalar(string sqlQuery, int timeOut)
         {
             System.Data.Common.DbCommand command;
             command = _connection.CreateCommand();
 
             command.CommandText = sqlQuery;
             command.Connection = _connection;
+
+            if (timeOut != -1)
+            {
+                command.CommandTimeout = timeOut;
+            }
 
             if (_transaction != null)
             {
@@ -794,10 +830,26 @@ namespace MyManagerCSharp
         }
 
 
+        protected int executeNoQueryWithDuplicateKey(string sqlQuery)
+        {
+            System.Data.Common.DbCommand command;
+            command = _connection.CreateCommand();
 
+            command.CommandText = sqlQuery;
+            command.Connection = _connection;
+
+            if (_transaction != null)
+            {
+                command.Transaction = _transaction;
+            }
+
+            return executeNoQueryWithDuplicateKey(command);
+
+        }
 
         protected int executeNoQueryWithDuplicateKey(System.Data.Common.DbCommand command)
         {
+
             try
             {
                 return _executeNoQuery(command);
@@ -850,6 +902,29 @@ namespace MyManagerCSharp
             }
         }
 
+
+
+        public string getWhereConditionByDate(string queryField, DateTime dataIniziale, DateTime dataFinale)
+        {
+
+            if (dataIniziale == dataFinale)
+            {
+                return String.Format(" AND (DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3}) ", queryField, dataIniziale.Day, dataIniziale.Month, dataIniziale.Year);
+            }
+
+
+            if (_connection.GetType().Name == "MySqlConnection")
+            {
+                return String.Format(" AND ( CAST( {0} AS DATE)  BETWEEN CAST('{1}' AS DATE) AND CAST('{2}' AS DATE) ) ", queryField, dataIniziale.ToString("yyyy-MM-dd"), dataFinale.ToString("yyyy-MM-dd"));
+            }
+
+
+
+            //http://www.sqlusa.com/bestpractices/datetimeconversion/
+            return String.Format(" AND (  CONVERT(date, {0} )  Between CONVERT(date, '{1}', 103)  AND  CONVERT(date, '{2}', 103) ) ", queryField, dataIniziale.ToString("dd/MM/yyyy"), dataFinale.ToString("dd/MM/yyyy"));
+
+        }
+
         public string getWhereConditionByDate(string queryField, Days? days)
         {
             if (days == null)
@@ -857,11 +932,13 @@ namespace MyManagerCSharp
                 return "";
             }
 
-
             //http://office.microsoft.com/en-us/access-help/examples-of-using-dates-as-criteria-in-access-queries-HA102809751.aspx
-
             string strWHERE = "";
+
             DateTime dataCorrente = DateTime.Now;
+            DateTime inizioSettimana;
+            DayOfWeek startOfWeek = DayOfWeek.Monday; //Lunedì
+
             switch (days)
             {
                 case Days.Oggi:
@@ -902,26 +979,52 @@ namespace MyManagerCSharp
                     }
                     break;
                 case Days.Settimana_corrente:
-                    if (_connection.GetType().Name == "MySqlConnection")
+                    Debug.WriteLine(dataCorrente.DayOfWeek);
+
+                    int diff = dataCorrente.DayOfWeek - startOfWeek;
+                    if (diff < 0)
                     {
-                        // WEEK(Now(),1) ,1 per fare iniziare la settimana da lunedì
-                        strWHERE += String.Format(" AND ( WEEK({0},1) = WEEK(Now(),1) AND  Year({0}) = Year(Now())  )", queryField);
+                        diff += 7;
                     }
-                    else
-                    {
-                        // su T-SQL SET DATEFIRST(1) per fare iniziare la settimana da lunedì
-                        strWHERE += String.Format(" AND ( DatePart(\"WW\", {0} ) = DatePart(\"WW\", GetDate())  AND  Year({0}) = Year(GetDate()) )", queryField);
-                    }
+
+                    inizioSettimana = dataCorrente.AddDays(-1 * diff).Date;
+
+                    strWHERE += getWhereConditionByDate(queryField, inizioSettimana, inizioSettimana.AddDays(6));
+
+
+                    //if (_connection.GetType().Name == "MySqlConnection")
+                    //{
+                    //    // WEEK(Now(),1) ,1 per fare iniziare la settimana da lunedì
+                    //    strWHERE += String.Format(" AND ( WEEK({0},1) = WEEK(Now(),1) AND  Year({0}) = Year(Now())  )", queryField);
+                    //}
+                    //else
+                    //{
+                    //    // su T-SQL SET DATEFIRST(1) per fare iniziare la settimana da lunedì
+                    //    strWHERE += String.Format(" AND ( DatePart(\"WW\", {0} ) = DatePart(\"WW\", GetDate())  AND  Year({0}) = Year(GetDate()) )", queryField);
+                    //}
                     break;
                 case Days.Settimana_precedente:
-                    if (_connection.GetType().Name == "MySqlConnection")
+                    Debug.WriteLine(dataCorrente.DayOfWeek);
+
+                    diff = dataCorrente.DayOfWeek - startOfWeek;
+                    if (diff < 0)
                     {
-                        strWHERE += String.Format(" AND (  YEAR({0}) *53 + WEEK({0},1) = YEAR(Now()) *53 + WEEK(GetDate(),1) -1 )", queryField);
+                        diff += 7;
                     }
-                    else
-                    {
-                        strWHERE += String.Format(" AND (  YEAR({0}) *53 + DatePart(\"WW\",{0}) = YEAR( GetDate() ) * 53 + DatePart(\"WW\" , GetDate()) -1 )", queryField);
-                    }
+
+                    inizioSettimana = dataCorrente.AddDays(-1 * diff).Date;
+
+                    strWHERE += getWhereConditionByDate(queryField, inizioSettimana.AddDays(-7), inizioSettimana.AddDays(-1));
+
+
+                    //if (_connection.GetType().Name == "MySqlConnection")
+                    //{
+                    //    strWHERE += String.Format(" AND (  YEAR({0}) *53 + WEEK({0},1) = YEAR(Now()) *53 + WEEK(GetDate(),1) -1 )", queryField);
+                    //}
+                    //else
+                    //{
+                    //    strWHERE += String.Format(" AND (  YEAR({0}) *53 + DatePart(\"WW\",{0}) = YEAR( GetDate() ) * 53 + DatePart(\"WW\" , GetDate()) -1 )", queryField);
+                    //}
                     break;
                 case Days.Mese_corrente:
                     strWHERE += String.Format(" AND (YEAR({0}) = YEAR(GetDate()) ) AND ( MONTH({0}) = MONTH( GetDate() ) )", queryField);
@@ -953,6 +1056,65 @@ namespace MyManagerCSharp
             }
 
             return strWHERE;
+        }
+
+        public string getGroupByByDate(string queryField, Days? days)
+        {
+            if (days == null)
+            {
+                return "";
+            }
+
+            string strGroupBy = "";
+
+            switch (days)
+            {
+                case Days.Oggi:
+                case Days.Ieri:
+                case Days.Ultimi_7_giorni:
+                case Days.Ultimi_30_giorni:
+                case Days.Ultimi_15_giorni:
+                case Days.Settimana_corrente:
+                case Days.Settimana_precedente:
+                case Days.Mese_corrente:
+                case Days.Mese_precedente:
+                    strGroupBy += String.Format(" FORMAT({0}, 'yyyy-MM-dd')", queryField);
+                    break;
+                case Days.Anno_corrente:
+                case Days.Anno_precedente:
+                case Days.Primo_semestre_anno_corrente:
+                case Days.Primo_semestre_anno_precedente:
+                case Days.Secondo_semestre_anno_corrente:
+                case Days.Secondo_semestre_anno_precedente:
+                case Days.Ultimo_semestre:
+                case Days.Tutti:
+                    strGroupBy += String.Format(" FORMAT({0}, 'yyyy-MM')", queryField);
+                    break;
+
+            }
+
+            return strGroupBy;
+        }
+
+
+        public void reseedIdentity(string tableName, int newValue)
+        {
+            _strSQL = String.Format("DBCC CHECKIDENT ( {0}, RESEED, {1} ) WITH NO_INFOMSGS", tableName, newValue);
+            _executeNoQuery(_strSQL);
+        }
+
+
+        public string getLastMigrationId()
+        {
+            _strSQL = "SELECT MigrationId   FROM __MigrationHistory";
+            _dt = _fillDataTable(_strSQL);
+
+            //prendo l'ultima riga!
+            string temp;
+            temp = _dt.Rows[_dt.Rows.Count -1][0].ToString();
+
+            Debug.WriteLine(temp);
+            return temp;
         }
 
     }

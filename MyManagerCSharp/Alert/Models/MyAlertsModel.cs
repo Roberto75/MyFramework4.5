@@ -7,8 +7,9 @@ namespace MyManagerCSharp.Alert.Models
 {
     public class MyAlertsModel
     {
-        public System.Web.Mvc.MultiSelectList Alerts;
+        //public System.Web.Mvc.MultiSelectList Alerts;
 
+        public List<MyManagerCSharp.Alert.Models.MyAlert> Alerts;
         public bool? EsitoSalvataggio;
 
         private System.Net.Mail.MailAddress _email;

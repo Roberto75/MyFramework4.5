@@ -44,6 +44,36 @@ namespace MyManagerCSharp
 
         #region "Utenti"
 
+
+        public string getBodyAccessDenied(long userId, string login, string email, string ip)
+        {
+            string temp = "";
+
+            Lingua lingua = Lingua.IT;
+
+            switch (lingua)
+            {
+                case Lingua.IT:
+                case Lingua.EN:
+
+                    temp = "<h1>Access denied  in" + System.Net.Dns.GetHostName() + "</h1>" + Environment.NewLine +
+
+                    "<br /> Si è verificato un tentativo di accesso ad una risorsa a cui non si posseggono le autorizzazioni:" +
+                    "<br />" + Environment.NewLine +
+                    "<br /> <b>Login</b>: " + login + Environment.NewLine +
+                    "<br /> <b>User Id</b>: " + userId + Environment.NewLine +
+                    "<br /> <b>Email</b>: " + email + Environment.NewLine +
+
+                    "<br />" + Environment.NewLine;
+                    break;
+            }
+
+
+            temp += getFirma(lingua);
+            return temp;
+        }
+
+
         public string getBodyRegistrazioneUtente(string nome, string cognome, string login, string email, Lingua lingua)
         {
 
@@ -147,7 +177,7 @@ namespace MyManagerCSharp
         }
 
 
-        public string getBodyResetPassword(string nome, string cognome, string passwordGenerata, Lingua lingua)
+        public virtual string getBodyResetPassword(string nome, string cognome, string passwordGenerata, Lingua lingua)
         {
             string temp = "";
 

@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="pdfforge.PDFCreator.Views.UserControls.GeneralTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helper="clr-namespace:pdfforge.PDFCreator.Helper"
+             xmlns:viewModels="clr-namespace:pdfforge.PDFCreator.ViewModels.UserControls"
+             mc:Ignorable="d" 
+             x:Name="This">
+    <UserControl.DataContext>
+        <viewModels:GeneralTabViewModel></viewModels:GeneralTabViewModel>
+    </UserControl.DataContext>
+    <StackPanel>
+        <HeaderedContentControl Name="LanguageControl" Template="{StaticResource HeaderPanelTemplate}" Header="Language">
+            <StackPanel HorizontalAlignment="Left" MinWidth="250" Margin="0 5 0 0">
+                <TextBlock Name="SelectLanguageLabel">Please select the application language:</TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                    <ComboBox Name="LanguageBox" Width="200" DisplayMemberPath="CommonName" SelectedValuePath="CommonName" SelectedValue="{Binding ApplicationSettings.Language}" ItemsSource="{Binding Languages}"/>
+                    <Button Name="LanguagePreviewButton" Margin="10 0 0 0" MinWidth="80"  Click="LanguagePreviewButton_Click">Preview</Button>
+                </StackPanel>
+            </StackPanel>
+        </HeaderedContentControl>
+        <HeaderedContentControl Name="UpdateCheckControl" Margin="0 5 0 0" Template="{StaticResource HeaderPanelTemplate}" Header="Update Check">
+            <StackPanel HorizontalAlignment="Left" MinWidth="250" Margin="0 5 0 0">
+                <TextBlock Name="UpdateIntervalLabel">Check for updates:</TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                    <ComboBox Name="UpdateIntervalComboBox" Width="200" HorizontalAlignment="Left" SelectedValue="{Binding ApplicationSettings.UpdateInterval}" SelectedValuePath="Value" DisplayMemberPath="Name" ItemsSource="{Binding UpdateIntervals}"/>
+                    <Button Name="CheckUpdateButton" Margin="10 0 0 0" MinWidth="80" Click="UpdateCheckButton_OnClick">Check now</Button>
+                </StackPanel>
+                <TextBlock Name="DownloadLatestVersionText" Margin="0 5 0 0">Download the latest version at:</TextBlock>
+                <TextBlock>
+                    <Hyperlink NavigateUri="Look in DownloadHyperlink_OnRequestNavigate" RequestNavigate="DownloadHyperlink_OnRequestNavigate">
+                        <TextBlock Text="{x:Static helper:Urls.PdfforgeWebsiteUrl}"/>
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </HeaderedContentControl>
+        <HeaderedContentControl Name="DefaultPrinterControl" Margin="0 5 0 0" Template="{StaticResource HeaderPanelTemplate}" Header="Default Printer">
+            <StackPanel Margin="0 5 0 0">
+                <TextBlock Name="ChangeDefaultPrinterLabel" TextWrapping="Wrap">Allow PDFCreator to temporarily change the default printer</TextBlock>
+                <ComboBox Name="ChangeDefaultPrinterComboBox" Margin="0 5 0 0" Width="200" HorizontalAlignment="Left" SelectedValue="{Binding ApplicationSettings.AskSwitchDefaultPrinter}" SelectedValuePath="Value" DisplayMemberPath="Name" ItemsSource="{Binding AskSwitchPrinterValues}" />
+            </StackPanel>
+        </HeaderedContentControl>
+        <HeaderedContentControl Name="MenuIntegrationControl" Margin="0 5 0 0" Template="{StaticResource HeaderPanelTemplate}" Header="Explorer Context Menu Integration">
+            <UniformGrid Columns="2" Margin="0 5 0 0" HorizontalAlignment="Left" Width="410">
+                <Button Margin="0 0 5 0" Padding="5" Click="AddExplorerIntegrationButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl Visibility="{Binding ElementName=This,Path=RequiresUacVisibility}" Width="16" Margin="5 0">
+                            <StaticResource ResourceKey="UacShield" />
+                        </ContentControl>
+                        <TextBlock VerticalAlignment="Center" Name="AddMenuIntegrationText">Add</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Margin="5 0 0 0" Padding="5" Click="RemoveExplorerIntegrationButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl Visibility="{Binding ElementName=This,Path=RequiresUacVisibility}" Width="16" Margin="5 0">
+                            <StaticResource ResourceKey="UacShield" />
+                        </ContentControl>
+                        <TextBlock VerticalAlignment="Center" Name="RemoveMenuIntegrationText">Remove</TextBlock>
+                    </StackPanel>
+                </Button>
+            </UniformGrid>
+
+        </HeaderedContentControl>
+    </StackPanel>
+</UserControl>

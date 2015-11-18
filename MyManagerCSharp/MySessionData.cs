@@ -20,6 +20,11 @@ namespace MyManagerCSharp
 
             get
             {
+                if (_email == null)
+                {
+                    return "";
+                }
+
                 return _email.ToString();
             }
         }
@@ -45,7 +50,7 @@ namespace MyManagerCSharp
         }
 
         //public string Profilo { get; set; }
-        public string ProfiloId { get; set; }
+        public string Profili { get; set; }
 
         public long UserId
         {
@@ -101,6 +106,50 @@ namespace MyManagerCSharp
             return esito;
         }
 
+
+        public bool IsInProfile(string role)
+        {
+            if (String.IsNullOrEmpty(Profili))
+            {
+                return false;
+            }
+
+            bool esito;
+            esito = Profili.IndexOf(role.ToUpper() + ";") != -1;
+
+            Debug.WriteLine("MySessionData IsInProfile: " + role + ": " + esito);
+            return esito;
+        }
+
+
+        public bool IsInProfile(string[] roles)
+        {
+            if (String.IsNullOrEmpty(Profili))
+            {
+                return false;
+            }
+
+            bool esito;
+
+            foreach (string r in roles)
+            {
+                esito = IsInProfile(r);
+                if (esito == true)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+
+        public bool IsInGroupAdministrators()
+        {
+            return IsInGroup("Administrators");
+        }
+
         public bool IsInGroup(string group)
         {
             if (Groups == null || Groups.Count == 0)
@@ -132,14 +181,14 @@ namespace MyManagerCSharp
 
 
 
-        public void LogOff()
+        public virtual void LogOff()
         {
             _userId = -1;
             _sid = null;
             Roles = "";
             Login = "";
             // Profilo = "";
-            ProfiloId = "";
+            Profili = "";
             Groups.Clear();
         }
 

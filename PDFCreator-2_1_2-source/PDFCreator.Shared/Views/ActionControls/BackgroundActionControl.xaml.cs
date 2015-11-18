@@ -1,0 +1,52 @@
+﻿using System.Collections.Generic;
+using System.Windows;
+using pdfforge.PDFCreator.Core.Settings.Enums;
+using pdfforge.PDFCreator.Shared.Helper;
+
+namespace pdfforge.PDFCreator.Shared.Views.ActionControls
+{
+    public partial class BackgroundActionControl : ActionControl
+    {
+        private static readonly TranslationHelper TranslationHelper = TranslationHelper.Instance;
+
+        public BackgroundActionControl()
+        {
+            InitializeComponent();
+
+            DisplayName = TranslationHelper.Instance.GetTranslation("BackgroundSettings", "DisplayName", "Add background (only for PDF)");
+            Description = TranslationHelper.Instance.GetTranslation("BackgroundSettings", "Description", "Add a background to your PDF documents.\r\nThe background file must be a PDF file and may contain multiple pages.");
+
+            TranslationHelper.Instance.TranslatorInstance.Translate(this);
+        }
+
+        public static IEnumerable<EnumValue<BackgroundRepetition>> BackgroundRepetitionValues
+        {
+            get { return TranslationHelper.GetEnumTranslation<BackgroundRepetition>(); }
+        }
+
+        public override bool IsActionEnabled
+        {
+            get
+            {
+                if (CurrentProfile == null)
+                    return false;
+                return CurrentProfile.BackgroundPage.Enabled;
+            }
+            set
+            {
+                CurrentProfile.BackgroundPage.Enabled = value;
+            }
+        }
+
+        private void SelectBackgroundFileButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var title = TranslationHelper.Instance.GetTranslation("BackgroundSettings", "SelectBackgroundFile", "Select background file");
+            var filter = TranslationHelper.Instance.GetTranslation("BackgroundSettings", "PDFFiles", "PDF files")
+                                    + @" (*.pdf)|*.pdf|"
+                                    + TranslationHelper.Instance.GetTranslation("BackgroundSettings", "AllFiles", "All files")
+                                    + @" (*.*)|*.*";
+
+            FileDialogHelper.ShowSelectFileDialog(BackgroundFileTextBox, title, filter);
+        }
+    }
+}

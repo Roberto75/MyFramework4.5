@@ -13,17 +13,20 @@ namespace MyManagerCSharp.Log
             Login,
             LoginMobile,
             Logout,
-            ResetPassword,
-            UpdatePassword,
+            Reset_password,
+            Update_password,
             Download,
-            NotAuthorized,
-            NotAuthenticated,
-            PageNotFound,
-            AccountEnable,
-            AccountDisable,
-            AccountDelete,
+            Not_authorized,
+            Not_authenticated,
+            Page_not_found,
+            Account_enable,
+            Account_disable,
+            Account_delete,
             Exception,
-            Error
+            Error,
+            Report,
+            ControllerAction,
+            Access_denied
         }
 
 
@@ -38,23 +41,23 @@ namespace MyManagerCSharp.Log
         {
 
         }
-        
-        public void insert(long userId, LogType tipo)
+
+        public void insert(long userId, string login, LogType tipo)
         {
-            insert(userId, tipo, "", null);
+            insert(userId, login, tipo, "", null, "", "", null,"");
         }
 
-        public void insert(long userId, LogType tipo, System.Net.IPAddress ipAddress)
+        public void insert(long userId, string login, LogType tipo, System.Net.IPAddress ipAddress)
         {
-            insert(userId, tipo, "", ipAddress);
+            insert(userId, login, tipo, "", ipAddress, "", "", null, "");
         }
 
-        public void insert(long userId, LogType tipo, string nota)
+        public void insert(long userId, string login, LogType tipo, string nota)
         {
-            insert(userId, tipo, nota, null);
+            insert(userId, login, tipo, nota, null, "", "", null, "");
         }
 
-        public void insert(long userId, LogType tipo, string nota, System.Net.IPAddress ipAddress)
+        public void insert(long userId, string login, LogType tipo, string nota, System.Net.IPAddress ipAddress, string controller, string action, Guid? sessionId,  string httpMethod)
         {
             string strSQLParametri;
 
@@ -72,11 +75,47 @@ namespace MyManagerCSharp.Log
                 _addParameter(command, "@nota", nota);
             }
 
+            if (!String.IsNullOrEmpty(login))
+            {
+                _strSQL += ",login ";
+                strSQLParametri += ", @LOGIN ";
+                _addParameter(command, "@LOGIN", login);
+            }
+
+            if (!String.IsNullOrEmpty(controller))
+            {
+                _strSQL += ",controller ";
+                strSQLParametri += ", @CONTROLLER ";
+                _addParameter(command, "@CONTROLLER", controller);
+            }
+
+            if (!String.IsNullOrEmpty(action))
+            {
+                _strSQL += ",action ";
+                strSQLParametri += ", @ACTION ";
+                _addParameter(command, "@ACTION", action);
+            }
+
+            if (!String.IsNullOrEmpty(httpMethod))
+            {
+                _strSQL += ",http_method ";
+                strSQLParametri += ", @HTTP_METHOD ";
+                _addParameter(command, "@HTTP_METHOD", httpMethod);
+            }
+            
+
             if (ipAddress != null)
             {
                 _strSQL += ",ip_address ";
                 strSQLParametri += ", @IP ";
-                _addParameter(command, "@IP", ipAddress.ToString() );
+                _addParameter(command, "@IP", ipAddress.ToString());
+            }
+
+            if (sessionId != null)
+            {
+                _strSQL += ",session_id ";
+                strSQLParametri += ", @SESSION_ID ";
+                _addParameter(command, "@SESSION_ID", sessionId);
             }
 
             command.CommandText = _strSQL + " ) " + strSQLParametri + " )";
@@ -88,7 +127,7 @@ namespace MyManagerCSharp.Log
 
 
 
-       
+
 
 
     }

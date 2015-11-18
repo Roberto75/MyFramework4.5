@@ -12,6 +12,10 @@ namespace MyManagerCSharp.Models
         public string tipo { get; set; }
 
 
+        public MyGroupSmall()
+        {
+
+        }
         public MyGroupSmall(System.Data.DataRow row)
         {
             gruppoId = long.Parse(row["gruppo_id"].ToString());

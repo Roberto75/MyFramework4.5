@@ -39,16 +39,56 @@ namespace MyManagerCSharp.Alert
             return risultato;
         }
 
-        public List<MyManagerCSharp.Alert.Models.MyAlert> getMyAlert(long userId)
+
+        public MyManagerCSharp.Alert.Models.MyAlert getAlertByUser(long userId, string alertName, double? valoreMinimo)
+        {
+            System.Data.Common.DbCommand command;
+            command = _connection.CreateCommand();
+
+            _strSQL = "SELECT  t1.*  " +
+                " from MyAlert as t1  " +
+                " join MyAlert_Utente as t2 on t1.id = t2.alert_id " +
+                " where t2.USER_ID =  " + userId + " AND  t1.nome = @NOME AND t2.valore_minimo >= @VALORE ";
+            
+            command.CommandText = _strSQL;
+
+            _addParameter(command, "@NOME", alertName);
+
+            if (valoreMinimo == null)
+            {
+                _addParameter(command, "@VALORE", 0);
+            }
+            else
+            {
+                _addParameter(command, "@VALORE", valoreMinimo.Value);
+            }
+
+            _dt = _fillDataTable(command);
+
+            if (_dt.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            if (_dt.Rows.Count > 1)
+            {
+                throw new ApplicationException("ALERT > 1");
+            }
+
+            MyManagerCSharp.Alert.Models.MyAlert risultato;
+            risultato = new MyManagerCSharp.Alert.Models.MyAlert(_dt.Rows[0]);
+
+            return risultato;
+        }
+        
+        public List<MyManagerCSharp.Alert.Models.MyAlert> getMyAlertV2(long userId)
         {
             List<MyManagerCSharp.Alert.Models.MyAlert> risultato = new List<Models.MyAlert>();
 
-            _strSQL = "SELECT t1.* " +
-                        " from MyAlert as t1 " +
-                        " join MyAlert_Utente as t2 on t1.id = t2.alert_id " +
-                        " where t2.user_id = " + userId;
-
-            _strSQL += "ORDER BY t1.DESCRIZIONE";
+            _strSQL = "SELECT  t2.id as is_selected ,  t2.valore_minimo, t1.*  " +
+                " from MyAlert as t1 " +
+                " left  join MyAlert_Utente as t2 on t1.id = t2.alert_id and  t2.user_id = " + userId +
+                " ORDER BY t1.DESCRIZIONE ";
 
             _dt = _fillDataTable(_strSQL);
 
@@ -59,6 +99,7 @@ namespace MyManagerCSharp.Alert
 
             return risultato;
         }
+        
 
         public bool update(IEnumerable<Models.MyAlert> alerts, long userId)
         {
@@ -72,7 +113,10 @@ namespace MyManagerCSharp.Alert
                 foreach (Models.MyAlert a in alerts)
                 {
                     Debug.WriteLine("Alert: " + a.id);
-                    add( userId, a.id);
+                    if (a.isSelected)
+                    {
+                        add(userId, a.id, a.valoreMinimo);
+                    }
                 }
 
                 _transactionCommit();
@@ -85,23 +129,46 @@ namespace MyManagerCSharp.Alert
             }
         }
 
-        public bool add(long userId, long alertId)
+        public bool add(long userId, long alertId, double? valoreMinimo)
         {
-            _strSQL = "INSERT INTO MyAlert_Utente ( date_added,  alert_id, user_id ) VALUES ( GetDate() , " + alertId + "," + userId + ")";
+            System.Data.Common.DbCommand command;
+            command = _connection.CreateCommand();
 
-            _executeNoQuery(_strSQL);
+            if (valoreMinimo != null)
+            {
+                _strSQL = "INSERT INTO MyAlert_Utente ( date_added,  alert_id, user_id, valore_minimo ) VALUES ( GetDate() , " + alertId + "," + userId + ", @SEVERITY )";
+                _addParameter(command, "@SEVERITY", valoreMinimo.Value);
+            }
+            else
+            {
+                _strSQL = "INSERT INTO MyAlert_Utente ( date_added,  alert_id, user_id ) VALUES ( GetDate() , " + alertId + "," + userId + ")";
+            }
+
+            command.CommandText = _strSQL;
+
+            _executeNoQuery(command);
             return true;
         }
-        
-        public List<MyManagerCSharp.Models.MyUserSmall> getUsers(long alertId)
+
+        public List<MyManagerCSharp.Models.MyUserSmall> getUsers(long alertId, double? valoreMinimo)
         {
+            System.Data.Common.DbCommand command;
+            command = _connection.CreateCommand();
 
             _strSQL = "SELECT DISTINCT " + SQL_SELECT_UTENTI_SMALL +
                        " FROM MyAlert_Utente as t1 " +
                        " join Utente as u on t1.user_id = u.user_id " +
                        " WHERE ALERT_ID = " + alertId;
-                     
-            _dt = _fillDataTable(_strSQL);
+
+            if (valoreMinimo != null)
+            {
+                _strSQL += " AND t1.valore_minimo >= @VALORE ";
+                _addParameter(command, "@VALORE", valoreMinimo);
+            }
+
+            command.CommandText = _strSQL;
+
+            _dt = _fillDataTable(command);
 
             List<MyManagerCSharp.Models.MyUserSmall> risultato = new List<MyManagerCSharp.Models.MyUserSmall>();
 

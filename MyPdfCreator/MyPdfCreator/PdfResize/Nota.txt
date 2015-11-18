@@ -1,0 +1,3 @@
+﻿https://fossies.org/dox/PDFCreator-2_1_2-source/dir_1223f1539dca5b9434e9f642273b42c4.html
+
+http://www.pdfforge.org/pdfcreator/manual/compression

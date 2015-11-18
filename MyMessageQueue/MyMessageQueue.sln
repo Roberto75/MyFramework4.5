@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMessageQueueDataModel", "MyMessageQueueManager\MyMessageQueueDataModel.csproj", "{650D5A4E-8DAB-4332-8219-4449DFB82F7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{21A3AD1D-8A21-4B37-A5A3-E4CAD471C917}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyManagerCSharp", "..\MyManagerCSharp\MyManagerCSharp.csproj", "{1CFB1797-36C1-4887-B980-747FCC81D6A1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{3B018F74-920C-4D7F-9540-CB0EC4D91D0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendEmail", "SendEmail\SendEmail.csproj", "{8FBCBABE-43AC-45AF-B31E-BD7F92D06065}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendFax", "SendFax\SendFax.csproj", "{218D8AD8-A5D5-47D1-BC25-25EECA72A649}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{650D5A4E-8DAB-4332-8219-4449DFB82F7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{650D5A4E-8DAB-4332-8219-4449DFB82F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{650D5A4E-8DAB-4332-8219-4449DFB82F7B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{650D5A4E-8DAB-4332-8219-4449DFB82F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{650D5A4E-8DAB-4332-8219-4449DFB82F7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{650D5A4E-8DAB-4332-8219-4449DFB82F7B}.Release|x86.ActiveCfg = Release|Any CPU
+		{21A3AD1D-8A21-4B37-A5A3-E4CAD471C917}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A3AD1D-8A21-4B37-A5A3-E4CAD471C917}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A3AD1D-8A21-4B37-A5A3-E4CAD471C917}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{21A3AD1D-8A21-4B37-A5A3-E4CAD471C917}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A3AD1D-8A21-4B37-A5A3-E4CAD471C917}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A3AD1D-8A21-4B37-A5A3-E4CAD471C917}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CFB1797-36C1-4887-B980-747FCC81D6A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CFB1797-36C1-4887-B980-747FCC81D6A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CFB1797-36C1-4887-B980-747FCC81D6A1}.Debug|x86.ActiveCfg = Debug|x86
+		{1CFB1797-36C1-4887-B980-747FCC81D6A1}.Debug|x86.Build.0 = Debug|x86
+		{1CFB1797-36C1-4887-B980-747FCC81D6A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CFB1797-36C1-4887-B980-747FCC81D6A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CFB1797-36C1-4887-B980-747FCC81D6A1}.Release|x86.ActiveCfg = Release|x86
+		{1CFB1797-36C1-4887-B980-747FCC81D6A1}.Release|x86.Build.0 = Release|x86
+		{8FBCBABE-43AC-45AF-B31E-BD7F92D06065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FBCBABE-43AC-45AF-B31E-BD7F92D06065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FBCBABE-43AC-45AF-B31E-BD7F92D06065}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8FBCBABE-43AC-45AF-B31E-BD7F92D06065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FBCBABE-43AC-45AF-B31E-BD7F92D06065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FBCBABE-43AC-45AF-B31E-BD7F92D06065}.Release|x86.ActiveCfg = Release|Any CPU
+		{218D8AD8-A5D5-47D1-BC25-25EECA72A649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{218D8AD8-A5D5-47D1-BC25-25EECA72A649}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{218D8AD8-A5D5-47D1-BC25-25EECA72A649}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{218D8AD8-A5D5-47D1-BC25-25EECA72A649}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{218D8AD8-A5D5-47D1-BC25-25EECA72A649}.Release|Any CPU.Build.0 = Release|Any CPU
+		{218D8AD8-A5D5-47D1-BC25-25EECA72A649}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8FBCBABE-43AC-45AF-B31E-BD7F92D06065} = {3B018F74-920C-4D7F-9540-CB0EC4D91D0C}
+		{218D8AD8-A5D5-47D1-BC25-25EECA72A649} = {3B018F74-920C-4D7F-9540-CB0EC4D91D0C}
+	EndGlobalSection
+EndGlobal
