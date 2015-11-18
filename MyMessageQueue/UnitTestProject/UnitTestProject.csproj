@@ -61,9 +61,9 @@
       <Project>{1cfb1797-36c1-4887-b980-747fcc81d6a1}</Project>
       <Name>MyManagerCSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MyMessageQueueManager\MyMessageQueueDataModel.csproj">
+    <ProjectReference Include="..\MyMessageQueueManager\MyMessageQueue.csproj">
       <Project>{650d5a4e-8dab-4332-8219-4449dfb82f7b}</Project>
-      <Name>MyMessageQueueDataModel</Name>
+      <Name>MyMessageQueue</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
