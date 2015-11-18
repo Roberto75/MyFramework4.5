@@ -60,7 +60,7 @@
                 Dim f As New FormExcel()
                 f.Owner = Me
                 f._setTitolo(node.Text)
-                f._init(Me._connection, Me.MyStatusBar, Me.MyProgressBar)
+                f._init(Nothing, Me.MyStatusBar, Me.MyProgressBar)
                 Me._addTabPage(f._getTabPage())
 
                 'Case "nTestPDF"

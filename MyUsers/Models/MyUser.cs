@@ -14,9 +14,6 @@ namespace MyUsers.Models
             Lista,
             Full
         }
-       
-   
-		
         public string password { get; set; }
 
         // Foreign key
@@ -24,15 +21,16 @@ namespace MyUsers.Models
         public virtual MyCustomer Customer { get; set; }
 
         // Foreign key
-        public string profiloId { get; set; }
-        public virtual MyProfile Profilo { get; set; }
+        //public string profiloId { get; set; }
+        //public virtual MyProfile Profilo { get; set; }
 
+        public virtual List<MyProfile> Profili { get; set; }
         public virtual List<MyGroup> Gruppi { get; set; }
         public virtual List<MyRole> Ruoli { get; set; }
-        
+
 
         public string codiceFiscale { get; set; }
-       
+
         public string telefono { get; set; }
         public string mobile { get; set; }
         public string indirizzo { get; set; }
@@ -50,6 +48,7 @@ namespace MyUsers.Models
         public DateTime? dateAdded { get; set; }
         public DateTime? dateModified { get; set; }
         public DateTime? dateLastLogin { get; set; }
+        public DateTime? datePreviousLogin { get; set; }
         public DateTime? dateExpire { get; set; }
         public DateTime? dateExpirePassword { get; set; }
         public DateTime? dateModifiedPassword { get; set; }
@@ -74,7 +73,7 @@ namespace MyUsers.Models
         public int? dayExpirePassword { get; set; }
 
         //*** Active Directory
-       // public Guid? uidAD { get; set; }
+        // public Guid? uidAD { get; set; }
         public System.Security.Principal.SecurityIdentifier SID { get; set; }
 
         public MyUser()
@@ -91,7 +90,28 @@ namespace MyUsers.Models
             cognome = row["cognome"].ToString();
             email = row["email"].ToString();
             dateAdded = (row["date_added"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["date_added"].ToString());
-            dateLastLogin = (row["date_last_login"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["date_last_login"].ToString());
+
+            if (row["date_last_login"] is DBNull)
+            {
+                dateLastLogin = null;
+            }
+            else
+            {
+                dateLastLogin = DateTime.Parse(row["date_last_login"].ToString());
+            }
+
+            if (row["date_previous_login"] is DBNull)
+            {
+                datePreviousLogin = null;
+            }
+            else
+            {
+                datePreviousLogin = DateTime.Parse(row["date_previous_login"].ToString());
+            }
+
+
+
+
             customerId = (row["customer_id"] is DBNull) ? -1 : long.Parse(row["customer_id"].ToString());
 
             if (row["is_enabled"] is DBNull)
@@ -116,7 +136,7 @@ namespace MyUsers.Models
 
             if (mode == SelectFileds.Full)
             {
-                profiloId = (row["profilo_Id"] is DBNull) ? "" : row["profilo_Id"].ToString();
+                // profiloId = (row["profilo_Id"] is DBNull) ? "" : row["profilo_Id"].ToString();
                 codiceFiscale = (row["codice_fiscale"] is DBNull) ? "" : row["codice_fiscale"].ToString();
                 telefono = (row["telefono"] is DBNull) ? "" : row["telefono"].ToString();
                 mobile = (row["mobile"] is DBNull) ? "" : row["mobile"].ToString();

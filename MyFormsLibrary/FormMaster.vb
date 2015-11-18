@@ -2,7 +2,7 @@
 
     Public Event MyMenuTopSubItemOnClick(ByVal item As System.Windows.Forms.ToolStripMenuItem)
 
-    Protected _connection As Data.Common.DbConnection
+    Private _connection As Data.Common.DbConnection
     '*** LOGGING ***
     Private _pathFileLogMain As String
     Private _pathFileLogFileProcessed As String

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPdfCreator", "MyPdfCreator\MyPdfCreator.csproj", "{89C05CEC-2573-4330-A6B8-94CE359E820C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfResize", "PdfResize\PdfResize.csproj", "{28576488-090D-4D00-B8A7-6B3F48A92452}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPdfCreator", "MyPdfCreator\MyPdfCreator.csproj", "{89C05CEC-2573-4330-A6B8-94CE359E820C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{28576488-090D-4D00-B8A7-6B3F48A92452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{28576488-090D-4D00-B8A7-6B3F48A92452}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28576488-090D-4D00-B8A7-6B3F48A92452}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28576488-090D-4D00-B8A7-6B3F48A92452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

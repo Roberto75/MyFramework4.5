@@ -10,6 +10,7 @@ namespace MyUsers.Models
 {
 
    //[TypeConverter(typeof(MyGroupConverter))]
+    //[NotMapped]
     public class MyGroup
     {
         [Key]

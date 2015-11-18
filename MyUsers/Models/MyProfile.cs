@@ -14,9 +14,9 @@ namespace MyUsers.Models
         public DateTime dateAdded { get; set; }
         //public virtual ICollection<MyUser> Utenti { get; set; }
 
-        public MyProfile()
+        public MyProfile( string id)
         {
-
+            this.profiloId = id;
         }
 
         public MyProfile(System.Data.DataRow row)

@@ -21,7 +21,7 @@ namespace MyUsers.Reports
         }
 
 
-        public MyManagerCSharp.RGraph.Models.RGraphModel getLoginByDate(string reportId, MyManagerCSharp.Log.LogManager.Days days)
+        public MyManagerCSharp.RGraph.Models.RGraphModel getLoginByDate(string reportId, MyManagerCSharp.Log.LogManager.Days days, long userId)
         {
             _strSQL = "select count(*) as valore, CAST(date_added AS DATE)  as label "
                 + " from MyLogUSer as t1 ";
@@ -29,6 +29,11 @@ namespace MyUsers.Reports
             _strSQL += " WHERE  (t1.tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' or  t1.tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "' )";
 
             _strSQL += getWhereConditionByDate("date_added", days);
+
+            if (userId != -1)
+            {
+                _strSQL += " AND t1.user_id = " + userId;
+            }
 
             _strSQL += " GROUP BY CAST(date_added AS DATE) "
                 + " ORDER BY CAST(date_added AS DATE) ";
@@ -39,10 +44,25 @@ namespace MyUsers.Reports
             report.Data = _fillDataTable(_strSQL);
             report.Tipo = ReportType.Line;
             report.Label = LabelType.LabelAndValore;
-            report.Titolo = "Login " + days.ToString().Replace("_", " ");
+            report.Titolo = "Numero di accessi eseguiti " + days.ToString().Replace("_", " ");
             //report.Colors = PaletteType.Palette01;
 
             //ShowLabels = true;
+
+            if (days >= Days.Primo_semestre_anno_corrente)
+            {
+                report.Width = "1000px";
+            }
+            else
+            {
+                report.Width = "600px";
+            }
+
+            
+            report.Height = "500px";
+
+            //report.ShowFiltroData = true;
+            report.EnableOnClick = true;
 
             getChart(report, false, false);
             //Debug.WriteLine("html" + report.Html);
@@ -75,7 +95,7 @@ namespace MyUsers.Reports
             _strSQL += getWhereConditionByDate("t1.date_added", days);
 
             _strSQL += " GROUP BY  my_login " +
-               " order by my_login";
+               " order by count(*) desc";
 
             MyManagerCSharp.RGraph.Models.RGraphModel report = new MyManagerCSharp.RGraph.Models.RGraphModel();
 
@@ -84,11 +104,21 @@ namespace MyUsers.Reports
 
             report.Tipo = ReportType.HBar;
             report.Label = LabelType.LabelAndValore;
-            report.Titolo = "Top " + top + " " + loginType.ToString();
+            report.Titolo = "I primi " + top + "  utenti che hanno eseguito più accessi";
+
+            if (loginType == MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile)
+            {
+                report.Titolo += " da dispositivi Mobile";
+            }
+
+            report.Titolo += " ( " + days.ToString().Replace("_", " ") + " )";
+
             report.Colors = PaletteType.Palette01;
             // ShowLabels = true;
 
             report.Settings.Add(String.Format("{0}.set('chart.gutter.left', {1});", report.Id, 150));
+            report.Width = "700px";
+            report.Height = "400px";
 
             getChart(report, false, false);
 
@@ -101,7 +131,7 @@ namespace MyUsers.Reports
         public MyManagerCSharp.RGraph.Models.RGraphModel getLoginSuccessAndFailure(string reportId, int top, MyManagerCSharp.Log.LogManager.Days days)
         {
             _strSQL = "SELECT TOP " + top + " MY_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE FROM UTENTE WHERE ( LOGIN_SUCCESS > 0 Or LOGIN_FAILURE > 0 ) AND (DATE_DELETED is null) ";
-            
+
             //_strSQL +=" ORDER BY MY_LOGIN ";
             _strSQL += " ORDER BY (LOGIN_SUCCESS +  LOGIN_FAILURE) desc ";
 
@@ -115,14 +145,71 @@ namespace MyUsers.Reports
             report.Label = LabelType.LabelAndValore;
             report.Titolo = "Last " + top + " login";
             report.Colors = PaletteType.Palette01;
-         
+
+
+            getChart(report, true, false);
+            Debug.WriteLine("html" + report.Html);
+            return report;
+        }
+
+
+
+
+        public System.Data.DataTable getLoginByDayAsTable(DateTime dataDiRiferimento, long userId)
+        {
+
+            _strSQL = "SELECT t1.*, t2.my_login ";
+
+            if (userId != -1)
+            {
+                _strSQL = "SELECT t1.date_added as [Data], t1.ip_address as IP";
+            }
+
+            _strSQL += " FROM MyLogUser as t1 " +
+                    " left join Utente as t2 on t1.user_id = t2.user_id ";
+
+            _strSQL += " WHERE (tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' OR tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "') ";
+
+            _strSQL += String.Format("AND ( DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3} ) ", "t1.date_added", dataDiRiferimento.Day, dataDiRiferimento.Month, dataDiRiferimento.Year);
+
+
+            if (userId != -1)
+            {
+                _strSQL += " AND t1.user_id = " + userId;
+            }
+
+
+            _strSQL += " ORDER BY t1.date_added asc ";
+
+            return _fillDataTable(_strSQL);
+        }
+
+        public MyManagerCSharp.RGraph.Models.RGraphModel getLoginByDay(string reportId, DateTime dataDiRiferimento)
+        {
+            _strSQL = "SELECT * FROM MyLogUser WHERE (tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' OR tipo = " + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "') ";
+
+            _strSQL += String.Format("AND ( DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3} ) ", "date_added", dataDiRiferimento.Day, dataDiRiferimento.Month, dataDiRiferimento.Year);
+
+            _strSQL += " ORDER BY date_added asc";
+
+
+            MyManagerCSharp.RGraph.Models.RGraphModel report = new MyManagerCSharp.RGraph.Models.RGraphModel();
+
+            report.Id = reportId;
+            report.Data = _fillDataTable(_strSQL);
+
+            report.Tipo = ReportType.HBar;
+            report.Label = LabelType.LabelAndValore;
+            report.Titolo = "";
+            report.Colors = PaletteType.Palette01;
+
 
             getChart(report, true, false);
             Debug.WriteLine("html" + report.Html);
             return report;
 
 
-            
+
         }
 
 

@@ -8,6 +8,7 @@ namespace MyUsers.Models
     public class SearchGroups : PagedGroups
     {
         public MyGroup filter { get; set; }
+        public bool hideGroupAdministrators { get; set; }
         public List<MyManagerCSharp.Models.MyItem> ListaTipi { get; set; }
 
         public SearchGroups()

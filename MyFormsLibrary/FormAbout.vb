@@ -154,7 +154,7 @@ Public Class FormAbout
         ListBox1.Items.Clear()
 
         Dim tmp As New ArrayList
-        Dim Conf1 As System.Configuration.ConnectionStringSettingsCollection = System.Configuration.ConfigurationManager.ConnectionStrings
+        Dim Conf1 As Configuration.ConnectionStringSettingsCollection = System.Configuration.ConfigurationManager.ConnectionStrings
 
         ListBox1.DisplayMember = "name"
 
@@ -170,7 +170,7 @@ Public Class FormAbout
     End Sub
 
     Private Sub ListBox1_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ListBox1.SelectedIndexChanged
-        Dim Confx As System.Configuration.ConnectionStringSettings = CType(ListBox1.SelectedItem, System.Configuration.ConnectionStringSettings)
+        Dim Confx As Configuration.ConnectionStringSettings = CType(ListBox1.SelectedItem, System.Configuration.ConnectionStringSettings)
 
         Dim pgItemDBConn1 As New pgItemDBConn(Confx.Name, _
                                               Confx.ProviderName, _

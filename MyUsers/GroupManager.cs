@@ -20,6 +20,16 @@ namespace MyUsers
 
         }
 
+        public List<Models.MyGroup> getListWithoutAdministrators()
+        {
+            MyUsers.Models.SearchGroups model = new Models.SearchGroups();
+            model.hideGroupAdministrators = true;
+
+            getList(model);
+
+            return model.Gruppi;
+        }
+
         public List<Models.MyGroup> getList()
         {
             MyUsers.Models.SearchGroups model = new Models.SearchGroups();
@@ -35,12 +45,18 @@ namespace MyUsers
             List<Models.MyGroup> risultato;
             risultato = new List<Models.MyGroup>();
 
-            _strSQL = "SELECT * FROM GRUPPO " ;
+            _strSQL = "SELECT * FROM GRUPPO  WHERE (1=1) " ;
             
             if (model.filter != null && !String.IsNullOrEmpty (model.filter.tipo )){
-                _strSQL += " WHERE tipo_id = '" + model.filter.tipo  + "'";
+                _strSQL += " AND tipo_id = '" + model.filter.tipo  + "'";
             }
-            
+
+            if (model.hideGroupAdministrators)
+            {
+                _strSQL += " AND nome <> 'Administrators'";
+
+            }
+
             _strSQL += " order by nome";
 
             _dt = _fillDataTable(_strSQL);
@@ -284,16 +300,23 @@ namespace MyUsers
         }
 
 
+
+       
+
         public bool setGroups(Models.MyUser u)
         {
-
             _strSQL = "select t2.* from UtenteGruppo as t1 left join gruppo  as t2 on (t1.gruppo_id = t2.gruppo_id) WHERE t1.user_id = " + u.userId;
+
+
+            //if (hideAdministrators)
+            //{
+            //    _strSQL += " AND T2.NOME <> 'Administrators' ";
+
+            //}
 
             _dt = _fillDataTable(_strSQL);
 
-
             List<Models.MyGroup> listaGruppi = new List<Models.MyGroup>();
-
             Models.MyGroup g;
 
             foreach (DataRow row in _dt.Rows)
@@ -302,9 +325,7 @@ namespace MyUsers
                 listaGruppi.Add(g);
             }
 
-
             u.Gruppi = listaGruppi;
-
             return true;
         }
 

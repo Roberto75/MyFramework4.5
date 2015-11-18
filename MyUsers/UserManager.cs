@@ -11,7 +11,7 @@ namespace MyUsers
     public class UserManager : ManagerDB
     {
 
-        public const string _sqlElencoUtenti = "SELECT  t1.user_id, t1.my_login, t1.nome, t1.cognome , t1.email,  t1.date_added, t1.date_last_login, t1.is_enabled, t1.customer_id , t1.sid ";
+        public const string _sqlElencoUtenti = "SELECT  t1.user_id, t1.my_login, t1.nome, t1.cognome , t1.email,  t1.date_added,  t1.date_previous_login, t1.date_last_login, t1.is_enabled, t1.customer_id , t1.sid ";
 
 
         public UserManager(string connectionName)
@@ -245,7 +245,7 @@ namespace MyUsers
 
         public void addLoginSucces(long userId, string ip)
         {
-            _strSQL = "update UTENTE set date_last_login= GetDate() , login_success= login_success +1  ";
+            _strSQL = "update UTENTE set date_last_login= GetDate() , login_success= login_success +1 , [date_previous_login] = date_last_login ";
 
             if (!String.IsNullOrEmpty(ip))
             {
@@ -349,6 +349,39 @@ namespace MyUsers
         }
 
 
+        public List<Models.MyRole> getRoles()
+        {
+            List<Models.MyRole> risultato = new List<Models.MyRole>();
+            _strSQL = "select t1.ruolo_id , t1.nome from ruolo as t1  order by nome";
+
+            _dt = _fillDataTable(_strSQL);
+            Models.MyRole ruolo;
+            foreach (DataRow row in _dt.Rows)
+            {
+                ruolo = new Models.MyRole(row);
+                risultato.Add(ruolo);
+            }
+
+            return risultato;
+        }
+
+
+        public bool updateProfili(IEnumerable<Models.MyProfile> profili, long userId)
+        {
+            _strSQL = "DELETE FROM  UtenteProfilo WHERE user_id = " + userId;
+            _executeNoQuery(_strSQL);
+
+            foreach (Models.MyProfile p in profili)
+            {
+                _strSQL = "INSERT INTO UtenteProfilo ( date_added,  profilo_id, user_id ) VALUES ( GetDate() , '" + p.profiloId + "'," + userId + ")";
+                _executeNoQuery(_strSQL);
+            }
+
+            return true;
+        }
+
+
+
         public string getRoles(System.Security.Principal.SecurityIdentifier sid)
         {
             _strSQL = "select t1.ruolo_id from ruolo as t1 " +
@@ -389,11 +422,20 @@ namespace MyUsers
         }
 
 
-
-        public string getProfiloId(long userId)
+        public string getProfili(long userId)
         {
-            _strSQL = "SELECT PROFILO_ID FROM UTENTE WHERE USER_ID = " + userId;
-            return _executeScalar(_strSQL);
+            _strSQL = "select t1.profilo_id from UtenteProfilo as t1  where t1.user_id = " + userId;
+
+            _dt = _fillDataTable(_strSQL);
+
+            string profili;
+            profili = "";
+            foreach (DataRow row in _dt.Rows)
+            {
+                profili += row[0] + ";";
+            }
+
+            return profili;
         }
 
         public string getEmail(long userId)
@@ -458,7 +500,8 @@ namespace MyUsers
             {
                 _strSQL += ",MY_PASSWORD";
                 strSQLParametri += ", @MY_PASSWORD ";
-                _addParameter(command, "@MY_PASSWORD", u.password);
+                //_addParameter(command, "@MY_PASSWORD", u.password);
+                _addParameter(command, "@MY_PASSWORD", MyManagerCSharp.SecurityManager.getMD5Hash(u.password));
             }
 
             if (!String.IsNullOrEmpty(u.indirizzo))
@@ -602,17 +645,17 @@ namespace MyUsers
                 _addParameter(command, "@COMUNE_ID", u.comuneId);
             }
 
-            if (!String.IsNullOrEmpty(u.profiloId))
-            {
-                _strSQL += ", PROFILO_ID ";
-                strSQLParametri += ", @PROFILO_ID ";
-                _addParameter(command, "@PROFILO_ID", u.profiloId);
-            }
-            else
-            {
-                _strSQL += ", PROFILO_ID ";
-                strSQLParametri += ", NULL ";
-            }
+            //if (!String.IsNullOrEmpty(u.profiloId))
+            //{
+            //    _strSQL += ", PROFILO_ID ";
+            //    strSQLParametri += ", @PROFILO_ID ";
+            //    _addParameter(command, "@PROFILO_ID", u.profiloId);
+            //}
+            //else
+            //{
+            //    _strSQL += ", PROFILO_ID ";
+            //    strSQLParametri += ", NULL ";
+            //}
 
             if (u.customerId != null && u.customerId != -1)
             {
@@ -651,14 +694,21 @@ namespace MyUsers
             _strSQL = "DELETE FROM UtenteGruppo WHERE user_id = " + userId;
             _executeNoQuery(_strSQL);
 
-            _strSQL = "DELETE FROM UTENTE WHERE user_id = " + userId;
 
+            _strSQL = "DELETE FROM UtenteProfilo WHERE user_id = " + userId;
+            _executeNoQuery(_strSQL);
+
+            //Cancello l'integrità referenziale sull DB tra la tabella dei Logs e la tabella Utente in modo da poter conservare i log degli utenti eliminati
+            //_strSQL = "DELETE FROM MyLogUser WHERE user_id = " + userId;
+            //_executeNoQuery(_strSQL);
+
+            _strSQL = "DELETE FROM UTENTE WHERE user_id = " + userId;
             return _executeNoQuery(_strSQL) == 1;
         }
 
 
 
-        public List<Models.MyProfile> getProfileList()
+        public List<Models.MyProfile> getProfili()
         {
 
             List<Models.MyProfile> risultato;
@@ -704,19 +754,36 @@ namespace MyUsers
 
         }
 
-        public bool setProfilo(Models.MyUser u)
+        public bool setProfili(Models.MyUser u)
         {
 
-            Models.MyProfile p;
-            p = getProfilo(u.profiloId);
+            _strSQL = "select t2.* from UtenteProfilo as t1 left join profilo  as t2 on (t1.profilo_id = t2.profilo_id) WHERE t1.user_id = " + u.userId;
 
-            if (p != null)
+            _dt = _fillDataTable(_strSQL);
+
+
+            List<Models.MyProfile> listaProfili = new List<Models.MyProfile>();
+
+            Models.MyProfile p;
+
+            foreach (DataRow row in _dt.Rows)
             {
-                u.Profilo = p;
+                p = new Models.MyProfile(row);
+                listaProfili.Add(p);
             }
+
+
+            u.Profili = listaProfili;
 
             return true;
         }
+
+
+        //public bool setGroupsWithoutAdministrators(Models.MyUser u)
+        //{
+        //    GroupManager gManager = new GroupManager(this._connection);
+        //    return gManager.setGroups(u, true);
+        //}
 
 
         public bool setGroups(Models.MyUser u)
@@ -731,6 +798,7 @@ namespace MyUsers
             GroupManager gManager = new GroupManager(this._connection);
             return gManager.setRoles(u);
         }
+
 
 
         public bool update(Models.MyUser u)
@@ -862,15 +930,15 @@ namespace MyUsers
             }
 
 
-            if (!String.IsNullOrEmpty(u.profiloId))
-            {
-                _strSQL += ", PROFILO_ID = @PROFILO_ID ";
-                _addParameter(command, "@PROFILO_ID", u.profiloId);
-            }
-            else
-            {
-                _strSQL += ", PROFILO_ID = NULL ";
-            }
+            //if (!String.IsNullOrEmpty(u.profiloId))
+            //{
+            //    _strSQL += ", PROFILO_ID = @PROFILO_ID ";
+            //    _addParameter(command, "@PROFILO_ID", u.profiloId);
+            //}
+            //else
+            //{
+            //    _strSQL += ", PROFILO_ID = NULL ";
+            //}
 
 
             if (u.dataDiNascita != null && u.dataDiNascita != DateTime.MinValue)
@@ -896,6 +964,9 @@ namespace MyUsers
 
             return true;
         }
+
+
+
 
 
         public long getUserIdFromLogin(string login)
@@ -938,6 +1009,12 @@ namespace MyUsers
             return long.Parse(_dt.Rows[0]["USER_ID"].ToString());
         }
 
+
+        public string getLogin(long userId)
+        {
+            _strSQL = "select MY_LOGIN  from  UTENTE  where USER_ID = " + userId;
+            return _executeScalar(_strSQL);
+        }
 
 
 
@@ -1025,6 +1102,27 @@ namespace MyUsers
             return true;
         }
 
+
+
+        public bool updateIsEnabled(long userId, bool isEnabled)
+        {
+            _strSQL = "UPDATE UTENTE SET IS_ENABLED = @IS_ENABLED " +
+                                                   ", DATE_MODIFIED = GetDate() " +
+                                                    " WHERE USER_ID=" + userId;
+
+            System.Data.Common.DbCommand command;
+            command = _connection.CreateCommand();
+            command.CommandText = _strSQL;
+
+            _addParameter(command, "@IS_ENABLED", isEnabled);
+
+            _executeNoQuery(command);
+
+            // Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+            //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.UpdatePassword)
+            return true;
+        }
+
         public bool updateEmail(long userId, string email)
         {
             _strSQL = "UPDATE UTENTE SET EMAIL = @EMAIL " +
@@ -1035,7 +1133,14 @@ namespace MyUsers
             command = _connection.CreateCommand();
             command.CommandText = _strSQL;
 
-            _addParameter(command, "@EMAIL", email.Trim().ToLower());
+            if (String.IsNullOrEmpty(email))
+            {
+                _addParameter(command, "@EMAIL", DBNull.Value);
+            }
+            else
+            {
+                _addParameter(command, "@EMAIL", email.Trim().ToLower());
+            }
 
             _executeNoQuery(command);
 
@@ -1076,9 +1181,7 @@ namespace MyUsers
 
             _addParameter(command, "@VALORE", "%" + valore + "%");
 
-
             _dt = _fillDataTable(command);
-
 
             MyManagerCSharp.Models.MyItem item;
             foreach (DataRow row in _dt.Rows)
@@ -1088,13 +1191,10 @@ namespace MyUsers
                 risultato.Add(item);
             }
 
-
-
             return risultato;
         }
 
 
     }
-
 
 }
