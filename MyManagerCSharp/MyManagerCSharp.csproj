@@ -159,6 +159,9 @@
     <Compile Include="Models\MySeries.cs" />
     <Compile Include="Models\MyUserSmall.cs" />
     <Compile Include="MyJQueryMobile.cs" />
+    <Compile Include="MyObject\MyContatto.cs" />
+    <Compile Include="MyObject\MyEmail.cs" />
+    <Compile Include="MyObject\MyNote.cs" />
     <Compile Include="ReflectionManager.cs" />
     <Compile Include="RGraph\Models\RGraphMeter.cs" />
     <Compile Include="RGraph\Models\WidgetRGraph.cs" />
