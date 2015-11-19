@@ -6,7 +6,7 @@ using MyManagerCSharp;
 using System.Diagnostics;
 using System.IO.Compression;
 
-namespace MyTasks
+namespace My.Shared.Tasks
 {
     public class MyTaskBase
     {
@@ -933,32 +933,14 @@ namespace MyTasks
             {
                 Console.WriteLine("attach: " + attach.Filename);
 
-                //if (attach.Filename.ToLower().EndsWith(".xml"))
-                //{
                 contaAllegatiScaricati++;
 
                 attachFileName = folderAttachments.FullName + attach.Filename;
 
                 //Rel. 1.0.1.10
                 attach.StoreToFile(attachFileName);
-                //if (attach.IsText)
-                //{
-                //    System.IO.File.WriteAllText(attachFileName, attach.TextContent, Encoding.UTF8);
-                //}
-                //else
-                //{
-                //    System.IO.File.WriteAllBytes(attachFileName, attach.BinaryContent);
-                //}
-                //}
-                //else
-                //{
-                //    messaggio = String.Format("Allegato non nel formato XML: " + attach.Filename);
-                //    _log.warning(messaggio, _uid.ToString(), "", _taskName);
-                //    Console.WriteLine(messaggio);
-                //}
+
             }
-
-
         }
 
     }

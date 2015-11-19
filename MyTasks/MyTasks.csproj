@@ -30,6 +30,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ActiveUp.Net.Common">
+      <HintPath>..\ActiveUp.MailSystem\ActiveUp.Net.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Dns">
+      <HintPath>..\ActiveUp.MailSystem\ActiveUp.Net.Dns.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Imap4">
+      <HintPath>..\ActiveUp.MailSystem\ActiveUp.Net.Imap4.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Mail">
+      <HintPath>..\ActiveUp.MailSystem\ActiveUp.Net.Mail.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Pop3">
+      <HintPath>..\ActiveUp.MailSystem\ActiveUp.Net.Pop3.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Smtp">
+      <HintPath>..\ActiveUp.MailSystem\ActiveUp.Net.Smtp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -46,22 +64,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EarlyWarning\public\Implementazione\Ver2\ActiveUp.Net\Class Library\ActiveUp.Net.Common\ActiveUp.Net.Common.csproj">
-      <Project>{3a83ae95-c23f-48b4-9f1a-ad4b32c37b93}</Project>
-      <Name>ActiveUp.Net.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\EarlyWarning\public\Implementazione\Ver2\ActiveUp.Net\Class Library\ActiveUp.Net.Dns\ActiveUp.Net.Dns.csproj">
-      <Project>{a82ce4dd-9b08-439c-bc28-cb7b2bffa85c}</Project>
-      <Name>ActiveUp.Net.Dns</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\EarlyWarning\public\Implementazione\Ver2\ActiveUp.Net\Class Library\ActiveUp.Net.Imap4\ActiveUp.Net.Imap4.csproj">
-      <Project>{6bee77df-2dd2-41c3-ba16-60e20b1eddcc}</Project>
-      <Name>ActiveUp.Net.Imap4</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\EarlyWarning\public\Implementazione\Ver2\ActiveUp.Net\Class Library\ActiveUp.Net.Pop3\ActiveUp.Net.Pop3.csproj">
-      <Project>{3f01cf20-c49d-44a9-aa57-68f04915fe97}</Project>
-      <Name>ActiveUp.Net.Pop3</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MyManagerCSharp\MyManagerCSharp.csproj">
       <Project>{1cfb1797-36c1-4887-b980-747fcc81d6a1}</Project>
       <Name>MyManagerCSharp</Name>

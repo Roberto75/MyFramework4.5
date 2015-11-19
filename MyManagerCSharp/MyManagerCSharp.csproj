@@ -8,7 +8,7 @@
     <ProjectGuid>{1CFB1797-36C1-4887-B980-747FCC81D6A1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyManagerCSharp</RootNamespace>
+    <RootNamespace>My.Shared</RootNamespace>
     <AssemblyName>MyManagerCSharp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -155,6 +155,7 @@
     <Compile Include="Models\MySeries.cs" />
     <Compile Include="Models\MyUserSmall.cs" />
     <Compile Include="MyJQueryMobile.cs" />
+    <Compile Include="ReflectionManager.cs" />
     <Compile Include="RGraph\Models\RGraphMeter.cs" />
     <Compile Include="RGraph\Models\WidgetRGraph.cs" />
     <Compile Include="Ticket\Models\MyTicketAttachment.cs" />
