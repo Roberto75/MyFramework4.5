@@ -175,15 +175,8 @@
     <Compile Include="Ticket\Models\SearchMyTickets.cs" />
     <Compile Include="MyException.cs" />
     <Compile Include="MyLog.cs" />
-    <Compile Include="SQL\MyObject\MyContatto.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SQL\MyObject\MyEmail.cs" />
     <Compile Include="Models\MyItem.cs" />
     <Compile Include="Log\Models\MyLog.cs" />
-    <Compile Include="SQL\MyObject\MyNote.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MySessionData.cs" />
     <Compile Include="NetworkManager.cs" />
     <Compile Include="PasswordManager.cs" />
@@ -219,14 +212,11 @@
     <None Include="MyKey.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SQL\Create-Alert.sql" />
-    <Content Include="SQL\Create-LogUser.sql" />
-    <Content Include="SQL\Create-Ticket.sql" />
-    <Content Include="SQL\Create-Log.sql" />
     <Content Include="whatsnew.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GoogleChart\Models\" />
+    <Folder Include="SQL\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
