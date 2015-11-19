@@ -10,7 +10,7 @@ using System.IO;
 namespace My.Shared.Tasks
 {
     public class MyTaskBase
-    {
+    { 
         protected MyManagerCSharp.Log.LogManager _log;
         protected string _taskName;
         protected Guid _uid;
