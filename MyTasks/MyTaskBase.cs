@@ -5,6 +5,7 @@ using System.Text;
 using MyManagerCSharp;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.IO;
 
 namespace My.Shared.Tasks
 {
@@ -646,7 +647,11 @@ namespace My.Shared.Tasks
         private string processFolder(System.IO.DirectoryInfo folderXML)
         {
             string messaggio;
-            bool esito;
+            bool esitoSingoloFileXML;
+            bool esitoArchivioZip;
+
+
+
 
             messaggio = String.Format("Inizio elaborazione della folder: {0}", folderXML.FullName);
             _log.info(messaggio, _uid.ToString(), "", _taskName);
@@ -656,7 +661,7 @@ namespace My.Shared.Tasks
             contaAllegatiInseriti = 0;
             contaAllegatiInErrore = 0;
 
-            foreach (System.IO.FileInfo fi in folderXML.GetFiles("*.xml"))
+            foreach (System.IO.FileInfo fi in folderXML.GetFiles("*.*", SearchOption.AllDirectories))
             {
                 contaAllegatiLetti++;
 
@@ -664,33 +669,102 @@ namespace My.Shared.Tasks
                 _log.info(messaggio, _uid.ToString(), fi.Name, _taskName);
                 Console.WriteLine(messaggio);
 
-                contaRecordLetti = 0;
-                contaRecordInseriti = 0;
-                contaRecordInErrore = 0;
-                contaRecordGiaPresenti = 0;
+                List<FileInfo> filesXML = new List<FileInfo>();
+                esitoArchivioZip = true;
 
-
-                esito = processXML(fi);
-
-                if (esito)
+                switch (fi.Extension)
                 {
-                    if (System.IO.File.Exists(folderArchive.FullName + fi.Name))
-                    {
-                        System.IO.File.Delete(folderArchive.FullName + fi.Name);
-                    }
+                    case ".zip":
+                        FileInfo fileZip = fi;
+                        using (System.IO.Compression.ZipArchive archive = System.IO.Compression.ZipFile.OpenRead(fileZip.FullName))
+                        {
+                            foreach (System.IO.Compression.ZipArchiveEntry entry in archive.Entries)
+                            {
+                                entry.ExtractToFile(System.IO.Path.Combine(fileZip.Directory.FullName, entry.Name), true);
+
+                                filesXML.Add(new FileInfo(System.IO.Path.Combine(fileZip.Directory.FullName, entry.Name)));
+                            }
+                        }
+
+                        messaggio = "UNZIP completato con successo: " + fileZip.Name;
+                        _log.info(messaggio, _uid.ToString(), fi.Name, _taskName);
+                        Console.WriteLine(messaggio);
 
 
-                    fi.MoveTo(folderArchive.FullName + fi.Name);
+                        break;
+                    case ".xml":
+                        filesXML.Add(fi);
+                        break;
+                    case "":
+                        //nel caso di CVS ho dei files senza estenzione ... non li sposto!!!
+                        contaAllegatiLetti--;
+                        continue;
+                    default:
+                        //throw new ApplicationException("Task Base: tipo di file non supportato: " + fi.Extension);
+                        messaggio = "Task Base: tipo di file non supportato: " + fi.FullName;
+                        _log.error(messaggio, _uid.ToString(), fi.Name, _taskName);
+                        Console.WriteLine(messaggio);
 
-                    messaggio = String.Format("Elaborazione e archiviazione del file conclusa con successo: {0}", fi.Name);
-                    _log.info(messaggio, _uid.ToString(), fi.Name, _taskName);
-                    Console.WriteLine(messaggio);
-
-                    contaAllegatiInseriti++;
+                        if (System.IO.File.Exists(folderArchive.FullName + fi.Name))
+                        {
+                            System.IO.File.Delete(folderArchive.FullName + fi.Name);
+                        }
+                        contaAllegatiInErrore++;
+                        fi.MoveTo(folderArchive.FullName + "Error\\" + fi.Name);
+                        continue;
+                        
                 }
-                else
+
+
+
+                foreach (FileInfo file in filesXML)
                 {
-                    if (_DebugMoveErrorFileInFolder)
+                    contaRecordLetti = 0;
+                    contaRecordInseriti = 0;
+                    contaRecordInErrore = 0;
+                    contaRecordGiaPresenti = 0;
+
+                    esitoSingoloFileXML = processXML(file);
+
+                    if (esitoSingoloFileXML)
+                    {
+                        if (System.IO.File.Exists(folderArchive.FullName + file.Name))
+                        {
+                            System.IO.File.Delete(folderArchive.FullName + file.Name);
+                        }
+
+                        file.MoveTo(folderArchive.FullName + file.Name);
+
+                        messaggio = String.Format("Elaborazione e archiviazione del file conclusa con successo: {0}", file.Name);
+                        _log.info(messaggio, _uid.ToString(), file.Name, _taskName);
+                        Console.WriteLine(messaggio);
+
+                        contaAllegatiInseriti++;
+                    }
+                    else
+                    {
+                        esitoArchivioZip = false;
+
+                        if (_DebugMoveErrorFileInFolder)
+                        {
+                            if (System.IO.File.Exists(folderArchive.FullName + "Error\\" + file.Name))
+                            {
+                                System.IO.File.Delete(folderArchive.FullName + "Error\\" + file.Name);
+                            }
+
+                            file.MoveTo(folderArchive.FullName + "Error\\" + file.Name);
+                        }
+                        messaggio = String.Format("Elaborazione del file conclusa con errori: {0}", file.Name);
+                        _log.error(messaggio, _uid.ToString(), file.Name, _taskName);
+                        Console.WriteLine(messaggio);
+
+                        contaAllegatiInErrore++;
+                    }
+                }
+
+                if (fi.Extension == ".zip")
+                {
+                    if (esitoArchivioZip == false)
                     {
                         if (System.IO.File.Exists(folderArchive.FullName + "Error\\" + fi.Name))
                         {
@@ -698,12 +772,16 @@ namespace My.Shared.Tasks
                         }
 
                         fi.MoveTo(folderArchive.FullName + "Error\\" + fi.Name);
-                    }
-                    messaggio = String.Format("Elaborazione del file conclusa con errori: {0}", fi.Name);
-                    _log.error(messaggio, _uid.ToString(), fi.Name, _taskName);
-                    Console.WriteLine(messaggio);
 
-                    contaAllegatiInErrore++;
+                        //messaggio = String.Format("Elaborazione del file conclusa con errori: {0}", fi.Name);
+                        //_log.error(messaggio, _uid.ToString(), fi.Name, _taskName);
+                        //Console.WriteLine(messaggio);
+                    }
+                    else
+                    {
+                        fi.MoveTo(folderArchive.FullName + fi.Name);
+
+                    }
                 }
             }
 

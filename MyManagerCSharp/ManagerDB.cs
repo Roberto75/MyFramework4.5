@@ -1,6 +1,7 @@
 ﻿//Direttive di compilazione per le librerire esterne
 
 //#define MySQL
+#define Oracle
 //#Const SqlServerCe = False
 //#Const PostgreSQL = False
 //#Const Oracle = False
@@ -260,9 +261,10 @@ namespace MyManagerCSharp
                         case "OleDbDataAdapter":
                             (objAdap as System.Data.OleDb.OleDbDataAdapter).Fill(ds, tableName);
                             break;
-#if Oracle 
-                    Case "OracleDataAdapter"
-                        DirectCast(objAdap, System.Data.OracleClient.OracleDataAdapter).Fill(ds, table)
+#if Oracle
+                        case "OracleDataAdapter":
+                            (objAdap as Oracle.DataAccess.Client.OracleDataAdapter).Fill(ds, tableName);
+                            break;
 #endif
                         case "OdbcDataAdapter":
                             (objAdap as System.Data.Odbc.OdbcDataAdapter).Fill(ds, tableName);
@@ -319,11 +321,11 @@ namespace MyManagerCSharp
                     objAdap = new System.Data.OleDb.OleDbDataAdapter();
                     (objAdap as System.Data.OleDb.OleDbDataAdapter).SelectCommand = (command as System.Data.OleDb.OleDbCommand);
                     break;
-#if Oracle 
-            Case "OracleConnection"
-                objAdap = New System.Data.OracleClient.OracleDataAdapter
-                DirectCast(objAdap, System.Data.OracleClient.OracleDataAdapter).SelectCommand = DirectCast(command, System.Data.OracleClient.OracleCommand)
-                break;
+#if Oracle
+                case "OracleConnection":
+                    objAdap = new Oracle.DataAccess.Client.OracleDataAdapter();
+                    (objAdap as Oracle.DataAccess.Client.OracleDataAdapter).SelectCommand = (command as Oracle.DataAccess.Client.OracleCommand);
+                    break;
 #endif
                 case "OdbcConnection":
                     objAdap = new System.Data.Odbc.OdbcDataAdapter();
@@ -344,6 +346,16 @@ namespace MyManagerCSharp
 
 
 
+        protected string parseSQLforOracle(string strSQL)
+        {
+            strSQL = strSQL.Replace("GetDate()", "Sysdate");
+
+            strSQL = strSQL.Replace(" @", " :");
+
+            return strSQL;
+        }
+
+
         protected string parseSQLforMySQL(string strSQL)
         {
             strSQL = strSQL.Replace("GetDate()", "Now()");
@@ -359,6 +371,7 @@ namespace MyManagerCSharp
 
             return strSQL;
         }
+
 
         protected string parseSQLforAccessAndPostgreSQL(string strSQL)
         {
@@ -447,6 +460,31 @@ namespace MyManagerCSharp
                     command.Parameters.Add(parameter);
                     break;
 #endif
+
+
+#if Oracle
+                case "OracleCommand":
+                    parameter = new Oracle.DataAccess.Client.OracleParameter();
+                    parameter.Value = value;
+
+                    if (value != null && value != DBNull.Value)
+                    {
+                        (parameter as Oracle.DataAccess.Client.OracleParameter).OracleDbType = getOracleDbType(value);
+                    }
+                    else
+                    {
+                        parameter.Value = DBNull.Value;
+                    }
+
+                    parameter.ParameterName = name;
+                    command.Parameters.Add(parameter);
+                    break;
+
+#endif
+
+
+
+
                 default:
                     throw new MyException("Tipo di comando non supportato: " + command.GetType().Name);
             }
@@ -516,6 +554,39 @@ namespace MyManagerCSharp
             }
         }
 
+#if Oracle
+
+        protected Oracle.DataAccess.Client.OracleDbType getOracleDbType(Object value)
+        {
+            switch (value.GetType().Name)
+            {
+                case "Boolean":
+                    return Oracle.DataAccess.Client.OracleDbType.Byte;
+                case "Int64": //Long
+                    return Oracle.DataAccess.Client.OracleDbType.Int64;
+                case "Int32": //Int
+                    return Oracle.DataAccess.Client.OracleDbType.Int32;
+                case "Int16": //SmallInt
+                    return Oracle.DataAccess.Client.OracleDbType.Int16;
+                case "String":
+                    return Oracle.DataAccess.Client.OracleDbType.Varchar2;
+                case "Byte[]":
+                    return Oracle.DataAccess.Client.OracleDbType.BinaryDouble;
+                case "DateTime":
+                    return Oracle.DataAccess.Client.OracleDbType.Date;
+                case "Decimal":
+                    return Oracle.DataAccess.Client.OracleDbType.Decimal;
+                case "Char":
+                    return Oracle.DataAccess.Client.OracleDbType.Char;
+                default:
+                    throw new MyException("Tipo di dato non supportato: " + value.GetType().Name);
+
+            }
+        }
+#endif
+
+
+
 #if MySQL
         protected MySql.Data.MySqlClient.MySqlDbType getMySqlDbType(Object value)
         {
@@ -551,6 +622,10 @@ namespace MyManagerCSharp
             else if (_connection.GetType().Name == "MySqlConnection")
             {
                 command.CommandText = parseSQLforMySQL(command.CommandText);
+            }
+            else if (_connection.GetType().Name == "OracleConnection")
+            {
+                command.CommandText = parseSQLforOracle(command.CommandText);
             }
 
 
@@ -700,8 +775,6 @@ namespace MyManagerCSharp
 
             return long.Parse(obj.ToString());
         }
-
-
 
 
         #region "__TRANSACTION___"
@@ -1111,7 +1184,7 @@ namespace MyManagerCSharp
 
             //prendo l'ultima riga!
             string temp;
-            temp = _dt.Rows[_dt.Rows.Count -1][0].ToString();
+            temp = _dt.Rows[_dt.Rows.Count - 1][0].ToString();
 
             Debug.WriteLine(temp);
             return temp;
