@@ -10,7 +10,7 @@ using System.IO;
 namespace My.Shared.Tasks
 {
     public class MyTaskBase
-    { 
+    {
         protected MyManagerCSharp.Log.LogManager _log;
         protected string _taskName;
         protected Guid _uid;
@@ -647,7 +647,7 @@ namespace My.Shared.Tasks
         private string processFolder(System.IO.DirectoryInfo folderXML)
         {
             string messaggio;
-            bool esitoSingoloFileXML;
+            bool esitoSingoloFile;
             bool esitoArchivioZip;
 
 
@@ -661,7 +661,25 @@ namespace My.Shared.Tasks
             contaAllegatiInseriti = 0;
             contaAllegatiInErrore = 0;
 
-            foreach (System.IO.FileInfo fi in folderXML.GetFiles("*.*", SearchOption.AllDirectories))
+            SearchOption option;
+            string valore = System.Configuration.ConfigurationManager.AppSettings["task.folder.attachments.SearchOption"];
+            if (String.IsNullOrEmpty(valore))
+            {
+                option = SearchOption.TopDirectoryOnly;
+            }
+            else
+            {
+                try
+                {
+                    option = (SearchOption)Enum.Parse(typeof(SearchOption), valore);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("[App.config] task.folder.attachments.SearchOption valore non riconosciuto: " + valore + " (AllDirectories || TopDirectoryOnly)");
+                }
+            }
+
+            foreach (System.IO.FileInfo fi in folderXML.GetFiles("*.*", option))
             {
                 contaAllegatiLetti++;
 
@@ -669,64 +687,86 @@ namespace My.Shared.Tasks
                 _log.info(messaggio, _uid.ToString(), fi.Name, _taskName);
                 Console.WriteLine(messaggio);
 
-                List<FileInfo> filesXML = new List<FileInfo>();
+                List<FileInfo> files = new List<FileInfo>();
                 esitoArchivioZip = true;
 
-                switch (fi.Extension)
+                if (fi.Extension == ".zip")
                 {
-                    case ".zip":
-                        FileInfo fileZip = fi;
-                        using (System.IO.Compression.ZipArchive archive = System.IO.Compression.ZipFile.OpenRead(fileZip.FullName))
-                        {
-                            foreach (System.IO.Compression.ZipArchiveEntry entry in archive.Entries)
-                            {
-                                entry.ExtractToFile(System.IO.Path.Combine(fileZip.Directory.FullName, entry.Name), true);
-
-                                filesXML.Add(new FileInfo(System.IO.Path.Combine(fileZip.Directory.FullName, entry.Name)));
-                            }
-                        }
-
-                        messaggio = "UNZIP completato con successo: " + fileZip.Name;
-                        _log.info(messaggio, _uid.ToString(), fi.Name, _taskName);
-                        Console.WriteLine(messaggio);
-
-
-                        break;
-                    case ".xml":
-                        filesXML.Add(fi);
-                        break;
-                    case "":
-                        //nel caso di CVS ho dei files senza estenzione ... non li sposto!!!
-                        contaAllegatiLetti--;
-                        continue;
-                    default:
-                        //throw new ApplicationException("Task Base: tipo di file non supportato: " + fi.Extension);
-                        messaggio = "Task Base: tipo di file non supportato: " + fi.FullName;
-                        _log.error(messaggio, _uid.ToString(), fi.Name, _taskName);
-                        Console.WriteLine(messaggio);
-
-                        if (System.IO.File.Exists(folderArchive.FullName + fi.Name))
-                        {
-                            System.IO.File.Delete(folderArchive.FullName + fi.Name);
-                        }
-                        contaAllegatiInErrore++;
-                        fi.MoveTo(folderArchive.FullName + "Error\\" + fi.Name);
-                        continue;
-                        
+                    files = unZip(fi);
+                    messaggio = "UNZIP completato con successo: " + fi.Name + " trovati " + files.Count + " files";
+                    _log.info(messaggio, _uid.ToString(), fi.Name, _taskName);
+                    Console.WriteLine(messaggio);
+                }
+                else
+                {
+                    files.Add(fi);
                 }
 
+                //switch (fi.Extension)
+                //{
+                //    case ".zip":
+                //        FileInfo fileZip = fi;
+                //        using (System.IO.Compression.ZipArchive archive = System.IO.Compression.ZipFile.OpenRead(fileZip.FullName))
+                //        {
+                //            foreach (System.IO.Compression.ZipArchiveEntry entry in archive.Entries)
+                //            {
+                //                entry.ExtractToFile(System.IO.Path.Combine(fileZip.Directory.FullName, entry.Name), true);
+
+                //                files.Add(new FileInfo(System.IO.Path.Combine(fileZip.Directory.FullName, entry.Name)));
+                //            }
+                //        }
+
+                //        messaggio = "UNZIP completato con successo: " + fileZip.Name;
+                //        _log.info(messaggio, _uid.ToString(), fi.Name, _taskName);
+                //        Console.WriteLine(messaggio);
 
 
-                foreach (FileInfo file in filesXML)
+                //        break;
+                //    case ".xml":
+                //        files.Add(fi);
+                //        break;
+                //    case "":
+                //        //nel caso di CVS ho dei files senza estenzione ... non li sposto!!!
+                //        contaAllegatiLetti--;
+                //        continue;
+                //    default:
+                //        //throw new ApplicationException("Task Base: tipo di file non supportato: " + fi.Extension);
+                //        messaggio = "Task Base: tipo di file non supportato: " + fi.FullName;
+                //        _log.error(messaggio, _uid.ToString(), fi.Name, _taskName);
+                //        Console.WriteLine(messaggio);
+
+                //        if (System.IO.File.Exists(folderArchive.FullName + fi.Name))
+                //        {
+                //            System.IO.File.Delete(folderArchive.FullName + fi.Name);
+                //        }
+                //        contaAllegatiInErrore++;
+                //        fi.MoveTo(folderArchive.FullName + "Error\\" + fi.Name);
+                //        continue;
+
+                //}
+
+
+
+                foreach (FileInfo file in files)
                 {
                     contaRecordLetti = 0;
                     contaRecordInseriti = 0;
                     contaRecordInErrore = 0;
                     contaRecordGiaPresenti = 0;
+                    try
+                    {
+                        esitoSingoloFile = processFile(file);
+                    }
+                    catch (Exception ex) //
+                    {
+                        _log.exception(ex, _uid.ToString(), file.Name, _taskName);
+                        Console.WriteLine(ex.Message);
 
-                    esitoSingoloFileXML = processXML(file);
+                        esitoSingoloFile = false;
+                    }
 
-                    if (esitoSingoloFileXML)
+
+                    if (esitoSingoloFile)
                     {
                         if (System.IO.File.Exists(folderArchive.FullName + file.Name))
                         {
@@ -802,7 +842,7 @@ namespace My.Shared.Tasks
             return "";
         }
 
-        protected virtual bool processXML(System.IO.FileInfo fi)
+        protected virtual bool processFile(System.IO.FileInfo fi)
         {
             //return "Not implemented";
             return false;
@@ -1019,6 +1059,22 @@ namespace My.Shared.Tasks
                 attach.StoreToFile(attachFileName);
 
             }
+        }
+
+        protected List<FileInfo> unZip(FileInfo fileZip)
+        {
+            List<FileInfo> files = new List<FileInfo>();
+
+            using (System.IO.Compression.ZipArchive archive = System.IO.Compression.ZipFile.OpenRead(fileZip.FullName))
+            {
+                foreach (System.IO.Compression.ZipArchiveEntry entry in archive.Entries)
+                {
+                    entry.ExtractToFile(System.IO.Path.Combine(fileZip.Directory.FullName, entry.Name), true);
+
+                    files.Add(new FileInfo(System.IO.Path.Combine(fileZip.Directory.FullName, entry.Name)));
+                }
+            }
+            return files;
         }
 
     }
