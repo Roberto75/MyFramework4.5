@@ -212,11 +212,14 @@
     <None Include="MyKey.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SQL\Create-Alert.sql" />
+    <Content Include="SQL\Create-Log.sql" />
+    <Content Include="SQL\Create-LogUser.sql" />
+    <Content Include="SQL\Create-Ticket.sql" />
     <Content Include="whatsnew.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GoogleChart\Models\" />
-    <Folder Include="SQL\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
