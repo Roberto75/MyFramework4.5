@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyManagerCSharp.Ticket.Models
 {
-    public class PagedMyTicket : MyManagerCSharp.Models.Paged  
+    public class PagedMyTicket : My.Shared.Models.Paged   
     {
         public List<MyTicket> TicketsList { get; set; }
     }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyManagerCSharp.Log.Models
 {
-    public class PagedMyLogs : MyManagerCSharp.Models.Paged 
+    public class PagedMyLogs : My.Shared.Models.Paged 
     {
         public IEnumerable<MyLog> LogsList { get; set; }
     }
