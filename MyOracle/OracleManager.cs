@@ -1,15 +1,23 @@
-﻿using System;
+﻿//Direttive di compilazione per le librerire esterne
+//#define Oracle
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace My.Shared.db
 {
 
+
+
     public class OracleManager
     {
+
+#if Oracle
         protected Oracle.DataAccess.Client.OracleConnection _connection;
         protected Oracle.DataAccess.Client.OracleTransaction _transaction;
 
@@ -155,6 +163,8 @@ namespace My.Shared.db
 
             return command.ExecuteNonQuery();
         }
+
+#endif
 
     }
 

@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular.WebApplication", "WebApplication\Angular.WebApplication.csproj", "{2EA15FEF-8168-4F86-9673-E647DF194327}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyUsers", "..\..\MyUsers\MyUsers.csproj", "{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EA15FEF-8168-4F86-9673-E647DF194327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EA15FEF-8168-4F86-9673-E647DF194327}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EA15FEF-8168-4F86-9673-E647DF194327}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2EA15FEF-8168-4F86-9673-E647DF194327}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EA15FEF-8168-4F86-9673-E647DF194327}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EA15FEF-8168-4F86-9673-E647DF194327}.Release|x64.ActiveCfg = Release|Any CPU
+		{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}.Debug|x64.ActiveCfg = Debug|x64
+		{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}.Debug|x64.Build.0 = Debug|x64
+		{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}.Release|x64.ActiveCfg = Release|x64
+		{DE537BC0-C7B3-4F38-9DE2-5757D6D3999E}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
