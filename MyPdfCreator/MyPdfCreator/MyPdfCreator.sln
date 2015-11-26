@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfResize", "PdfResize\PdfR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPdfCreator", "MyPdfCreator\MyPdfCreator.csproj", "{89C05CEC-2573-4330-A6B8-94CE359E820C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{F05B73D8-F9EC-4DD5-B702-D8B5DFD7940F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApplication", "TestConsoleApplication\TestConsoleApplication.csproj", "{DD239A98-5D2A-4A5A-BA5C-C601A6BF7424}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89C05CEC-2573-4330-A6B8-94CE359E820C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F05B73D8-F9EC-4DD5-B702-D8B5DFD7940F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F05B73D8-F9EC-4DD5-B702-D8B5DFD7940F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F05B73D8-F9EC-4DD5-B702-D8B5DFD7940F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F05B73D8-F9EC-4DD5-B702-D8B5DFD7940F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD239A98-5D2A-4A5A-BA5C-C601A6BF7424}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD239A98-5D2A-4A5A-BA5C-C601A6BF7424}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD239A98-5D2A-4A5A-BA5C-C601A6BF7424}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD239A98-5D2A-4A5A-BA5C-C601A6BF7424}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

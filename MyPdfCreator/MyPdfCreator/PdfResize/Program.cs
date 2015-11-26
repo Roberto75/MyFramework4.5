@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,13 @@ namespace PdfResize
         {
 
 
-            MyPdf pdf = new MyPdf();
+            //MyPdf pdf = new MyPdf();
+            //pdf.test();
 
-            pdf.test();
+
+            
+           
  
-
-
 
             //pdfforge.PDFCreator.Shared.Helper.PrinterHelper helper = new pdfforge.PDFCreator.Shared.Helper.PrinterHelper();
 

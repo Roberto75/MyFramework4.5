@@ -32,36 +32,39 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DataStorage">
+      <HintPath>..\lib 2.1.2.0\DataStorage.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.1.2\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PDFCreator.Core">
-      <HintPath>..\..\..\..\..\Program Files\PDFCreator\PDFCreator.Core.dll</HintPath>
+      <HintPath>..\lib 2.1.2.0\PDFCreator.Core.dll</HintPath>
     </Reference>
-    <Reference Include="PDFCreator.Settings, Version=2.1.2.0, Culture=neutral, PublicKeyToken=fc6825f92a0342e2, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\PDFCreator\PDFCreator.Settings.dll</HintPath>
+    <Reference Include="PDFCreator.Settings">
+      <HintPath>..\lib 2.1.2.0\PDFCreator.Settings.dll</HintPath>
     </Reference>
     <Reference Include="PDFCreator.Shared">
-      <HintPath>..\..\..\..\..\Program Files\PDFCreator\PDFCreator.Shared.dll</HintPath>
+      <HintPath>..\lib 2.1.2.0\PDFCreator.Shared.dll</HintPath>
     </Reference>
     <Reference Include="PDFCreator.Utilities">
-      <HintPath>..\..\..\..\..\Program Files\PDFCreator\PDFCreator.Utilities.dll</HintPath>
+      <HintPath>..\lib 2.1.2.0\PDFCreator.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="PDFProcessing">
-      <HintPath>..\..\..\..\..\Program Files\PDFCreator\PDFProcessing.dll</HintPath>
+      <HintPath>..\lib 2.1.2.0\PDFProcessing.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="SystemWrapper">
-      <HintPath>..\..\..\..\..\Program Files\PDFCreator\SystemWrapper.dll</HintPath>
+      <HintPath>..\lib 2.1.2.0\SystemWrapper.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
