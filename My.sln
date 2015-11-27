@@ -29,8 +29,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOracle", "MyOracle\MyOrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTasks", "MyTasks\MyTasks.csproj", "{EE7B67D4-E414-4AA7-980A-5D1CEF97F28C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularWebApplication", "AngularWebApplication\AngularWebApplication.csproj", "{2EA15FEF-8168-4F86-9673-E647DF194327}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,14 +172,6 @@ Global
 		{EE7B67D4-E414-4AA7-980A-5D1CEF97F28C}.Release|x64.ActiveCfg = Release|x64
 		{EE7B67D4-E414-4AA7-980A-5D1CEF97F28C}.Release|x64.Build.0 = Release|x64
 		{EE7B67D4-E414-4AA7-980A-5D1CEF97F28C}.Release|x86.ActiveCfg = Release|Any CPU
-		{2EA15FEF-8168-4F86-9673-E647DF194327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2EA15FEF-8168-4F86-9673-E647DF194327}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2EA15FEF-8168-4F86-9673-E647DF194327}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2EA15FEF-8168-4F86-9673-E647DF194327}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2EA15FEF-8168-4F86-9673-E647DF194327}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2EA15FEF-8168-4F86-9673-E647DF194327}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2EA15FEF-8168-4F86-9673-E647DF194327}.Release|x64.ActiveCfg = Release|Any CPU
-		{2EA15FEF-8168-4F86-9673-E647DF194327}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -45,6 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\MyPdfCreator\Ghostscript\Bin\gsdll32.dll">
+      <Link>Ghostscript\Bin\gsdll32.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\MyPdfCreator\Ghostscript\Bin\gswin32c.exe">
+      <Link>Ghostscript\Bin\gswin32c.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Ghostscript\Lib\Fontmap.URW-136.cs">
       <DependentUpon>Fontmap.URW-136.TT</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -53,6 +61,10 @@
     </Content>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="..\MyPdfCreator\Ghostscript\Bin\gsdll32.lib">
+      <Link>Ghostscript\Bin\gsdll32.lib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Ghostscript\Lib\ghostpdf.inf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -606,9 +618,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Ghostscript\Bin\gsdll32.lib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Ghostscript\Lib\acctest.ps">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -803,16 +812,6 @@
       <Project>{89c05cec-2573-4330-a6b8-94ce359e820c}</Project>
       <Name>MyPdfCreator</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ghostscript\Bin\gsdll32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ghostscript\Bin\gswin32c.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Ghostscript\Lib\Fontmap.Sol">

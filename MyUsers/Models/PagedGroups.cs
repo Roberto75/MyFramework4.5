@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyUsers.Models
 {
-    public class PagedGroups : MyManagerCSharp.Models.Paged
+    public class PagedGroups : My.Shared.Models.Paged
     {
         public List<MyGroup> Gruppi { get; set; }
     }

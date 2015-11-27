@@ -36,7 +36,7 @@ namespace My.Pdf
             profile.PdfSettings.ColorModel = pdfforge.PDFCreator.Core.Settings.Enums.ColorModel.Rgb;
             //profile.JpegSettings.Color = pdfforge.PDFCreator.Core.Settings.Enums.JpegColor.Color24Bit;
             //profile.JpegSettings.Dpi = 
-            
+
 
             int i = 1;
             StringBuilder sb = new StringBuilder();
@@ -72,9 +72,14 @@ namespace My.Pdf
                 Debug.WriteLine("Exception: " + ex.Message);
             }
 
-            job.OutputFilenameTemplate = outputFolder.FullName + word.Name;
+            job.OutputFilenameTemplate = outputFolder.FullName + word.Name.Replace(word.Extension, ".pdf");
 
             job.RunJob();
+
+            if (job.OutputFiles.Count == 0)
+            {
+                throw new ApplicationException("job.OutputFiles.Count = 0");
+            }
 
             if (job.OutputFiles.Count > 1)
             {

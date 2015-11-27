@@ -18,6 +18,8 @@ namespace TestConsoleApplication
 
             sorceFileWord = @"C:\Develop.NET\EarlyWarning\public\Documentazione\Applicativi_Sicuri_Capp_3_e_4.docx";
 
+            sorceFileWord = @"C:\Develop.NET\14100106659.doc";
+
             WordToPdf pdf = new WordToPdf();
 
             FileInfo output;
