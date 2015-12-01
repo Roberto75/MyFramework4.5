@@ -650,9 +650,6 @@ namespace My.Shared.Tasks
             bool esitoSingoloFile;
             bool esitoArchivioZip;
 
-
-
-
             messaggio = String.Format("Inizio elaborazione della folder: {0}", folderXML.FullName);
             _log.info(messaggio, _uid.ToString(), "", _taskName);
             Console.WriteLine(messaggio);
