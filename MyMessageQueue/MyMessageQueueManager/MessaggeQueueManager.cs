@@ -75,7 +75,17 @@ namespace My.MessageQueue
         public bool insertMember(long distributionListId, string nome, string email)
         {
             DistributionListManager m = new DistributionListManager(_connection);
-            return m.insertMember(distributionListId, nome , email);
+            return m.insertMember(distributionListId, nome, email);
+        }
+
+        public long insertDistributionList(string nome)
+        {
+            DistributionListManager m = new DistributionListManager(_connection);
+
+            DistributionList list = new DistributionList();
+            list.name = nome;
+
+            return m.createDistributionList(list);
         }
 
 

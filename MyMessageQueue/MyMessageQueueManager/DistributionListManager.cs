@@ -24,18 +24,46 @@ namespace My.MessageQueue
 
         }
 
-        public long createDistributionList(DistributionList list)
+
+        public bool exist(DistributionList list)
         {
+            _strSQL = "select count(*) from mmq.DistributionList  where UPPER(name) = @NAME ";
+
             System.Data.Common.DbCommand command;
             command = _connection.CreateCommand();
 
+            _addParameter(command, "@NAME", list.name.Trim());
+            command.CommandText = _strSQL;
+
+            string risultato = _executeScalar(command);
+
+            if (int.Parse(risultato) > 1)
+            {
+                throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.Record_duplicato);
+            }
+
+            return int.Parse(risultato) == 1;
+
+        }
+
+
+        public long createDistributionList(DistributionList list)
+        {
+            if (exist(list))
+            {
+                throw new ApplicationException("Esiste già una lista di distribuzione con questo nome: " + list.name ); 
+            }
+
+
+
+
+            System.Data.Common.DbCommand command;
+            command = _connection.CreateCommand();
             _transactionBegin();
 
             long newId = -1;
-
             try
             {
-
                 _strSQL = "INSERT INTO mmq.DistributionList ( date_added , name, nota, distribution_type ) VALUES ( GETDATE() , @NAME , @NOTA , " + (int)list.distributionType + ")";
                 _addParameter(command, "@NAME", list.name);
                 _addParameter(command, "@NOTA", list.nota);
@@ -44,7 +72,6 @@ namespace My.MessageQueue
                 _executeNoQuery(command);
 
                 newId = _getIdentity();
-
 
                 //Members
                 if (list.Members != null)
@@ -104,7 +131,7 @@ namespace My.MessageQueue
 
         private bool existsMemeber(Member m)
         {
-            _strSQL = "select count(*) from mmq.Member " +
+            _strSQL = "select * from mmq.Member " +
                " where UPPER(name) = @NAME and UPPER(email) = @EMAIL ";
 
             System.Data.Common.DbCommand command;
@@ -115,18 +142,25 @@ namespace My.MessageQueue
 
             command.CommandText = _strSQL;
 
-            string risultato = _executeScalar(command);
+            _dt = _fillDataTable(command);
 
-            if (int.Parse(risultato) > 1)
+            if (_dt.Rows.Count == 0)
+            {
+                return false;
+            }
+
+            if (_dt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.Record_duplicato);
             }
+                        
+            m.id = long.Parse(_dt.Rows[0]["id"].ToString());
 
-            return int.Parse(risultato) == 1;
+            return true;
         }
 
 
-        public bool  insertMember(long distributionListId, string nome, string email)
+        public bool insertMember(long distributionListId, string nome, string email)
         {
 
             if (String.IsNullOrEmpty(nome))
@@ -143,9 +177,9 @@ namespace My.MessageQueue
 
             if (!existsMemeber(m))
             {
-               m.id =  insertMember(m);
+                m.id = insertMember(m);
             }
-            
+
             _strSQL = "INSERT INTO mmq.[DistributionListMembers] ( distribution_id , member_id , date_added ) VALUES (  " + distributionListId + ", " + m.id + " ,  GetDate() )";
             _executeNoQuery(_strSQL);
 
@@ -194,18 +228,17 @@ namespace My.MessageQueue
                 " order by t2.name";
 
             _dt = _fillDataTable(_strSQL);
-
-            if (_dt.Rows.Count == 0)
-            {
-                return;
-            }
+                       
 
             if (list.Members == null)
             {
                 list.Members = new List<Member>();
             }
 
-
+            if (_dt.Rows.Count == 0)
+            {
+                return;
+            }
 
             Member member;
             foreach (DataRow row in _dt.Rows)
@@ -217,16 +250,18 @@ namespace My.MessageQueue
 
         public List<DistributionList> getList()
         {
+            List<DistributionList> risultato = new List<DistributionList>();
+
 
             _strSQL = "SELECT * FROM mmq.DistributionList order by name";
             _dt = _fillDataTable(_strSQL);
 
             if (_dt.Rows.Count == 0)
             {
-                return null;
+                return risultato;
             }
 
-            List<DistributionList> risultato = new List<DistributionList>();
+
 
             foreach (DataRow row in _dt.Rows)
             {

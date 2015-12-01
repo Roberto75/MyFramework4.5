@@ -276,7 +276,7 @@ namespace My.Shared.Tasks
             {
                 Uri sourceFile = new Uri(System.Configuration.ConfigurationManager.AppSettings["download.url"]);
 
-                messaggio = String.Format("Inizio download file XML: {0}", sourceFile.AbsoluteUri);
+                messaggio = String.Format("Inizio download file: {0}", sourceFile.AbsoluteUri);
                 _log.info(messaggio, _uid.ToString(), "", _taskName);
                 Console.WriteLine(messaggio);
 
@@ -291,8 +291,8 @@ namespace My.Shared.Tasks
                 if (!String.IsNullOrEmpty(esito))
                 {
 
-                    _log.error("Download XML: " + esito, _uid.ToString(), "", _taskName);
-                    Console.WriteLine("Download XML fallito: " + esito);
+                    _log.error("Download: " + esito, _uid.ToString(), "", _taskName);
+                    Console.WriteLine("Download fallito: " + esito);
 
                     if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.support"]))
                     {
@@ -301,7 +301,7 @@ namespace My.Shared.Tasks
                         MyManagerCSharp.MailMessageManager mail = new MailMessageManager(System.Configuration.ConfigurationManager.AppSettings["application.name"], System.Configuration.ConfigurationManager.AppSettings["application.url"]);
                         mail._Subject = System.Net.Dns.GetHostName() + " - " + _taskName + " - Errore durante il download";
 
-                        mail._Body = String.Format("Errore durante il download file XML {0} " + Environment.NewLine + "{1}", sourceFile, esito);
+                        mail._Body = String.Format("Errore durante il download file {0} " + Environment.NewLine + "{1}", sourceFile, esito);
                         try
                         {
                             mail._To(System.Configuration.ConfigurationManager.AppSettings["mail.support"]);
@@ -317,29 +317,27 @@ namespace My.Shared.Tasks
                     return false;
                 }
 
-                messaggio = "Download XML completato con successo";
+                messaggio = "Download completato con successo";
                 _log.info(messaggio, _uid.ToString(), "", _taskName);
                 Console.WriteLine(messaggio);
 
-                //Rutigliano 19/11/2014   UNZIP
-                if (destinationFile.Extension == ".zip")
-                {
-                    // System.IO.Compression.ZipFile.ExtractToDirectory(destinationFile.FullName, folderAttachments.FullName);
+                ////Rutigliano 19/11/2014   UNZIP
+                //if (destinationFile.Extension == ".zip")
+                //{
+                //    // System.IO.Compression.ZipFile.ExtractToDirectory(destinationFile.FullName, folderAttachments.FullName);
 
+                //    using (System.IO.Compression.ZipArchive archive = System.IO.Compression.ZipFile.OpenRead(destinationFile.FullName))
+                //    {
+                //        foreach (System.IO.Compression.ZipArchiveEntry entry in archive.Entries)
+                //        {
+                //            entry.ExtractToFile(System.IO.Path.Combine(folderAttachments.FullName, entry.Name), true);
+                //        }
+                //    }
 
-
-                    using (System.IO.Compression.ZipArchive archive = System.IO.Compression.ZipFile.OpenRead(destinationFile.FullName))
-                    {
-                        foreach (System.IO.Compression.ZipArchiveEntry entry in archive.Entries)
-                        {
-                            entry.ExtractToFile(System.IO.Path.Combine(folderAttachments.FullName, entry.Name), true);
-                        }
-                    }
-
-                    messaggio = "UNZIP completato con successo";
-                    _log.info(messaggio, _uid.ToString(), "", _taskName);
-                    Console.WriteLine(messaggio);
-                }
+                //    messaggio = "UNZIP completato con successo";
+                //    _log.info(messaggio, _uid.ToString(), "", _taskName);
+                //    Console.WriteLine(messaggio);
+                //}
 
                 _fileDownloaded = destinationFile;
                 return true;
@@ -368,12 +366,8 @@ namespace My.Shared.Tasks
             ActiveUp.Net.Mail.Pop3Client client = new ActiveUp.Net.Mail.Pop3Client();
             long countMessages;
 
-
             try
             {
-
-
-
                 string username;
                 string password;
 
@@ -644,16 +638,13 @@ namespace My.Shared.Tasks
 
 
 
-        private string processFolder(System.IO.DirectoryInfo folderXML)
+        private string processFolder(System.IO.DirectoryInfo folder)
         {
             string messaggio;
             bool esitoSingoloFile;
             bool esitoArchivioZip;
 
-
-
-
-            messaggio = String.Format("Inizio elaborazione della folder: {0}", folderXML.FullName);
+            messaggio = String.Format("Inizio elaborazione della folder: {0}", folder.FullName);
             _log.info(messaggio, _uid.ToString(), "", _taskName);
             Console.WriteLine(messaggio);
 
@@ -679,7 +670,7 @@ namespace My.Shared.Tasks
                 }
             }
 
-            foreach (System.IO.FileInfo fi in folderXML.GetFiles("*.*", option))
+            foreach (System.IO.FileInfo fi in folder.GetFiles("*.*", option))
             {
                 contaAllegatiLetti++;
 

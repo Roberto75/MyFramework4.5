@@ -1,7 +1,7 @@
 ﻿//Direttive di compilazione per le librerire esterne
 
-//#define MySQL
-#define Oracle
+#define MySQL
+//#define Oracle
 //#Const SqlServerCe = False
 //#Const PostgreSQL = False
 //#Const Oracle = False

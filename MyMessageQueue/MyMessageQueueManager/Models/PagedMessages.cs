@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace My.MessageQueue.Models
 {
-    public class PagedMessages : MyManagerCSharp.Models.Paged
+    public class PagedMessages : My.Shared.Models.Paged
     {
         public List<MessageBase> Messages { get; set; }
 
