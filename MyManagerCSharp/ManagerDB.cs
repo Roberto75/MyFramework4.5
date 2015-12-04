@@ -571,7 +571,7 @@ namespace MyManagerCSharp
                 case "String":
                     return Oracle.DataAccess.Client.OracleDbType.Varchar2;
                 case "Byte[]":
-                    return Oracle.DataAccess.Client.OracleDbType.BinaryDouble;
+                    return Oracle.DataAccess.Client.OracleDbType.Blob;
                 case "DateTime":
                     return Oracle.DataAccess.Client.OracleDbType.Date;
                 case "Decimal":
