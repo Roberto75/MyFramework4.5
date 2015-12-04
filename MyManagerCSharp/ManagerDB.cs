@@ -1,7 +1,7 @@
 ﻿//Direttive di compilazione per le librerire esterne
 
-#define MySQL
-//#define Oracle
+//#define MySQL
+#define Oracle
 //#Const SqlServerCe = False
 //#Const PostgreSQL = False
 //#Const Oracle = False
@@ -777,6 +777,20 @@ namespace MyManagerCSharp
         }
 
 
+
+
+        protected long getSequence(string sequenceName)
+        {
+            string strSQL = "select " + sequenceName + ".nextval from dual";
+            System.Data.Common.DbCommand command;
+            command = _connection.CreateCommand();
+
+            command.CommandText = strSQL;
+
+            return Convert.ToInt64(command.ExecuteScalar());
+        }
+
+
         #region "__TRANSACTION___"
 
         public void _transactionBegin(ref System.Data.Common.DbTransaction transaction)
@@ -830,8 +844,6 @@ namespace MyManagerCSharp
             return _transaction;
         }
         #endregion
-
-
 
 
 

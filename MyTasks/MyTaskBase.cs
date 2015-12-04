@@ -576,7 +576,7 @@ namespace My.Shared.Tasks
             catch (Exception ex)
             {
                 _log.error(ex.Message, _uid.ToString(), "", _taskName);
-                Console.WriteLine("Exception: " + ex.Message);
+                _printMessage("Exception: " + ex.Message);
                 return false;
             }
             finally
@@ -752,7 +752,8 @@ namespace My.Shared.Tasks
                     catch (Exception ex) //
                     {
                         _log.exception(ex, _uid.ToString(), file.Name, _taskName);
-                        Console.WriteLine(ex.Message);
+                        _printMessage(ex);
+
 
                         esitoSingoloFile = false;
                     }
@@ -887,11 +888,26 @@ namespace My.Shared.Tasks
             _IV = IV;
         }
 
-        private void _printMessage(string message)
+        protected void _printMessage(string message)
         {
             Debug.WriteLine(message);
             Console.WriteLine(message);
         }
+
+        protected void _printMessage(Exception ex)
+        {
+            string temp = "";
+            Exception e = ex;
+            while (e != null)
+            {
+                temp += e.Message + Environment.NewLine;
+                e = e.InnerException;
+            }
+
+            _printMessage("Exception: " + temp);
+            _printMessage("StackTrace:" + ex.StackTrace);
+        }
+
 
         private bool Imap()
         {
@@ -997,16 +1013,14 @@ namespace My.Shared.Tasks
 
                 messaggio = String.Format("Sono stati scaricati {0} allegati XML", contaAllegatiScaricati);
                 _log.info(messaggio, _uid.ToString(), "", _taskName);
-                Console.WriteLine(messaggio);
-
+                _printMessage(messaggio);
                 return true;
 
             }
             catch (Exception ex)
             {
                 _log.error(ex.Message, _uid.ToString(), "", _taskName);
-                Console.WriteLine("Exception: " + ex.Message);
-                Debug.WriteLine("Exception: " + ex.Message);
+                _printMessage("Exception: " + ex.Message);
                 return false;
             }
             finally
