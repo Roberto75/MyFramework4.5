@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<whatsnew>
+  <!-- 
+  type => bug
+  type => changes
+-->
+
+
+  <release number="1.0.0.1" data="04/12/2015" >
+    <item data="04/12/2015"  owner="Rutigliano" type="changes" display="false"  >
+      unzip
+    </item>
+  </release>
+
+</whatsnew>
