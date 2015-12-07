@@ -682,7 +682,7 @@ namespace My.Shared.Tasks
                 List<FileInfo> files = new List<FileInfo>();
                 esitoArchivioZip = true;
 
-                if (fi.Extension == ".zip")
+                if (fi.Extension == ".zip" || fi.Extension == ".ZIP")
                 {
                     files = unZip(fi);
                     messaggio = "UNZIP completato con successo: " + fi.Name + " trovati " + files.Count + " files";
