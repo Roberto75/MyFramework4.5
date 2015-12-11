@@ -43,14 +43,17 @@ namespace My.Phantomjs
 
             foreach (My.Phantomjs.Models.Task t in Tasks)
             {
-                Console.WriteLine("Phantomjs process task: " + t.fileName);
+                Console.Write("Elaborazione del task: " + t.fileName + " ...");
 
                 process(t);
 
                 if (t.Esito == My.Phantomjs.Models.Task.EnumEsito.Failed)
                 {
+                    Console.WriteLine(" fallita!");
                     esito = false;
                 }
+
+                Console.WriteLine(" conclusa con successo");
             }
 
             return esito;
