@@ -29,9 +29,9 @@ namespace MyManagerCSharp.Alert
 
             mStrSQL = "SELECT * FROM MyAlert WHERE IS_ENABLED = 1 ORDER BY DESCRIZIONE";
 
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 risultato.Add(new MyManagerCSharp.Alert.Models.MyAlert(row));
             }
@@ -63,20 +63,20 @@ namespace MyManagerCSharp.Alert
                 mAddParameter(command, "@VALORE", valoreMinimo.Value);
             }
 
-            m_dt = mFillDataTable(command);
+            mDt = mFillDataTable(command);
 
-            if (m_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (m_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new ApplicationException("ALERT > 1");
             }
 
             MyManagerCSharp.Alert.Models.MyAlert risultato;
-            risultato = new MyManagerCSharp.Alert.Models.MyAlert(m_dt.Rows[0]);
+            risultato = new MyManagerCSharp.Alert.Models.MyAlert(mDt.Rows[0]);
 
             return risultato;
         }
@@ -90,9 +90,9 @@ namespace MyManagerCSharp.Alert
                 " left  join MyAlert_Utente as t2 on t1.id = t2.alert_id and  t2.user_id = " + userId +
                 " ORDER BY t1.DESCRIZIONE ";
 
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 risultato.Add(new MyManagerCSharp.Alert.Models.MyAlert(row));
             }
@@ -168,12 +168,12 @@ namespace MyManagerCSharp.Alert
 
             command.CommandText = mStrSQL;
 
-            m_dt = mFillDataTable(command);
+            mDt = mFillDataTable(command);
 
             List<MyManagerCSharp.Models.MyUserSmall> risultato = new List<MyManagerCSharp.Models.MyUserSmall>();
 
             MyManagerCSharp.Models.MyUserSmall userSmall;
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 userSmall = new MyManagerCSharp.Models.MyUserSmall(row);
 
@@ -195,19 +195,19 @@ namespace MyManagerCSharp.Alert
             mAddParameter(command, "@NOME", nome.ToUpper().Trim());
 
             command.CommandText = mStrSQL;
-            m_dt = mFillDataTable(command);
+            mDt = mFillDataTable(command);
 
-            if (m_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.Record_duplicato);
             }
 
-            if (m_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            return new Models.MyAlert(m_dt.Rows[0]);
+            return new Models.MyAlert(mDt.Rows[0]);
         }
 
     }

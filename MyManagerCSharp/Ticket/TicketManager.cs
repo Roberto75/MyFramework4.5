@@ -60,10 +60,10 @@ namespace MyManagerCSharp.Ticket
 
             mStrSQL += " ORDER BY t.DATE_ADDED";
 
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             Models.MyTicket t;
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 t = new Models.MyTicket(row);
 
@@ -106,10 +106,10 @@ namespace MyManagerCSharp.Ticket
             mStrSQL += " ORDER BY t.DATE_ADDED";
 
             command.CommandText = mStrSQL;
-            m_dt = mFillDataTable(command );
+            mDt = mFillDataTable(command );
 
             Models.MyTicket t;
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 t = new Models.MyTicket(row);
                 t.Owner = new MyManagerCSharp.Models.MyUserSmall(row);
@@ -127,9 +127,9 @@ namespace MyManagerCSharp.Ticket
         //    strSQL = "select ticket_id from Ticket where ticket_status_id = 'OPEN' and user_id_cliente = @user_id_cliente and ticket_type_id= @ticket_type_id"
 
         //    Dim command As System.Data.Common.DbCommand
-        //    command = _connection.CreateCommand()
+        //    command = mConnection.CreateCommand()
         //    command.CommandText = strSQL
-        //    command.Connection = Me._connection
+        //    command.Connection = Me.mConnection
 
         //    Me._addParameter(command, "@user_id_cliente", userIdCliente)
         //    Me._addParameter(command, "@ticket_type_id", ticketType)
@@ -373,7 +373,7 @@ namespace MyManagerCSharp.Ticket
 
         public Models.MyTicket getTicket(long ticketId)
         {
-            //_strSQL = "SELECT * FROM TICKET where ID = " + ticketId;
+            // mStrSQL = "SELECT * FROM TICKET where ID = " + ticketId;
 
             mStrSQL = "select t.* ,  " + SQL_SELECT_UTENTI_SMALL +
                " from Ticket as t " +
@@ -381,22 +381,22 @@ namespace MyManagerCSharp.Ticket
                " where ID = " + ticketId;
 
 
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            if (m_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (m_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("id > 0");
             }
 
             Models.MyTicket t;
-            t = new Models.MyTicket(m_dt.Rows[0]);
+            t = new Models.MyTicket(mDt.Rows[0]);
 
-            t.Owner = new MyManagerCSharp.Models.MyUserSmall(m_dt.Rows[0]);
+            t.Owner = new MyManagerCSharp.Models.MyUserSmall(mDt.Rows[0]);
 
 
             return t;
@@ -405,18 +405,18 @@ namespace MyManagerCSharp.Ticket
 
         public List<Models.MyTicketPost> getPosts(long ticketId)
         {
-            //_strSQL = "SELECT * FROM TICKET_POST WHERE TICKET_ID = " + ticketId + " ORDER BY DATE_ADDED";
+            // mStrSQL = "SELECT * FROM TICKET_POST WHERE TICKET_ID = " + ticketId + " ORDER BY DATE_ADDED";
 
             mStrSQL = "SELECT t.* ,   " + SQL_SELECT_UTENTI_SMALL +
                         " FROM TICKET_POST as t " +
                         " join Utente as u on t.user_id = u.user_id " +
                         "WHERE TICKET_ID = " + ticketId + " ORDER BY DATE_ADDED";
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             List<Models.MyTicketPost> risultato = new List<Models.MyTicketPost>();
 
             Models.MyTicketPost post;
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 post = new Models.MyTicketPost(row);
                 post.Owner = new MyManagerCSharp.Models.MyUserSmall(row);
@@ -437,9 +437,9 @@ namespace MyManagerCSharp.Ticket
         //                    " group by ticket_post_id "
 
         //    Dim command As System.Data.Common.DbCommand
-        //    command = _connection.CreateCommand()
+        //    command = mConnection.CreateCommand()
         //    command.CommandText = strSQL
-        //    command.Connection = Me._connection
+        //    command.Connection = Me.mConnection
 
         //    Me._addParameter(command, "@TICKET_ID", ticketId)
 
@@ -452,9 +452,9 @@ namespace MyManagerCSharp.Ticket
         //    Dim strSQL As String = "UPDATE TICKET SET DATE_CLOSED = GETDATE(), DATE_LAST_MODIFIED = GETDATE(), TICKET_STATUS_ID = 'CLOSED' WHERE TICKET_ID = @TICKET_ID "
 
         //    Dim command As System.Data.Common.DbCommand
-        //    command = _connection.CreateCommand()
+        //    command = mConnection.CreateCommand()
         //    command.CommandText = strSQL
-        //    command.Connection = Me._connection
+        //    command.Connection = Me.mConnection
 
 
         //    Me._addParameter(command, "@TICKET_ID", ticketId)
@@ -490,18 +490,18 @@ namespace MyManagerCSharp.Ticket
 
         public List<Models.MyTicketAttachment> getAttachments(long ticketId)
         {
-            // _strSQL = "SELECT * FROM TICKET_ATTACHMENT WHERE TICKET_ID = " + ticketId + " ORDER BY FILE_NAME";
+            //  mStrSQL = "SELECT * FROM TICKET_ATTACHMENT WHERE TICKET_ID = " + ticketId + " ORDER BY FILE_NAME";
             mStrSQL = "SELECT t.* ,  " + SQL_SELECT_UTENTI_SMALL +
                    " FROM TICKET_ATTACHMENT as t " +
                    " join Utente as u on t.user_id = u.user_id " +
                    "WHERE TICKET_ID = " + ticketId + " ORDER BY FILE_NAME";
 
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             List<Models.MyTicketAttachment> risultato = new List<Models.MyTicketAttachment>();
 
             Models.MyTicketAttachment attach;
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 attach = new Models.MyTicketAttachment(row);
                 attach.Owner = new MyManagerCSharp.Models.MyUserSmall(row);
@@ -516,20 +516,20 @@ namespace MyManagerCSharp.Ticket
         public Models.MyTicketAttachment getAttachment(long attachId)
         {
             mStrSQL = "SELECT * FROM TICKET_ATTACHMENT WHERE ID = " + attachId;
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            if (m_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (m_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("id > 0");
             }
 
             Models.MyTicketAttachment attach;
-            attach = new Models.MyTicketAttachment(m_dt.Rows[0]);
+            attach = new Models.MyTicketAttachment(mDt.Rows[0]);
             return attach;
         }
 
@@ -543,12 +543,12 @@ namespace MyManagerCSharp.Ticket
                        " AND u.user_id <> " + utenteCorrente +
                        " ORDER BY  U.MY_LOGIN";
 
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             List<MyManagerCSharp.Models.MyUserSmall> risultato = new List<MyManagerCSharp.Models.MyUserSmall>();
 
             MyManagerCSharp.Models.MyUserSmall userSmall;
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 userSmall = new MyManagerCSharp.Models.MyUserSmall(row);
 

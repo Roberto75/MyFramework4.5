@@ -162,11 +162,11 @@ namespace MyManagerCSharp.Log
         {
             mStrSQL = "select  distinct my_type from mylog order by 1";
 
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             List<string> risultato = new List<string>();
 
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 risultato.Add(row[0].ToString());
             }
@@ -239,9 +239,9 @@ namespace MyManagerCSharp.Log
 
 
             command.CommandText = temp;
-            m_dt = mFillDataTable(command);
+            mDt = mFillDataTable(command);
 
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 risultato.Add(new MyManagerCSharp.Log.Models.MyLog(row));
             }
@@ -287,9 +287,9 @@ namespace MyManagerCSharp.Log
             mAddParameter(command, "@REFERENCEID", referenceId);
 
             command.CommandText = mStrSQL;
-            m_dt = mFillDataTable(command);
+            mDt = mFillDataTable(command);
 
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 risultato.Add(new MyManagerCSharp.Log.Models.MyLog(row));
             }
@@ -301,9 +301,9 @@ namespace MyManagerCSharp.Log
 
         public System.Data.DataTable getSummary()
         {
-            //_strSQL = "SELECT my_level , count(*) as conta from MyLog";
-            //_strSQL += getWhereConditionByDate("date_added", days);
-            //_strSQL += " group by my_level order by my_level";
+            // mStrSQL = "SELECT my_level , count(*) as conta from MyLog";
+            // mStrSQL += getWhereConditionByDate("date_added", days);
+            // mStrSQL += " group by my_level order by my_level";
 
             mStrSQL = " select count(*) as TOT " +
                 " , my_level " +

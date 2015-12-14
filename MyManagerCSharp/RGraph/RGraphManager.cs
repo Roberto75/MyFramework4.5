@@ -494,14 +494,14 @@ namespace MyManagerCSharp.RGraph
 
             if (rotateDataSet)
             {
-                m_dt = rotateRigheToColonne(report.Data);
+                mDt = rotateRigheToColonne(report.Data);
             }
             else
             {
-                m_dt = report.Data;
+                mDt = report.Data;
             }
 
-            if (m_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 report.Html = "";
                 return;
@@ -578,7 +578,7 @@ namespace MyManagerCSharp.RGraph
             //ATTENZIONE:
             //La prima colonna è sempre la LABEL
 
-            foreach (System.Data.DataRow row in m_dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 //strData += row["valore"] + ",";
 
@@ -646,7 +646,7 @@ namespace MyManagerCSharp.RGraph
                 totale = totale + Decimal.Parse(row["valore"].ToString());
 
 
-                if (m_dt.Columns.Contains("my_key"))
+                if (mDt.Columns.Contains("my_key"))
                 {
                     strMyKeys += String.Format("'{0}',", row["my_key"].ToString().Replace("'", "\'"));
                     //'strMyKeys &= String.Format("'{0}',", row("my_key").ToString().Replace("'", "\'"))
@@ -661,10 +661,10 @@ namespace MyManagerCSharp.RGraph
 
             if (OrderColor)
             {
-                m_dt.DefaultView.Sort = "valore desc";
+                mDt.DefaultView.Sort = "valore desc";
                 indexColor = 0;
 
-                foreach (System.Data.DataRowView row in m_dt.DefaultView)
+                foreach (System.Data.DataRowView row in mDt.DefaultView)
                 {
                     strColors = strColors.Replace(String.Format("'{0}'", row["label"].ToString().Replace("'", "\'")), String.Format("'{0}'", "#" + _palette[indexColor % paletteColors]));
 
@@ -712,7 +712,7 @@ namespace MyManagerCSharp.RGraph
             {
                 decimal percentuale;
 
-                foreach (System.Data.DataRow row in m_dt.Rows)
+                foreach (System.Data.DataRow row in mDt.Rows)
                 {
                     percentuale = 0;
                     if (decimal.Parse(row["valore"].ToString()) != 0)
@@ -787,7 +787,7 @@ namespace MyManagerCSharp.RGraph
             strJavaScript += String.Format("{0}.Draw();", report.Id) + Environment.NewLine;
 
 
-            if (m_dt.Columns.Contains("my_key"))
+            if (mDt.Columns.Contains("my_key"))
             {
                 //strJavaScript += strMyKeys + Environment.NewLine;
                 report.MyKeys = strMyKeys;

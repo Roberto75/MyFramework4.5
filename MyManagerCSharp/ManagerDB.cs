@@ -54,7 +54,7 @@ namespace MyManagerCSharp
         private string _provider;
 
         protected string mStrSQL;
-        protected DataTable m_dt;
+        protected DataTable mDt;
 
         public ManagerDB(string connectionName)
         {
@@ -1070,7 +1070,7 @@ namespace MyManagerCSharp
                     strWHERE += getWhereConditionByDate(queryField, inizioSettimana, inizioSettimana.AddDays(6));
 
 
-                    //if (_connection.GetType().Name == "MySqlConnection")
+                    //if (mConnection.GetType().Name == "MySqlConnection")
                     //{
                     //    // WEEK(Now(),1) ,1 per fare iniziare la settimana da lunedì
                     //    strWHERE += String.Format(" AND ( WEEK({0},1) = WEEK(Now(),1) AND  Year({0}) = Year(Now())  )", queryField);
@@ -1095,7 +1095,7 @@ namespace MyManagerCSharp
                     strWHERE += getWhereConditionByDate(queryField, inizioSettimana.AddDays(-7), inizioSettimana.AddDays(-1));
 
 
-                    //if (_connection.GetType().Name == "MySqlConnection")
+                    //if (mConnection.GetType().Name == "MySqlConnection")
                     //{
                     //    strWHERE += String.Format(" AND (  YEAR({0}) *53 + WEEK({0},1) = YEAR(Now()) *53 + WEEK(GetDate(),1) -1 )", queryField);
                     //}
@@ -1185,11 +1185,11 @@ namespace MyManagerCSharp
         public string getLastMigrationId()
         {
             mStrSQL = "SELECT MigrationId   FROM __MigrationHistory";
-            m_dt = mFillDataTable(mStrSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             //prendo l'ultima riga!
             string temp;
-            temp = m_dt.Rows[m_dt.Rows.Count - 1][0].ToString();
+            temp = mDt.Rows[mDt.Rows.Count - 1][0].ToString();
 
             Debug.WriteLine(temp);
             return temp;

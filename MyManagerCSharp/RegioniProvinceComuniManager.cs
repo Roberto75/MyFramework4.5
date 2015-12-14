@@ -24,8 +24,8 @@ namespace MyManagerCSharp
         {
             mStrSQL = "SELECT * FROM PROVINCE WHERE regione_id =" + regioneId + "  ORDER BY VALORE";
 
-            m_dt = mFillDataTable(mStrSQL);
-            return m_dt;
+            mDt = mFillDataTable(mStrSQL);
+            return mDt;
         }
 
 
@@ -35,14 +35,14 @@ namespace MyManagerCSharp
             //'Escludo l'ITALIA tra gli STATI ESTERI
             mStrSQL = "SELECT * FROM COMUNI WHERE provincia_id = '" + provinciaId + "' AND ID <> 'IT' ORDER BY VALORE";
 
-            m_dt = mFillDataTable(mStrSQL);
-            return m_dt;
+            mDt = mFillDataTable(mStrSQL);
+            return mDt;
         }
 
 
         public System.Data.DataTable getRegioneByLabel(string regione)
         {
-            //' _strSql = "SELECT * FROM REGIONI WHERE UCASE (VALORE)  = '" & regione.ToUpper & "'"
+            //'  mStrSQL = "SELECT * FROM REGIONI WHERE UCASE (VALORE)  = '" & regione.ToUpper & "'"
             mStrSQL = "SELECT * FROM REGIONI WHERE UCASE (VALORE)  = @REGIONE ";
 
             System.Data.Common.DbCommand command;
@@ -61,7 +61,7 @@ namespace MyManagerCSharp
 
         public string getRegioneById(int regioneId)
         {
-            //' _strSql = "SELECT * FROM REGIONI WHERE UCASE (VALORE)  = '" & regione.ToUpper & "'"
+            //'  mStrSQL = "SELECT * FROM REGIONI WHERE UCASE (VALORE)  = '" & regione.ToUpper & "'"
             mStrSQL = "SELECT valore FROM REGIONI WHERE  ID = " + regioneId;
             return mExecuteScalar(mStrSQL );
         }

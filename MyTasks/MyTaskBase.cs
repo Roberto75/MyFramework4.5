@@ -15,7 +15,7 @@ namespace My.Shared.Tasks
         protected string _taskName;
         protected Guid _uid;
 
-        protected string _connectionName;
+        protected string mConnectionName;
 
         protected bool _DebugMoveErrorFileInFolder;
 
@@ -47,7 +47,7 @@ namespace My.Shared.Tasks
             _taskName = taskName;
             _uid = Guid.NewGuid();
 
-            _connectionName = connectionName;
+            mConnectionName = connectionName;
 
             _DebugMoveErrorFileInFolder = true;
         }
