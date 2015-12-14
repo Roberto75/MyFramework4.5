@@ -18,61 +18,61 @@ namespace My.Shared.db
     {
 
 #if Oracle
-        protected Oracle.DataAccess.Client.OracleConnection _connection;
-        protected Oracle.DataAccess.Client.OracleTransaction _transaction;
+        protected Oracle.DataAccess.Client.OracleConnection mConnection;
+        protected Oracle.DataAccess.Client.OracleTransaction mTransaction;
 
-        protected string _connectionName;
+        protected string mConnectionName;
 
-        protected string _strSQL;
+        protected string mStrSQL;
 
-        protected DataTable _dt;
+        protected DataTable mDt;
 
         #region ***Connessione**
 
         public OracleManager(string connectionName)
         {
-            _connectionName = connectionName;
+            mConnectionName = connectionName;
 
-            _connection = new Oracle.DataAccess.Client.OracleConnection();
-            _connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
+            mConnection = new Oracle.DataAccess.Client.OracleConnection();
+            mConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
         }
 
         public OracleManager(Oracle.DataAccess.Client.OracleConnection connection)
         {
 
-            _connection = connection;
+            mConnection = connection;
         }
 
-        public Oracle.DataAccess.Client.OracleConnection getConnection()
+        public Oracle.DataAccess.Client.OracleConnection GetConnection()
         {
-            return _connection;
+            return mConnection;
         }
 
-        public void openConnection()
+        public void OpenConnection()
         {
-            if (_connection == null)
+            if (mConnection == null)
             {
                 throw new ApplicationException("Connection non inizializzata");
             }
 
 
-            if (_connection.State != System.Data.ConnectionState.Open)
+            if (mConnection.State != System.Data.ConnectionState.Open)
             {
-                _connection.Open();
+                mConnection.Open();
             }
         }
 
 
-        public void closeConnection()
+        public void CloseConnection()
         {
-            if (_connection == null)
+            if (mConnection == null)
             {
                 throw new ApplicationException("Connection non inizializzata");
             }
 
 
-            _connection.Close();
-            _connection.Dispose();
+            mConnection.Close();
+            mConnection.Dispose();
         }
 
 
@@ -81,79 +81,79 @@ namespace My.Shared.db
 
         #region ***Transazione**
 
-        public void transactionBegin(ref Oracle.DataAccess.Client.OracleTransaction transaction)
+        public void TransactionBegin(ref Oracle.DataAccess.Client.OracleTransaction transaction)
         {
             if (transaction == null)
             {
                 throw new ApplicationException("Transazione NON inizializzata");
             }
-            _transaction = transaction;
+            mTransaction = transaction;
         }
 
-        public void transactionBegin()
+        public void TransactionBegin()
         {
-            if (_transaction != null)
+            if (mTransaction != null)
             {
                 throw new ApplicationException("Transazione già aperta");
             }
-            _transaction = _connection.BeginTransaction();
+            mTransaction = mConnection.BeginTransaction();
         }
 
-        public void transactionCommit()
+        public void TransactionCommit()
         {
-            if (_transaction == null)
+            if (mTransaction == null)
             {
                 throw new ApplicationException("Transazione NON inizializzata");
             }
-            _transaction.Commit();
-            _transaction.Dispose();
-            _transaction = null;
+            mTransaction.Commit();
+            mTransaction.Dispose();
+            mTransaction = null;
         }
 
-        public void transactionRollback()
+        public void TransactionRollback()
         {
-            if (_transaction == null)
+            if (mTransaction == null)
             {
                 throw new ApplicationException("Transazione NON inizializzata");
 
             }
-            _transaction.Rollback();
-            _transaction.Dispose();
-            _transaction = null;
+            mTransaction.Rollback();
+            mTransaction.Dispose();
+            mTransaction = null;
         }
 
 
-        public Oracle.DataAccess.Client.OracleTransaction getTransaction()
+        public Oracle.DataAccess.Client.OracleTransaction GetTransaction()
         {
             //'26/01/2012 commento
             //' If _transaction Is Nothing Then
             //' Throw New ManagerException("Transazione NON inizializzata")
             //'xit Function
             //'  End If
-            return _transaction;
+            return mTransaction;
         }
 
         #endregion
 
 
 
-        protected long getSequence(string sequenceName)
+        protected long mGetSequence(string sequenceName)
         {
             string strSQL = "select " + sequenceName + ".nextval from dual";
-            Oracle.DataAccess.Client.OracleCommand command = new Oracle.DataAccess.Client.OracleCommand(strSQL, _connection);
+            Oracle.DataAccess.Client.OracleCommand command = new Oracle.DataAccess.Client.OracleCommand(strSQL, mConnection);
 
             return Convert.ToInt64(command.ExecuteScalar());
         }
 
 
 
-        protected int ExecuteNonQuery(string strSQL)
+        protected int mExecuteNonQuery(string strSQL)
         {
-            Oracle.DataAccess.Client.OracleCommand command = new Oracle.DataAccess.Client.OracleCommand(strSQL, _connection);
-            return ExecuteNonQuery(command);
+            Oracle.DataAccess.Client.OracleCommand command = new Oracle.DataAccess.Client.OracleCommand(strSQL, mConnection);
+            return mExecuteNonQuery(command);
         }
 
-        protected int ExecuteNonQuery(Oracle.DataAccess.Client.OracleCommand command)
+        protected int mExecuteNonQuery(Oracle.DataAccess.Client.OracleCommand command)
         {
             //if (_transaction != null)
             //{
