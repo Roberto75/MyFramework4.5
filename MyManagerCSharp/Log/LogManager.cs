@@ -36,15 +36,15 @@ namespace MyManagerCSharp.Log
 
         public int delete(LogManager.Days days)
         {
-            _strSQL = "DELETE FROM MYLOG ";
+            mStrSQL = "DELETE FROM MYLOG ";
 
             string strWHERE = "";
 
             strWHERE = getWhereConditionByDate("date_added", days);
 
-            _strSQL = _strSQL + strWHERE;
+            mStrSQL = mStrSQL + strWHERE;
 
-            return _executeNoQuery(_strSQL);
+            return mExecuteNoQuery(mStrSQL);
         }
 
 
@@ -80,8 +80,14 @@ namespace MyManagerCSharp.Log
 
         public void exception(Exception ex, string referenceId, string referenceType, string tipo)
         {
-            string nota;
-            nota = ex.Message;
+            string nota = "";
+            Exception e = ex;
+
+            while (e != null)
+            {
+                nota += e.Message + Environment.NewLine;
+                e = e.InnerException;
+            }
 
             insert(tipo, nota, referenceId, referenceType, Level.Exception);
         }
@@ -102,65 +108,65 @@ namespace MyManagerCSharp.Log
         {
             string strSQLParametri;
 
-            _strSQL = "INSERT INTO MyLog ( DATE_ADDED  ";
+            mStrSQL = "INSERT INTO MyLog ( DATE_ADDED  ";
             strSQLParametri = " VALUES ( GetDate()  ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.Connection = _connection;
+            command =  mConnection.CreateCommand();
+            command.Connection =  mConnection;
 
             if (!String.IsNullOrEmpty(nota))
             {
-                _strSQL += ",my_note ";
+                mStrSQL += ",my_note ";
                 strSQLParametri += ", @nota ";
-                _addParameter(command, "@nota", nota);
+                mAddParameter(command, "@nota", nota);
             }
 
             if (!String.IsNullOrEmpty(tipo))
             {
-                _strSQL += ",my_type ";
+                mStrSQL += ",my_type ";
                 strSQLParametri += ", @tipo ";
-                _addParameter(command, "@tipo", tipo);
+                mAddParameter(command, "@tipo", tipo);
             }
 
             if (!String.IsNullOrEmpty(referenceId))
             {
-                _strSQL += ",reference_id ";
+                mStrSQL += ",reference_id ";
                 strSQLParametri += ", @referenceId ";
-                _addParameter(command, "@referenceId", referenceId);
+                mAddParameter(command, "@referenceId", referenceId);
             }
 
             if (!String.IsNullOrEmpty(referenceType))
             {
-                _strSQL += ",reference_type ";
+                mStrSQL += ",reference_type ";
                 strSQLParametri += ", @referenceType ";
-                _addParameter(command, "@referenceType", referenceType);
+                mAddParameter(command, "@referenceType", referenceType);
             }
 
             if (level != LogManager.Level.Undefined)
             {
-                _strSQL += ",my_level ";
+                mStrSQL += ",my_level ";
                 strSQLParametri += ", @MY_LEVEL ";
-                _addParameter(command, "@MY_LEVEL", level.ToString());
+                mAddParameter(command, "@MY_LEVEL", level.ToString());
             }
 
-            command.CommandText = _strSQL + " ) " + strSQLParametri + " )";
+            command.CommandText = mStrSQL + " ) " + strSQLParametri + " )";
             command.CommandType = System.Data.CommandType.Text;
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
         }
 
 
         public string[] getMyType()
         {
-            _strSQL = "select  distinct my_type from mylog order by 1";
+            mStrSQL = "select  distinct my_type from mylog order by 1";
 
-            _dt = _fillDataTable(_strSQL);
+            m_dt = mFillDataTable(mStrSQL);
 
             List<string> risultato = new List<string>();
 
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 risultato.Add(row[0].ToString());
             }
@@ -174,10 +180,10 @@ namespace MyManagerCSharp.Log
 
             List<MyManagerCSharp.Log.Models.MyLog> risultato = new List<MyManagerCSharp.Log.Models.MyLog>();
 
-            _strSQL = " FROM MyLog ";
+            mStrSQL = " FROM MyLog ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command =  mConnection.CreateCommand();
 
             string strWHERE = " WHERE (1=1)";
             string temp;
@@ -215,15 +221,15 @@ namespace MyManagerCSharp.Log
 
             strWHERE += getWhereConditionByDate("date_added", model.Days);
 
-            _strSQL = _strSQL + strWHERE;
+            mStrSQL = mStrSQL + strWHERE;
 
-            temp = "SELECT COUNT(*) " + _strSQL;
+            temp = "SELECT COUNT(*) " + mStrSQL;
             command.CommandText = temp;
-            model.TotalRows = int.Parse(_executeScalar(command));
+            model.TotalRows = int.Parse(mExecuteScalar(command));
 
 
 
-            temp = "SELECT * " + _strSQL + " ORDER BY " + model.Sort + " " + model.SortDir;
+            temp = "SELECT * " + mStrSQL + " ORDER BY " + model.Sort + " " + model.SortDir;
 
             if (model.PageSize > 0 && model.PageNumber >= 0)
             {
@@ -233,9 +239,9 @@ namespace MyManagerCSharp.Log
 
 
             command.CommandText = temp;
-            _dt = _fillDataTable(command);
+            m_dt = mFillDataTable(command);
 
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 risultato.Add(new MyManagerCSharp.Log.Models.MyLog(row));
             }
@@ -255,7 +261,7 @@ namespace MyManagerCSharp.Log
         {
             List<MyManagerCSharp.Log.Models.MyLog> risultato = new List<MyManagerCSharp.Log.Models.MyLog>();
 
-            _strSQL = " select * FROM MyLog  where reference_id = @REFERENCEID ";
+            mStrSQL = " select * FROM MyLog  where reference_id = @REFERENCEID ";
 
 
             if (levels.Count > 0)
@@ -271,19 +277,19 @@ namespace MyManagerCSharp.Log
 
                 temp += ")";
 
-                _strSQL += " AND " + temp;
+                mStrSQL += " AND " + temp;
             }
 
-            _strSQL += " ORDER BY date_added asc";
+            mStrSQL += " ORDER BY date_added asc";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            _addParameter(command, "@REFERENCEID", referenceId);
+            command =  mConnection.CreateCommand();
+            mAddParameter(command, "@REFERENCEID", referenceId);
 
-            command.CommandText = _strSQL;
-            _dt = _fillDataTable(command);
+            command.CommandText = mStrSQL;
+            m_dt = mFillDataTable(command);
 
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 risultato.Add(new MyManagerCSharp.Log.Models.MyLog(row));
             }
@@ -299,7 +305,7 @@ namespace MyManagerCSharp.Log
             //_strSQL += getWhereConditionByDate("date_added", days);
             //_strSQL += " group by my_level order by my_level";
 
-            _strSQL = " select count(*) as TOT " +
+            mStrSQL = " select count(*) as TOT " +
                 " , my_level " +
                 ",sum(case when DAY(date_added) =  DAY(GetDate()) and MONTH(date_added) =  MONTH(GetDate())  and YEAR(date_added) = YEAR(GetDate()) then 1 else 0 end) as 'Oggi' " +
                 ",sum(case when DAY(date_added) =  DAY( DATEADD( day , -1 ,GETDATE() )) and MONTH(date_added) =  MONTH( DATEADD( day , -1 ,GETDATE() ))  and YEAR(date_added) = YEAR( DATEADD( day , -1 ,GETDATE() )) then 1 else 0 end) as 'Ieri'  " +
@@ -309,7 +315,7 @@ namespace MyManagerCSharp.Log
                 " group by my_level";
 
 
-            return _fillDataTable(_strSQL);
+            return mFillDataTable(mStrSQL);
         }
 
 
@@ -317,18 +323,18 @@ namespace MyManagerCSharp.Log
         public System.Data.DataTable getSummaryV2(MyManagerCSharp.Log.LogManager.Days days)
         {
 
-            _strSQL = "select reference_id , my_type,MIN (date_added) as data_inizio, MAX(date_added) as data_fine " +
+            mStrSQL = "select reference_id , my_type,MIN (date_added) as data_inizio, MAX(date_added) as data_fine " +
                 ",sum(case when my_level =  'Exception' then 1 else 0 end) as 'Exception'" +
                 ",sum(case when my_level =  'Error' then 1 else 0 end) as 'Error'" +
                 ",sum(case when my_level =  'Warning' then 1 else 0 end) as 'Warning'" +
                 ",sum(case when my_level =  'Info' then 1 else 0 end) as 'Info'" +
                 " from mylog";
 
-            _strSQL += " WHERE (1=1)" + getWhereConditionByDate("date_added", days);
+            mStrSQL += " WHERE (1=1)" + getWhereConditionByDate("date_added", days);
 
-            _strSQL += " group by reference_id,  my_type" +
+            mStrSQL += " group by reference_id,  my_type" +
                 " order by MIN (date_added) desc";
-            return _fillDataTable(_strSQL);
+            return mFillDataTable(mStrSQL);
         }
 
     }

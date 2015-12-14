@@ -11,64 +11,62 @@ namespace MyManagerCSharp
 
         #region "Progress Bar e Statu Bar"
             
-        protected System.Windows.Forms.ToolStripProgressBar _progressBar;
-    
-        protected System.Windows.Forms.ToolStripLabel _statusBar;
+        protected System.Windows.Forms.ToolStripProgressBar m_progressBar;
+        protected System.Windows.Forms.ToolStripLabel m_statusBar;
 
     
-        public void _setProgressBar(System.Windows.Forms.ToolStripProgressBar value)
+        public void SetProgressBar(System.Windows.Forms.ToolStripProgressBar value)
         {
-            _progressBar = value;
+            m_progressBar = value;
         }
 
-        public void _setStatusBar(System.Windows.Forms.ToolStripLabel value)
+        public void SetStatusBar(System.Windows.Forms.ToolStripLabel value)
         {
-            _statusBar = value;
+           m_statusBar = value;
         }
 
-        public void _statusBarUpdate(string value)
+        public void StatusBarUpdate(string value)
         {
-            if (_statusBar == null)
+            if (m_statusBar == null)
             {
                 return;
             }
-            _statusBar.Text = value;
+            m_statusBar.Text = value;
             System.Windows.Forms.Application.DoEvents();
         }
         
-        public void _progressBarPerformStep()
+        public void ProgressBarPerformStep()
         {
-            if (_progressBar == null)
+            if (m_progressBar == null)
             {
                 return;
             }
-            _progressBar.PerformStep();
+            m_progressBar.PerformStep();
             System.Windows.Forms.Application.DoEvents();
         }
         
-        public void _progressBarSetValue(int value)
+        public void ProgressBarSetValue(int value)
         {
-            if (_progressBar == null)
+            if (m_progressBar == null)
             {
                 return;
             }
-            _progressBar.Value = value;
+            m_progressBar.Value = value;
             System.Windows.Forms.Application.DoEvents();
         }
         
-        public void _progressBarSetMaximumValue(int value)
+        public void ProgressBarSetMaximumValue(int value)
         {
-            if (_progressBar == null)
+            if (m_progressBar == null)
             {
                 return;
             }
-            _progressBar.Maximum = value;
+            m_progressBar.Maximum = value;
         }
 
         #endregion
 
-
-         
+                
 
     }
 }

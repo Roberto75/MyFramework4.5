@@ -61,67 +61,67 @@ namespace MyManagerCSharp.Log
         {
             string strSQLParametri;
 
-            _strSQL = "INSERT INTO MyLogUser ( DATE_ADDED , user_id , tipo";
+            mStrSQL = "INSERT INTO MyLogUser ( DATE_ADDED , user_id , tipo";
             strSQLParametri = " VALUES ( GetDate() , " + userId + ", '" + tipo.ToString() + "' ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.Connection = _connection;
+            command =  mConnection.CreateCommand();
+            command.Connection =  mConnection;
 
             if (!String.IsNullOrEmpty(nota))
             {
-                _strSQL += ",nota ";
+                mStrSQL += ",nota ";
                 strSQLParametri += ", @nota ";
-                _addParameter(command, "@nota", nota);
+                mAddParameter(command, "@nota", nota);
             }
 
             if (!String.IsNullOrEmpty(login))
             {
-                _strSQL += ",login ";
+                mStrSQL += ",login ";
                 strSQLParametri += ", @LOGIN ";
-                _addParameter(command, "@LOGIN", login);
+                mAddParameter(command, "@LOGIN", login);
             }
 
             if (!String.IsNullOrEmpty(controller))
             {
-                _strSQL += ",controller ";
+                mStrSQL += ",controller ";
                 strSQLParametri += ", @CONTROLLER ";
-                _addParameter(command, "@CONTROLLER", controller);
+                mAddParameter(command, "@CONTROLLER", controller);
             }
 
             if (!String.IsNullOrEmpty(action))
             {
-                _strSQL += ",action ";
+                mStrSQL += ",action ";
                 strSQLParametri += ", @ACTION ";
-                _addParameter(command, "@ACTION", action);
+                mAddParameter(command, "@ACTION", action);
             }
 
             if (!String.IsNullOrEmpty(httpMethod))
             {
-                _strSQL += ",http_method ";
+                mStrSQL += ",http_method ";
                 strSQLParametri += ", @HTTP_METHOD ";
-                _addParameter(command, "@HTTP_METHOD", httpMethod);
+                mAddParameter(command, "@HTTP_METHOD", httpMethod);
             }
             
 
             if (ipAddress != null)
             {
-                _strSQL += ",ip_address ";
+                mStrSQL += ",ip_address ";
                 strSQLParametri += ", @IP ";
-                _addParameter(command, "@IP", ipAddress.ToString());
+                mAddParameter(command, "@IP", ipAddress.ToString());
             }
 
             if (sessionId != null)
             {
-                _strSQL += ",session_id ";
+                mStrSQL += ",session_id ";
                 strSQLParametri += ", @SESSION_ID ";
-                _addParameter(command, "@SESSION_ID", sessionId);
+                mAddParameter(command, "@SESSION_ID", sessionId);
             }
 
-            command.CommandText = _strSQL + " ) " + strSQLParametri + " )";
+            command.CommandText = mStrSQL + " ) " + strSQLParametri + " )";
             command.CommandType = System.Data.CommandType.Text;
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
         }
 
 

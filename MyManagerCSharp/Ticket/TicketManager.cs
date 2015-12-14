@@ -37,8 +37,8 @@ namespace MyManagerCSharp.Ticket
 
         public long getTicketTypeId(long ticketId)
         {
-            _strSQL = "SELECT TICKET_TYPE_ID FROM TICKET where ID = " + ticketId;
-            return long.Parse(_executeScalar(_strSQL));
+            mStrSQL = "SELECT TICKET_TYPE_ID FROM TICKET where ID = " + ticketId;
+            return long.Parse(mExecuteScalar(mStrSQL));
         }
 
 
@@ -47,23 +47,23 @@ namespace MyManagerCSharp.Ticket
             List<Models.MyTicket> risultato;
             risultato = new List<Models.MyTicket>();
 
-            _strSQL = "select t.* , " + SQL_SELECT_UTENTI_SMALL +
+            mStrSQL = "select t.* , " + SQL_SELECT_UTENTI_SMALL +
                 " from Ticket as t " +
                 " join Utente as u on t.OWNER_ID = u.user_id ";
 
-            _strSQL += " WHERE t.OWNER_ID = " + userId;
+            mStrSQL += " WHERE t.OWNER_ID = " + userId;
             if (stato != null && stato != TicketManager.TicketStatus.Undefined)
 
             {
-                _strSQL += " AND t.TICKET_STATUS_ID = '" + stato.ToString() + "'";
+                mStrSQL += " AND t.TICKET_STATUS_ID = '" + stato.ToString() + "'";
             }
 
-            _strSQL += " ORDER BY t.DATE_ADDED";
+            mStrSQL += " ORDER BY t.DATE_ADDED";
 
-            _dt = _fillDataTable(_strSQL);
+            m_dt = mFillDataTable(mStrSQL);
 
             Models.MyTicket t;
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 t = new Models.MyTicket(row);
 
@@ -86,30 +86,30 @@ namespace MyManagerCSharp.Ticket
             risultato = new List<Models.MyTicket>();
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command =  mConnection.CreateCommand();
 
-            _strSQL = "select t.* , " + SQL_SELECT_UTENTI_SMALL +
+            mStrSQL = "select t.* , " + SQL_SELECT_UTENTI_SMALL +
                 " from Ticket as t " +
                 " join Utente as u on t.OWNER_ID = u.user_id ";
 
             if (!String.IsNullOrEmpty(targetId))
             {
-                _strSQL += " where t.target_id = @TARGET_ID";
+                mStrSQL += " where t.target_id = @TARGET_ID";
                 //Rel. 1.0.1.6 visibilià sui dati per gli utenti dello stesso gruppo di redazione
-                _addParameter(command, "@TARGET_ID", targetId);
+                mAddParameter(command, "@TARGET_ID", targetId);
             }
        
             if (stato != null && stato != TicketManager.TicketStatus.Undefined)
             {
-                _strSQL += " AND  t.TICKET_STATUS_ID = '" + stato.ToString() + "'";
+                mStrSQL += " AND  t.TICKET_STATUS_ID = '" + stato.ToString() + "'";
             }
-            _strSQL += " ORDER BY t.DATE_ADDED";
+            mStrSQL += " ORDER BY t.DATE_ADDED";
 
-            command.CommandText = _strSQL;
-            _dt = _fillDataTable(command );
+            command.CommandText = mStrSQL;
+            m_dt = mFillDataTable(command );
 
             Models.MyTicket t;
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 t = new Models.MyTicket(row);
                 t.Owner = new MyManagerCSharp.Models.MyUserSmall(row);
@@ -147,70 +147,70 @@ namespace MyManagerCSharp.Ticket
 
         public long insertNewTicket(long userId, string targetId, string note, Models.MyTicket ticket)
         {
-            _strSQL = "INSERT INTO TICKET ( OWNER_ID, TARGET_ID, TITOLO,  TICKET_STATUS_ID , DATE_ADDED ,  DATE_LAST_MODIFIED ";
+            mStrSQL = "INSERT INTO TICKET ( OWNER_ID, TARGET_ID, TITOLO,  TICKET_STATUS_ID , DATE_ADDED ,  DATE_LAST_MODIFIED ";
 
             string strSQLParametri = "";
             strSQLParametri = " VALUES ( @OWNER_ID , @TARGET_ID ,  @TITOLO , '" + TicketStatus.Aperto + "', GETDATE() , GETDATE() ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.CommandText = _strSQL;
+            command =  mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
             try
             {
-                _transactionBegin();
+                mTransactionBegin();
 
-                _addParameter(command, "@OWNER_ID", userId);
-                _addParameter(command, "@TARGET_ID", targetId);
-                _addParameter(command, "@TITOLO", ticket.titolo);
+                mAddParameter(command, "@OWNER_ID", userId);
+                mAddParameter(command, "@TARGET_ID", targetId);
+                mAddParameter(command, "@TITOLO", ticket.titolo);
 
                 if (!String.IsNullOrEmpty(ticket.referenceTypeId))
                 {
-                    _strSQL += ",REFERENCE_TYPE_ID ";
+                    mStrSQL += ",REFERENCE_TYPE_ID ";
                     strSQLParametri += ", @REFERENCE_TYPE_ID ";
-                    _addParameter(command, "@REFERENCE_TYPE_ID", ticket.referenceTypeId);
+                    mAddParameter(command, "@REFERENCE_TYPE_ID", ticket.referenceTypeId);
                 }
 
                 if (ticket.referenceId != -1)
                 {
-                    _strSQL += ",REFERENCE_ID ";
+                    mStrSQL += ",REFERENCE_ID ";
                     strSQLParametri += ", @REFERENCE_ID ";
-                    _addParameter(command, "@REFERENCE_ID", ticket.referenceId);
+                    mAddParameter(command, "@REFERENCE_ID", ticket.referenceId);
                 }
 
                 if (ticket.referenceSourceId != -1)
                 {
-                    _strSQL += ",REFERENCE_SOURCE_ID ";
+                    mStrSQL += ",REFERENCE_SOURCE_ID ";
                     strSQLParametri += ", @REFERENCE_SOURCE_ID ";
-                    _addParameter(command, "@REFERENCE_SOURCE_ID", ticket.referenceSourceId);
+                    mAddParameter(command, "@REFERENCE_SOURCE_ID", ticket.referenceSourceId);
                 }
 
 
                 if (!String.IsNullOrEmpty(ticket.referenceSource))
                 {
-                    _strSQL += ",REFERENCE_SOURCE ";
+                    mStrSQL += ",REFERENCE_SOURCE ";
                     strSQLParametri += ", @REFERENCE_SOURCE ";
-                    _addParameter(command, "@REFERENCE_SOURCE", ticket.referenceSource);
+                    mAddParameter(command, "@REFERENCE_SOURCE", ticket.referenceSource);
                 }
 
-                command.CommandText = _strSQL + " ) " + strSQLParametri + " )";
+                command.CommandText = mStrSQL + " ) " + strSQLParametri + " )";
 
                 long newTicketId;
-                _executeNoQuery(command);
-                newTicketId = _getIdentity();
+                mExecuteNoQuery(command);
+                newTicketId = mGetIdentity();
 
 
                 //aggiungo il testo ...
-                _strSQL = "INSERT INTO TICKET_POST (DATE_ADDED , isFirstPost, USER_ID, TICKET_ID, NOTE )" +
+                mStrSQL = "INSERT INTO TICKET_POST (DATE_ADDED , isFirstPost, USER_ID, TICKET_ID, NOTE )" +
                            " VALUES ( GETDATE(), 1, @USER_ID , @TICKET_ID , @NOTE )";
 
                 command.Parameters.Clear();
-                command.CommandText = _strSQL;
-                _addParameter(command, "@USER_ID", userId);
-                _addParameter(command, "@TICKET_ID", newTicketId);
-                _addParameter(command, "@NOTE", note);
+                command.CommandText = mStrSQL;
+                mAddParameter(command, "@USER_ID", userId);
+                mAddParameter(command, "@TICKET_ID", newTicketId);
+                mAddParameter(command, "@NOTE", note);
 
-                _executeNoQuery(command);
-                _transactionCommit();
+                mExecuteNoQuery(command);
+                mTransactionCommit();
 
 
                 return newTicketId;
@@ -218,7 +218,7 @@ namespace MyManagerCSharp.Ticket
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception: " + ex.Message);
-                _transactionRollback();
+                mTransactionRollback();
                 throw ex;
             }
         }
@@ -227,9 +227,9 @@ namespace MyManagerCSharp.Ticket
         public bool deleteAttachment(long attachId, long ticketId, string absoluteServerPath)
         {
             string fileName;
-            _strSQL = "SELECT FILE_NAME FROM TICKET_ATTACHMENT WHERE ID = " + attachId;
+            mStrSQL = "SELECT FILE_NAME FROM TICKET_ATTACHMENT WHERE ID = " + attachId;
 
-            fileName = _executeScalar(_strSQL);
+            fileName = mExecuteScalar(mStrSQL);
 
             if (!String.IsNullOrEmpty(fileName) && !String.IsNullOrEmpty(absoluteServerPath))
             {
@@ -243,8 +243,8 @@ namespace MyManagerCSharp.Ticket
                 }
             }
 
-            _strSQL = "DELETE TICKET_ATTACHMENT  where ID = " + attachId;
-            return _executeNoQuery(_strSQL) == 1;
+            mStrSQL = "DELETE TICKET_ATTACHMENT  where ID = " + attachId;
+            return mExecuteNoQuery(mStrSQL) == 1;
         }
 
 
@@ -252,19 +252,19 @@ namespace MyManagerCSharp.Ticket
         {
             try
             {
-                _transactionBegin();
+                mTransactionBegin();
 
-                _strSQL = "DELETE TICKET_POST  where TICKET_ID = " + ticketId;
-                _executeNoQuery(_strSQL);
+                mStrSQL = "DELETE TICKET_POST  where TICKET_ID = " + ticketId;
+                mExecuteNoQuery(mStrSQL);
 
-                _strSQL = "DELETE TICKET_ATTACHMENT  where TICKET_ID = " + ticketId;
-                _executeNoQuery(_strSQL);
+                mStrSQL = "DELETE TICKET_ATTACHMENT  where TICKET_ID = " + ticketId;
+                mExecuteNoQuery(mStrSQL);
 
-                _strSQL = "DELETE TICKET  where ID = " + ticketId;
+                mStrSQL = "DELETE TICKET  where ID = " + ticketId;
                 int conta;
-                conta = _executeNoQuery(_strSQL);
+                conta = mExecuteNoQuery(mStrSQL);
 
-                _transactionCommit();
+                 mTransactionCommit();
 
 
                 if (!String.IsNullOrEmpty(absoluteServerPath))
@@ -286,7 +286,7 @@ namespace MyManagerCSharp.Ticket
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception: " + ex.Message);
-                _transactionRollback();
+                mTransactionRollback();
                 return false;
             }
 
@@ -298,31 +298,31 @@ namespace MyManagerCSharp.Ticket
             long newId;
             try
             {
-                _transactionBegin();
+                 mTransactionBegin();
 
                 //operatore risponde ad un ticket già esistente ...
-                _strSQL = "INSERT INTO TICKET_POST (DATE_ADDED ,  isFirstPost, USER_ID, TICKET_ID, NOTE )  VALUES ( GetDate() , 0, @USER_ID, @TICKET_ID, @NOTE ) ";
+                mStrSQL = "INSERT INTO TICKET_POST (DATE_ADDED ,  isFirstPost, USER_ID, TICKET_ID, NOTE )  VALUES ( GetDate() , 0, @USER_ID, @TICKET_ID, @NOTE ) ";
 
                 System.Data.Common.DbCommand command;
-                command = _connection.CreateCommand();
-                command.CommandText = _strSQL;
+                command =  mConnection.CreateCommand();
+                command.CommandText = mStrSQL;
 
-                _addParameter(command, "@USER_ID", userId);
-                _addParameter(command, "@TICKET_ID", ticketId);
-                _addParameter(command, "@NOTE", testo);
+                mAddParameter(command, "@USER_ID", userId);
+                mAddParameter(command, "@TICKET_ID", ticketId);
+                mAddParameter(command, "@NOTE", testo);
 
-                _executeNoQuery(command);
+                mExecuteNoQuery(command);
 
-                newId = _getIdentity();
+                newId = mGetIdentity();
 
-                _strSQL = "UPDATE TICKET SET  DATE_LAST_MODIFIED = GETDATE() WHERE id =  " + ticketId;
-                _executeNoQuery(_strSQL);
+                mStrSQL = "UPDATE TICKET SET  DATE_LAST_MODIFIED = GETDATE() WHERE id =  " + ticketId;
+                mExecuteNoQuery(mStrSQL);
 
-                _transactionCommit();
+                 mTransactionCommit();
             }
             catch (Exception ex)
             {
-                _transactionRollback();
+                mTransactionRollback();
                 Debug.WriteLine("Exception: " + ex.Message);
                 return -1;
             }
@@ -337,31 +337,31 @@ namespace MyManagerCSharp.Ticket
             long newId;
             try
             {
-                _transactionBegin();
+                 mTransactionBegin();
 
                 //operatore risponde ad un ticket già esistente ...
-                _strSQL = "INSERT INTO TICKET_POST (DATE_ADDED ,  isFirstPost, USER_ID, TICKET_ID, NOTE )  VALUES ( GetDate() , 0, @USER_ID, @TICKET_ID, @NOTE ) ";
+                mStrSQL = "INSERT INTO TICKET_POST (DATE_ADDED ,  isFirstPost, USER_ID, TICKET_ID, NOTE )  VALUES ( GetDate() , 0, @USER_ID, @TICKET_ID, @NOTE ) ";
 
                 System.Data.Common.DbCommand command;
-                command = _connection.CreateCommand();
-                command.CommandText = _strSQL;
+                command =  mConnection.CreateCommand();
+                command.CommandText = mStrSQL;
 
-                _addParameter(command, "@USER_ID", userId);
-                _addParameter(command, "@TICKET_ID", ticketId);
-                _addParameter(command, "@NOTE", testo);
+                mAddParameter(command, "@USER_ID", userId);
+                mAddParameter(command, "@TICKET_ID", ticketId);
+                mAddParameter(command, "@NOTE", testo);
 
-                _executeNoQuery(command);
+                mExecuteNoQuery(command);
 
-                newId = _getIdentity();
+                newId = mGetIdentity();
 
-                _strSQL = "UPDATE TICKET SET TICKET_STATUS_ID = '" + TicketStatus.Chiuso.ToString() + "', DATE_LAST_MODIFIED = GETDATE() WHERE id =  " + ticketId;
-                _executeNoQuery(_strSQL);
+                mStrSQL = "UPDATE TICKET SET TICKET_STATUS_ID = '" + TicketStatus.Chiuso.ToString() + "', DATE_LAST_MODIFIED = GETDATE() WHERE id =  " + ticketId;
+                mExecuteNoQuery(mStrSQL);
 
-                _transactionCommit();
+                 mTransactionCommit();
             }
             catch (Exception ex)
             {
-                _transactionRollback();
+                mTransactionRollback();
                 Debug.WriteLine("Exception: " + ex.Message);
                 return -1;
             }
@@ -375,28 +375,28 @@ namespace MyManagerCSharp.Ticket
         {
             //_strSQL = "SELECT * FROM TICKET where ID = " + ticketId;
 
-            _strSQL = "select t.* ,  " + SQL_SELECT_UTENTI_SMALL +
+            mStrSQL = "select t.* ,  " + SQL_SELECT_UTENTI_SMALL +
                " from Ticket as t " +
                " join Utente as u on t.OWNER_ID = u.user_id " +
                " where ID = " + ticketId;
 
 
-            _dt = _fillDataTable(_strSQL);
+            m_dt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count == 0)
+            if (m_dt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (_dt.Rows.Count > 1)
+            if (m_dt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("id > 0");
             }
 
             Models.MyTicket t;
-            t = new Models.MyTicket(_dt.Rows[0]);
+            t = new Models.MyTicket(m_dt.Rows[0]);
 
-            t.Owner = new MyManagerCSharp.Models.MyUserSmall(_dt.Rows[0]);
+            t.Owner = new MyManagerCSharp.Models.MyUserSmall(m_dt.Rows[0]);
 
 
             return t;
@@ -407,16 +407,16 @@ namespace MyManagerCSharp.Ticket
         {
             //_strSQL = "SELECT * FROM TICKET_POST WHERE TICKET_ID = " + ticketId + " ORDER BY DATE_ADDED";
 
-            _strSQL = "SELECT t.* ,   " + SQL_SELECT_UTENTI_SMALL +
+            mStrSQL = "SELECT t.* ,   " + SQL_SELECT_UTENTI_SMALL +
                         " FROM TICKET_POST as t " +
                         " join Utente as u on t.user_id = u.user_id " +
                         "WHERE TICKET_ID = " + ticketId + " ORDER BY DATE_ADDED";
-            _dt = _fillDataTable(_strSQL);
+            m_dt = mFillDataTable(mStrSQL);
 
             List<Models.MyTicketPost> risultato = new List<Models.MyTicketPost>();
 
             Models.MyTicketPost post;
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 post = new Models.MyTicketPost(row);
                 post.Owner = new MyManagerCSharp.Models.MyUserSmall(row);
@@ -469,39 +469,39 @@ namespace MyManagerCSharp.Ticket
         public long insertAttachment(string fileName, string description, long ticketId, long userId)
         {
 
-            _strSQL = "INSERT INTO Ticket_Attachment ( DATE_ADDED, FILE_NAME, NOTE, USER_ID, TICKET_ID) " +
+            mStrSQL = "INSERT INTO Ticket_Attachment ( DATE_ADDED, FILE_NAME, NOTE, USER_ID, TICKET_ID) " +
                        " VALUES ( GETDATE() , @FILENAME , @NOTE , @FK_USER_ID ,  @FK_EXTERNAL_ID   ) ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command =  mConnection.CreateCommand();
 
-            _addParameter(command, "@FILENAME", fileName);
-            _addParameter(command, "@NOTE", description);
-            _addParameter(command, "@FK_USER_ID", userId);
-            _addParameter(command, "@FK_EXTERNAL_ID", ticketId);
+            mAddParameter(command, "@FILENAME", fileName);
+            mAddParameter(command, "@NOTE", description);
+            mAddParameter(command, "@FK_USER_ID", userId);
+            mAddParameter(command, "@FK_EXTERNAL_ID", ticketId);
 
-            command.CommandText = _strSQL;
+            command.CommandText = mStrSQL;
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            return _getIdentity();
+            return mGetIdentity();
         }
 
 
         public List<Models.MyTicketAttachment> getAttachments(long ticketId)
         {
             // _strSQL = "SELECT * FROM TICKET_ATTACHMENT WHERE TICKET_ID = " + ticketId + " ORDER BY FILE_NAME";
-            _strSQL = "SELECT t.* ,  " + SQL_SELECT_UTENTI_SMALL +
+            mStrSQL = "SELECT t.* ,  " + SQL_SELECT_UTENTI_SMALL +
                    " FROM TICKET_ATTACHMENT as t " +
                    " join Utente as u on t.user_id = u.user_id " +
                    "WHERE TICKET_ID = " + ticketId + " ORDER BY FILE_NAME";
 
-            _dt = _fillDataTable(_strSQL);
+            m_dt = mFillDataTable(mStrSQL);
 
             List<Models.MyTicketAttachment> risultato = new List<Models.MyTicketAttachment>();
 
             Models.MyTicketAttachment attach;
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 attach = new Models.MyTicketAttachment(row);
                 attach.Owner = new MyManagerCSharp.Models.MyUserSmall(row);
@@ -515,40 +515,40 @@ namespace MyManagerCSharp.Ticket
 
         public Models.MyTicketAttachment getAttachment(long attachId)
         {
-            _strSQL = "SELECT * FROM TICKET_ATTACHMENT WHERE ID = " + attachId;
-            _dt = _fillDataTable(_strSQL);
+            mStrSQL = "SELECT * FROM TICKET_ATTACHMENT WHERE ID = " + attachId;
+            m_dt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count == 0)
+            if (m_dt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (_dt.Rows.Count > 1)
+            if (m_dt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("id > 0");
             }
 
             Models.MyTicketAttachment attach;
-            attach = new Models.MyTicketAttachment(_dt.Rows[0]);
+            attach = new Models.MyTicketAttachment(m_dt.Rows[0]);
             return attach;
         }
 
 
         public List<MyManagerCSharp.Models.MyUserSmall> getUtentiInTicket(long ticketId, long utenteCorrente)
         {
-            _strSQL = "SELECT DISTINCT " + SQL_SELECT_UTENTI_SMALL +
+            mStrSQL = "SELECT DISTINCT " + SQL_SELECT_UTENTI_SMALL +
                        " FROM TICKET_POST as t " +
                        " join Utente as u on t.user_id = u.user_id " +
                        " WHERE TICKET_ID = " + ticketId +
                        " AND u.user_id <> " + utenteCorrente +
                        " ORDER BY  U.MY_LOGIN";
 
-            _dt = _fillDataTable(_strSQL);
+            m_dt = mFillDataTable(mStrSQL);
 
             List<MyManagerCSharp.Models.MyUserSmall> risultato = new List<MyManagerCSharp.Models.MyUserSmall>();
 
             MyManagerCSharp.Models.MyUserSmall userSmall;
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 userSmall = new MyManagerCSharp.Models.MyUserSmall(row);
 

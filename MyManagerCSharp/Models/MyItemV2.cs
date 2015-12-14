@@ -8,7 +8,7 @@ namespace MyManagerCSharp.Models
     public class MyItemV2
     {
         private int? _iValue = null;
-        private float? _fValue = null;
+      //  private float? _fValue = null;
         private decimal? _dValue = null;
         private string _sValue = "";
 

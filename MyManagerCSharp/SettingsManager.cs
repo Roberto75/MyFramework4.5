@@ -25,9 +25,6 @@ namespace MyManagerCSharp
 
 
         private System.Xml.XmlDocument _document;
-        private System.Xml.XmlNode _node;
-        private System.Xml.XmlNodeList _nodeList;
-
 
         public enum DefaultDriveParameter
         {

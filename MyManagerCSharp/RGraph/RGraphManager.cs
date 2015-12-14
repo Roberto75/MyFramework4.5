@@ -98,9 +98,8 @@ namespace MyManagerCSharp.RGraph
         {
             //eseguo la query
             System.Data.DataTable dt;
-            dt = _fillDataTable(sqlQuery);
-
-
+            dt = mFillDataTable(sqlQuery);
+            
             Models.RGraphModel report = new Models.RGraphModel();
             report.Tipo = tipo;
             report.Id = name;
@@ -495,14 +494,14 @@ namespace MyManagerCSharp.RGraph
 
             if (rotateDataSet)
             {
-                _dt = rotateRigheToColonne(report.Data);
+                m_dt = rotateRigheToColonne(report.Data);
             }
             else
             {
-                _dt = report.Data;
+                m_dt = report.Data;
             }
 
-            if (_dt.Rows.Count == 0)
+            if (m_dt.Rows.Count == 0)
             {
                 report.Html = "";
                 return;
@@ -579,7 +578,7 @@ namespace MyManagerCSharp.RGraph
             //ATTENZIONE:
             //La prima colonna è sempre la LABEL
 
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in m_dt.Rows)
             {
                 //strData += row["valore"] + ",";
 
@@ -647,7 +646,7 @@ namespace MyManagerCSharp.RGraph
                 totale = totale + Decimal.Parse(row["valore"].ToString());
 
 
-                if (_dt.Columns.Contains("my_key"))
+                if (m_dt.Columns.Contains("my_key"))
                 {
                     strMyKeys += String.Format("'{0}',", row["my_key"].ToString().Replace("'", "\'"));
                     //'strMyKeys &= String.Format("'{0}',", row("my_key").ToString().Replace("'", "\'"))
@@ -662,10 +661,10 @@ namespace MyManagerCSharp.RGraph
 
             if (OrderColor)
             {
-                _dt.DefaultView.Sort = "valore desc";
+                m_dt.DefaultView.Sort = "valore desc";
                 indexColor = 0;
 
-                foreach (System.Data.DataRowView row in _dt.DefaultView)
+                foreach (System.Data.DataRowView row in m_dt.DefaultView)
                 {
                     strColors = strColors.Replace(String.Format("'{0}'", row["label"].ToString().Replace("'", "\'")), String.Format("'{0}'", "#" + _palette[indexColor % paletteColors]));
 
@@ -713,7 +712,7 @@ namespace MyManagerCSharp.RGraph
             {
                 decimal percentuale;
 
-                foreach (System.Data.DataRow row in _dt.Rows)
+                foreach (System.Data.DataRow row in m_dt.Rows)
                 {
                     percentuale = 0;
                     if (decimal.Parse(row["valore"].ToString()) != 0)
@@ -788,7 +787,7 @@ namespace MyManagerCSharp.RGraph
             strJavaScript += String.Format("{0}.Draw();", report.Id) + Environment.NewLine;
 
 
-            if (_dt.Columns.Contains("my_key"))
+            if (m_dt.Columns.Contains("my_key"))
             {
                 //strJavaScript += strMyKeys + Environment.NewLine;
                 report.MyKeys = strMyKeys;

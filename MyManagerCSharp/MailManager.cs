@@ -5,12 +5,11 @@ using System.Text;
 
 namespace MyManagerCSharp
 {
-    [CLSCompliant(true)]
-    public class MailManager
+     public class MailManager
     {
         //chiavi per cifrare e decifrare le credenziali persenti nel file di configurazione
-        protected string _key;
-        protected string _IV;
+        protected string mKey;
+        protected string mIV;
 
 
 
@@ -29,7 +28,6 @@ namespace MyManagerCSharp
         #region "TO"
 
         private List<System.Net.Mail.MailAddress> p_To = new List<System.Net.Mail.MailAddress>();
-
 
         public void _To(string address)
         {
@@ -221,7 +219,6 @@ namespace MyManagerCSharp
         public string _MailServer;
 
         public List<System.Net.Mail.Attachment> _Attachments;
-
 
 
         public string send()
@@ -595,20 +592,20 @@ namespace MyManagerCSharp
 
         private string decript(string cipherTextBase64)
         {
-            if (String.IsNullOrEmpty(_key))
+            if (String.IsNullOrEmpty(mKey))
                 throw new ArgumentNullException("Decript key is NULL, usare il metodo setKey");
 
-            if (String.IsNullOrEmpty(_IV))
+            if (String.IsNullOrEmpty(mIV))
                 throw new ArgumentNullException("Decript IV is NULL, usare il metodo setKey");
 
-            return MyManagerCSharp.SecurityManager.AESDecryptSFromBase64String(cipherTextBase64, System.Text.UTF8Encoding.UTF8.GetBytes(_key), System.Text.UTF8Encoding.UTF8.GetBytes(_IV));
+            return MyManagerCSharp.SecurityManager.AESDecryptSFromBase64String(cipherTextBase64, System.Text.UTF8Encoding.UTF8.GetBytes(mKey), System.Text.UTF8Encoding.UTF8.GetBytes(mIV));
         }
 
 
         public void setKey(string key, string IV)
         {
-            _key = key;
-            _IV = IV;
+            mKey = key;
+            mIV = IV;
         }
 
 

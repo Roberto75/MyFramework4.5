@@ -46,42 +46,40 @@ namespace MyManagerCSharp
             Descending
         }
 
-        protected System.Data.Common.DbConnection _connection;
-        protected System.Data.Common.DbProviderFactory _factory;
-        protected System.Data.Common.DbTransaction _transaction;
-
-        protected string _connectionName;
+        protected System.Data.Common.DbConnection mConnection;
+        protected System.Data.Common.DbProviderFactory mFactory;
+        protected System.Data.Common.DbTransaction mTransaction;
+        protected string mConnectionName;
 
         private string _provider;
 
-        protected string _strSQL;
-
-        protected DataTable _dt;
+        protected string mStrSQL;
+        protected DataTable m_dt;
 
         public ManagerDB(string connectionName)
         {
             //In questo costruttore viene passata la connessione da utilizzare 
             _provider = System.Configuration.ConfigurationManager.ConnectionStrings[connectionName].ProviderName;
-            _connectionName = connectionName;
+            mConnectionName = connectionName;
 
             // Creazione dell'oggetto factory
-            _factory = System.Data.Common.DbProviderFactories.GetFactory(_provider);
+            mFactory = System.Data.Common.DbProviderFactories.GetFactory(_provider);
 
-            _connection = _factory.CreateConnection();
-            _connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
+            mConnection = mFactory.CreateConnection();
+            mConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
         }
 
         public ManagerDB(System.Data.Common.DbConnection connection)
         {
             //In questo costruttore viene passata la connessione da utilizzare 
-            _connection = connection;
+             mConnection = connection;
 
-            if (_connection == null)
+            if ( mConnection == null)
             {
                 return;
             }
 
-            switch (_connection.GetType().Name)
+            switch ( mConnection.GetType().Name)
             {
                 case "OdbcConnection":
                     _provider = "System.Data.Odbc";
@@ -102,75 +100,75 @@ namespace MyManagerCSharp
                     _provider = "Npgsql";
                     break;
                 default:
-                    throw new MyException("Il costruttore non gestisce  questo tipo di connessione: " + _connection.GetType().Name);
+                    throw new MyException("Il costruttore non gestisce  questo tipo di connessione: " +  mConnection.GetType().Name);
             }
 
-            _factory = System.Data.Common.DbProviderFactories.GetFactory(_provider);
+            mFactory = System.Data.Common.DbProviderFactories.GetFactory(_provider);
         }
 
         public System.Data.Common.DbConnection getConnection()
         {
-            return _connection;
+            return  mConnection;
         }
 
         public void changeConnectionString(string connectionString)
         {
-            _connection.ConnectionString = connectionString;
+             mConnection.ConnectionString = connectionString;
         }
 
         public void openConnection()
         {
-            if (String.IsNullOrEmpty(_connection.ConnectionString))
+            if (String.IsNullOrEmpty( mConnection.ConnectionString))
             {
                 Debug.WriteLine("ConnectionString IS NULL");
-                if (String.IsNullOrEmpty(_connectionName))
+                if (String.IsNullOrEmpty( mConnectionName))
                 {
                     throw new ApplicationException("ConnectionString non inizializzata");
                 }
                 else
                 {
-                    _connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[_connectionName].ConnectionString;
+                     mConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[ mConnectionName].ConnectionString;
                 }
             }
 
-            if (_connection.State != System.Data.ConnectionState.Open)
+            if ( mConnection.State != System.Data.ConnectionState.Open)
             {
-                _connection.Open();
+                 mConnection.Open();
             }
         }
 
         public void closeConnection()
         {
-            _connection.Close();
-            _connection.Dispose();
+             mConnection.Close();
+             mConnection.Dispose();
         }
 
-        public DataTable _fillDataTable(System.Data.Common.DbCommand command)
+        public DataTable mFillDataTable(System.Data.Common.DbCommand command)
         {
             DataSet dataSet;
             dataSet = new DataSet();
 
-            _fillDataSet(command, dataSet, null, -1);
+            mFillDataSet(command, dataSet, null, -1);
 
             return dataSet.Tables[0];
         }
 
-        public DataTable _fillDataTable(string sql)
+        public DataTable mFillDataTable(string sql)
         {
-            return _fillDataTable(sql, -1);
+            return mFillDataTable(sql, -1);
         }
 
-        public DataTable _fillDataTable(string sql, int timeOut)
+        public DataTable mFillDataTable(string sql, int timeOut)
         {
             DataSet dataSet;
             dataSet = new DataSet();
 
-            _fillDataSet(sql, dataSet, null, timeOut);
+            mFillDataSet(sql, dataSet, null, timeOut);
 
             return dataSet.Tables[0];
         }
 
-        protected DataSet _fillDataSet(string sqlQuery, string dataSetName, string tableName, int timeOut)
+        protected DataSet mFillDataSet(string sqlQuery, string dataSetName, string tableName, int timeOut)
         {
             DataSet dataSet;
 
@@ -183,37 +181,37 @@ namespace MyManagerCSharp
                 dataSet = new DataSet(dataSetName);
             }
 
-            _fillDataSet(sqlQuery, dataSet, tableName, timeOut);
+            mFillDataSet(sqlQuery, dataSet, tableName, timeOut);
 
             return dataSet;
         }
 
-        protected void _fillDataSet(string sqlQuery, DataSet ds, string tableName, int timeOut)
+        protected void mFillDataSet(string sqlQuery, DataSet ds, string tableName, int timeOut)
         {
             System.Data.Common.DbCommand command;
 
-            command = _connection.CreateCommand();
-            command.Connection = _connection;
+            command = mConnection.CreateCommand();
+            command.Connection = mConnection;
             command.CommandText = sqlQuery;
 
-            _fillDataSet(command, ds, tableName, timeOut);
+            mFillDataSet(command, ds, tableName, timeOut);
         }
 
-        protected void _fillDataSet(System.Data.Common.DbCommand command, DataSet ds, string tableName, int timeOut)
+        protected void mFillDataSet(System.Data.Common.DbCommand command, DataSet ds, string tableName, int timeOut)
         {
-            if (_transaction != null)
+            if ( mTransaction != null)
             {
-                command.Transaction = _transaction;
+                command.Transaction =  mTransaction;
             }
 
-            if (_connection.GetType().Name == "OleDbConnection" || _connection.GetType().Name == "OdbcConnection")
+            if ( mConnection.GetType().Name == "OleDbConnection" ||  mConnection.GetType().Name == "OdbcConnection")
             {
                 //'Per ACCESS e PostgreSQL ...
-                command.CommandText = parseSQLforAccessAndPostgreSQL(command.CommandText);
+                command.CommandText = mParseSQLforAccessAndPostgreSQL(command.CommandText);
             }
-            else if (_connection.GetType().Name == "MySqlConnection")
+            else if ( mConnection.GetType().Name == "MySqlConnection")
             {
-                command.CommandText = parseSQLforMySQL(command.CommandText);
+                command.CommandText = mParseSQLforMySQL(command.CommandText);
             }
 
             System.Data.Common.DataAdapter objAdap = null;
@@ -238,7 +236,7 @@ namespace MyManagerCSharp
                     command.CommandTimeout = timeOut;
                 }
 
-                objAdap = getDataAdapter(command);
+                objAdap = _getDataAdapter(command);
 
 
 
@@ -291,14 +289,12 @@ namespace MyManagerCSharp
                 }
             }
         }
-
-
-
-        private System.Data.Common.DataAdapter getDataAdapter(System.Data.Common.DbCommand command)
+       
+        private System.Data.Common.DataAdapter _getDataAdapter(System.Data.Common.DbCommand command)
         {
             System.Data.Common.DataAdapter objAdap = null;
 
-            switch (_connection.GetType().Name)
+            switch ( mConnection.GetType().Name)
             {
 #if MySQL
                 case "MySqlConnection":
@@ -338,15 +334,14 @@ namespace MyManagerCSharp
                 DirectCast(objAdap, Npgsql.NpgsqlDataAdapter).SelectCommand = DirectCast(command, Npgsql.NpgsqlCommand)
 #endif
                 default:
-                    throw new MyException("Tipo di connessione non riconosciuta: " + _connection.GetType().Name);
+                    throw new MyException("Tipo di connessione non riconosciuta: " +  mConnection.GetType().Name);
             }
 
             return objAdap;
         }
+        
 
-
-
-        protected string parseSQLforOracle(string strSQL)
+        protected string mParseSQLforOracle(string strSQL)
         {
             strSQL = strSQL.Replace("GetDate()", "Sysdate");
 
@@ -356,7 +351,7 @@ namespace MyManagerCSharp
         }
 
 
-        protected string parseSQLforMySQL(string strSQL)
+        protected string mParseSQLforMySQL(string strSQL)
         {
             strSQL = strSQL.Replace("GetDate()", "Now()");
 
@@ -373,7 +368,7 @@ namespace MyManagerCSharp
         }
 
 
-        protected string parseSQLforAccessAndPostgreSQL(string strSQL)
+        protected string mParseSQLforAccessAndPostgreSQL(string strSQL)
         {
             //analizzo la stringa SQL per renderla compatibile con ACCESS e PostgreSQL
             //sostituisco @PARAMETRO con ?
@@ -406,7 +401,7 @@ namespace MyManagerCSharp
 
 
 
-        public System.Data.Common.DbParameter _addParameter(System.Data.Common.DbCommand command, string name, Object value)
+        public System.Data.Common.DbParameter mAddParameter(System.Data.Common.DbCommand command, string name, Object value)
         {
             System.Data.Common.DbParameter parameter = null;
 
@@ -418,7 +413,7 @@ namespace MyManagerCSharp
 
                     if (value != null && value != DBNull.Value)
                     {
-                        (parameter as System.Data.SqlClient.SqlParameter).SqlDbType = getSqlDbType(value);
+                        (parameter as System.Data.SqlClient.SqlParameter).SqlDbType = mGetSqlDbType(value);
                     }
                     else
                     {
@@ -434,7 +429,7 @@ namespace MyManagerCSharp
 
                     if (value != null && value != DBNull.Value)
                     {
-                        (parameter as System.Data.OleDb.OleDbParameter).OleDbType = getOleDbType(value);
+                        (parameter as System.Data.OleDb.OleDbParameter).OleDbType = mGetOleDbType(value);
                     }
                     else
                     {
@@ -469,7 +464,7 @@ namespace MyManagerCSharp
 
                     if (value != null && value != DBNull.Value)
                     {
-                        (parameter as Oracle.DataAccess.Client.OracleParameter).OracleDbType = getOracleDbType(value);
+                        (parameter as Oracle.DataAccess.Client.OracleParameter).OracleDbType = mGetOracleDbType(value);
                     }
                     else
                     {
@@ -492,7 +487,7 @@ namespace MyManagerCSharp
             return parameter;
         }
 
-        protected System.Data.SqlDbType getSqlDbType(Object value)
+        protected System.Data.SqlDbType mGetSqlDbType(Object value)
         {
             switch (value.GetType().Name)
             {
@@ -525,7 +520,7 @@ namespace MyManagerCSharp
         }
 
 
-        protected System.Data.OleDb.OleDbType getOleDbType(Object value)
+        protected System.Data.OleDb.OleDbType mGetOleDbType(Object value)
         {
             switch (value.GetType().Name)
             {
@@ -556,7 +551,7 @@ namespace MyManagerCSharp
 
 #if Oracle
 
-        protected Oracle.DataAccess.Client.OracleDbType getOracleDbType(Object value)
+        protected Oracle.DataAccess.Client.OracleDbType mGetOracleDbType(Object value)
         {
             switch (value.GetType().Name)
             {
@@ -612,26 +607,26 @@ namespace MyManagerCSharp
             }
         }
 #endif
-        public int _executeNoQuery(System.Data.Common.DbCommand command)
+        public int mExecuteNoQuery(System.Data.Common.DbCommand command)
         {
             //'Roberto Rutigliano 04/04/2008:  'Per ACCESS e PostgreSQL ...
-            if (_connection.GetType().Name == "OleDbConnection" || _connection.GetType().Name == "OdbcConnection")
+            if (mConnection.GetType().Name == "OleDbConnection" || mConnection.GetType().Name == "OdbcConnection")
             {
-                command.CommandText = parseSQLforAccessAndPostgreSQL(command.CommandText);
+                command.CommandText = mParseSQLforAccessAndPostgreSQL(command.CommandText);
             }
-            else if (_connection.GetType().Name == "MySqlConnection")
+            else if (mConnection.GetType().Name == "MySqlConnection")
             {
-                command.CommandText = parseSQLforMySQL(command.CommandText);
+                command.CommandText = mParseSQLforMySQL(command.CommandText);
             }
-            else if (_connection.GetType().Name == "OracleConnection")
+            else if (mConnection.GetType().Name == "OracleConnection")
             {
-                command.CommandText = parseSQLforOracle(command.CommandText);
+                command.CommandText = mParseSQLforOracle(command.CommandText);
             }
 
 
-            if (_transaction != null)
+            if (mTransaction != null)
             {
-                command.Transaction = _transaction;
+                command.Transaction = mTransaction;
             }
 
             int numeroDiRecordAggiornati;
@@ -656,19 +651,19 @@ namespace MyManagerCSharp
         }
 
 
-        public int _executeNoQuery(string sqlQuery)
+        public int mExecuteNoQuery(string sqlQuery)
         {
-            return _executeNoQuery(sqlQuery, -1);
+            return mExecuteNoQuery(sqlQuery, -1);
         }
 
-        public int _executeNoQuery(string sqlQuery, int timeOut)
+        public int mExecuteNoQuery(string sqlQuery, int timeOut)
         {
             int numeroDiRecordAggiornati;
             System.Data.Common.DbCommand command;
 
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
             command.CommandText = sqlQuery;
-            command.Connection = _connection;
+            command.Connection = mConnection;
 
             if (timeOut != -1)
             {
@@ -678,19 +673,19 @@ namespace MyManagerCSharp
             }
 
 
-            if (_connection.GetType().Name == "OleDbConnection" || _connection.GetType().Name == "OdbcConnection")
+            if (mConnection.GetType().Name == "OleDbConnection" || mConnection.GetType().Name == "OdbcConnection")
             {
-                command.CommandText = parseSQLforAccessAndPostgreSQL(command.CommandText);
+                command.CommandText = mParseSQLforAccessAndPostgreSQL(command.CommandText);
             }
-            else if (_connection.GetType().Name == "MySqlConnection")
+            else if (mConnection.GetType().Name == "MySqlConnection")
             {
-                command.CommandText = parseSQLforMySQL(command.CommandText);
+                command.CommandText = mParseSQLforMySQL(command.CommandText);
             }
 
 
-            if (_transaction != null)
+            if (mTransaction != null)
             {
-                command.Transaction = _transaction;
+                command.Transaction = mTransaction;
             }
 
 
@@ -722,10 +717,10 @@ namespace MyManagerCSharp
             return numeroDiRecordAggiornati;
         }
 
-        protected long _getIdentity()
+        protected long mGetIdentity()
         {
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command =  mConnection.CreateCommand();
 
             switch (command.GetType().Name)
             {
@@ -741,11 +736,11 @@ namespace MyManagerCSharp
                     throw new MyException("GetIdentity(): tipo non supportato " + command.GetType().Name);
             }
 
-            command.Connection = _connection;
+            command.Connection =  mConnection;
 
-            if (_transaction != null)
+            if ( mTransaction != null)
             {
-                command.Transaction = _transaction;
+                command.Transaction =  mTransaction;
             }
 
 
@@ -779,11 +774,11 @@ namespace MyManagerCSharp
 
 
 
-        protected long getSequence(string sequenceName)
+        protected long mGetSequence(string sequenceName)
         {
             string strSQL = "select " + sequenceName + ".nextval from dual";
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command =  mConnection.CreateCommand();
 
             command.CommandText = strSQL;
 
@@ -793,96 +788,96 @@ namespace MyManagerCSharp
 
         #region "__TRANSACTION___"
 
-        public void _transactionBegin(ref System.Data.Common.DbTransaction transaction)
+        public void mTransactionBegin(ref System.Data.Common.DbTransaction transaction)
         {
             if (transaction == null)
             {
                 throw new MyException("Transazione NON inizializzata");
             }
-            _transaction = transaction;
+             mTransaction = transaction;
         }
 
-        public void _transactionBegin()
+        public void mTransactionBegin()
         {
-            if (_transaction != null)
+            if (mTransaction != null)
             {
                 throw new MyException("Transazione già aperta");
             }
-            _transaction = _connection.BeginTransaction();
+            mTransaction = mConnection.BeginTransaction();
         }
 
-        public void _transactionCommit()
+        public void mTransactionCommit()
         {
-            if (_transaction == null)
+            if (mTransaction == null)
             {
                 throw new MyException("Transazione NON inizializzata");
             }
-            _transaction.Commit();
-            _transaction.Dispose();
-            _transaction = null;
+            mTransaction.Commit();
+            mTransaction.Dispose();
+            mTransaction = null;
         }
 
-        public void _transactionRollback()
+        public void mTransactionRollback()
         {
-            if (_transaction == null)
+            if (mTransaction == null)
             {
                 throw new MyException("Transazione NON inizializzata");
 
             }
-            _transaction.Rollback();
-            _transaction.Dispose();
-            _transaction = null;
+            mTransaction.Rollback();
+            mTransaction.Dispose();
+            mTransaction = null;
         }
 
-        public System.Data.Common.DbTransaction _getTransaction()
+        public System.Data.Common.DbTransaction mGetTransaction()
         {
             //'26/01/2012 commento
             //' If _transaction Is Nothing Then
             //' Throw New ManagerException("Transazione NON inizializzata")
             //'xit Function
             //'  End If
-            return _transaction;
+            return mTransaction;
         }
         #endregion
 
 
 
-        public string _executeScalar(string sqlQuery)
+        public string mExecuteScalar(string sqlQuery)
         {
-            return _executeScalar(sqlQuery, -1);
+            return mExecuteScalar(sqlQuery, -1);
         }
 
-        public string _executeScalar(string sqlQuery, int timeOut)
+        public string mExecuteScalar(string sqlQuery, int timeOut)
         {
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command =  mConnection.CreateCommand();
 
             command.CommandText = sqlQuery;
-            command.Connection = _connection;
+            command.Connection =  mConnection;
 
             if (timeOut != -1)
             {
                 command.CommandTimeout = timeOut;
             }
 
-            if (_transaction != null)
+            if ( mTransaction != null)
             {
-                command.Transaction = _transaction;
+                command.Transaction =  mTransaction;
             }
 
-            return _executeScalar(command);
+            return mExecuteScalar(command);
         }
 
-        public string _executeScalar(System.Data.Common.DbCommand command)
+        public string mExecuteScalar(System.Data.Common.DbCommand command)
         {
 
-            if (_connection.GetType().Name == "OleDbConnection" || _connection.GetType().Name == "OdbcConnection")
+            if ( mConnection.GetType().Name == "OleDbConnection" ||  mConnection.GetType().Name == "OdbcConnection")
             {
-                command.CommandText = parseSQLforAccessAndPostgreSQL(command.CommandText);
+                command.CommandText = mParseSQLforAccessAndPostgreSQL(command.CommandText);
             }
-            else if (_connection.GetType().Name == "MySqlConnection")
+            else if ( mConnection.GetType().Name == "MySqlConnection")
             {
-                command.CommandText = parseSQLforMySQL(command.CommandText);
+                command.CommandText = mParseSQLforMySQL(command.CommandText);
             }
 
 
@@ -891,9 +886,9 @@ namespace MyManagerCSharp
             try
             {
 
-                if (_transaction != null)
+                if ( mTransaction != null)
                 {
-                    command.Transaction = _transaction;
+                    command.Transaction =  mTransaction;
                 }
 
                 obj = command.ExecuteScalar();
@@ -915,29 +910,29 @@ namespace MyManagerCSharp
         }
 
 
-        protected int executeNoQueryWithDuplicateKey(string sqlQuery)
+        protected int mExecuteNoQueryWithDuplicateKey(string sqlQuery)
         {
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command =  mConnection.CreateCommand();
 
             command.CommandText = sqlQuery;
-            command.Connection = _connection;
+            command.Connection =  mConnection;
 
-            if (_transaction != null)
+            if ( mTransaction != null)
             {
-                command.Transaction = _transaction;
+                command.Transaction =  mTransaction;
             }
 
-            return executeNoQueryWithDuplicateKey(command);
+            return mExecuteNoQueryWithDuplicateKey(command);
 
         }
 
-        protected int executeNoQueryWithDuplicateKey(System.Data.Common.DbCommand command)
+        protected int mExecuteNoQueryWithDuplicateKey(System.Data.Common.DbCommand command)
         {
 
             try
             {
-                return _executeNoQuery(command);
+                return mExecuteNoQuery(command);
             }
             catch (MyManagerCSharp.MyException ex)
             {
@@ -960,11 +955,11 @@ namespace MyManagerCSharp
             }
         }
 
-        protected int executeDeleteWithContraintViolation(string sql)
+        protected int mExecuteDeleteWithContraintViolation(string sql)
         {
             try
             {
-                return _executeNoQuery(sql);
+                return mExecuteNoQuery(sql);
             }
             catch (MyManagerCSharp.MyException ex)
             {
@@ -987,8 +982,6 @@ namespace MyManagerCSharp
             }
         }
 
-
-
         public string getWhereConditionByDate(string queryField, DateTime dataIniziale, DateTime dataFinale)
         {
 
@@ -998,7 +991,7 @@ namespace MyManagerCSharp
             }
 
 
-            if (_connection.GetType().Name == "MySqlConnection")
+            if ( mConnection.GetType().Name == "MySqlConnection")
             {
                 return String.Format(" AND ( CAST( {0} AS DATE)  BETWEEN CAST('{1}' AS DATE) AND CAST('{2}' AS DATE) ) ", queryField, dataIniziale.ToString("yyyy-MM-dd"), dataFinale.ToString("yyyy-MM-dd"));
             }
@@ -1034,7 +1027,7 @@ namespace MyManagerCSharp
                     strWHERE += String.Format(" AND (DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3}) ", queryField, ieri.Day, ieri.Month, ieri.Year);
                     break;
                 case Days.Ultimi_7_giorni:
-                    if (_connection.GetType().Name == "MySqlConnection")
+                    if ( mConnection.GetType().Name == "MySqlConnection")
                     {
                         strWHERE += String.Format(" AND ( {0} Between  date_add(Curdate(), INTERVAL -7 DAY)   AND  Curdate() )", queryField);
                     }
@@ -1044,7 +1037,7 @@ namespace MyManagerCSharp
                     }
                     break;
                 case Days.Ultimi_30_giorni:
-                    if (_connection.GetType().Name == "MySqlConnection")
+                    if ( mConnection.GetType().Name == "MySqlConnection")
                     {
                         strWHERE += String.Format(" AND ( {0} Between  date_add(Curdate(), INTERVAL -30 DAY)   AND  Curdate() )", queryField);
                     }
@@ -1054,7 +1047,7 @@ namespace MyManagerCSharp
                     }
                     break;
                 case Days.Ultimi_15_giorni:
-                    if (_connection.GetType().Name == "MySqlConnection")
+                    if ( mConnection.GetType().Name == "MySqlConnection")
                     {
                         strWHERE += String.Format(" AND ( {0} Between  date_add(Curdate(), INTERVAL -15 DAY)   AND  Curdate() )", queryField);
                     }
@@ -1184,19 +1177,19 @@ namespace MyManagerCSharp
 
         public void reseedIdentity(string tableName, int newValue)
         {
-            _strSQL = String.Format("DBCC CHECKIDENT ( {0}, RESEED, {1} ) WITH NO_INFOMSGS", tableName, newValue);
-            _executeNoQuery(_strSQL);
+            mStrSQL = String.Format("DBCC CHECKIDENT ( {0}, RESEED, {1} ) WITH NO_INFOMSGS", tableName, newValue);
+            mExecuteNoQuery(mStrSQL);
         }
 
 
         public string getLastMigrationId()
         {
-            _strSQL = "SELECT MigrationId   FROM __MigrationHistory";
-            _dt = _fillDataTable(_strSQL);
+            mStrSQL = "SELECT MigrationId   FROM __MigrationHistory";
+            m_dt = mFillDataTable(mStrSQL);
 
             //prendo l'ultima riga!
             string temp;
-            temp = _dt.Rows[_dt.Rows.Count - 1][0].ToString();
+            temp = m_dt.Rows[m_dt.Rows.Count - 1][0].ToString();
 
             Debug.WriteLine(temp);
             return temp;

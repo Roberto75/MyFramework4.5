@@ -9,7 +9,7 @@ namespace MyManagerCSharp.Models
 {
     public class MyDate
     {
-        protected  DateTime? _dataInizio;
+        protected DateTime? _dataInizio;
         protected DateTime? _dataFine;
         protected ManagerDB.Days? _days;
 
@@ -43,12 +43,12 @@ namespace MyManagerCSharp.Models
             }
             set
             {
-             //   _days = null;
+                //   _days = null;
                 _dataInizio = value;
             }
 
         }
-        
+
         public DateTime? DataFine
         {
             get
@@ -64,11 +64,11 @@ namespace MyManagerCSharp.Models
             }
             set
             {
-            //    _days = null;
+                //    _days = null;
                 _dataFine = value;
             }
         }
-        
+
         public DateTime decodeDaysDataInizio()
         {
             if (_days == null)
@@ -84,7 +84,7 @@ namespace MyManagerCSharp.Models
             {
 
                 case ManagerDB.Days.Tutti:
-                    risultato = DateTime.MinValue ;
+                    risultato = DateTime.MinValue;
                     break;
                 case ManagerDB.Days.Oggi:
                     risultato = dataCorrente;
