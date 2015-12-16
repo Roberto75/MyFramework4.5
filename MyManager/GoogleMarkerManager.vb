@@ -33,7 +33,7 @@
     Public Function _getFromLogSession() As Data.DataTable
         Dim strSQL As String
         strSQL = "select count(*) as TOT,  latitude, longitude  from LOG_SESSION where (latitude is not null) or (longitude is not null) group by latitude, longitude"
-        Return _fillDataTable(strSQL)
+        Return mFillDataTable(strSQL)
     End Function
 
     Public Function getHTML(ByVal groupName As String, ByVal poits As List(Of MyManager.GoogleMapsPoint)) As String

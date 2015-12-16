@@ -27,15 +27,15 @@ namespace My.MessageQueue
 
         public bool exist(DistributionList list)
         {
-            _strSQL = "select count(*) from mmq.DistributionList  where UPPER(name) = @NAME ";
+            mStrSQL = "select count(*) from mmq.DistributionList  where UPPER(name) = @NAME ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
-            _addParameter(command, "@NAME", list.name.Trim());
-            command.CommandText = _strSQL;
+            mAddParameter(command, "@NAME", list.name.Trim());
+            command.CommandText = mStrSQL;
 
-            string risultato = _executeScalar(command);
+            string risultato = mExecuteScalar(command);
 
             if (int.Parse(risultato) > 1)
             {
@@ -58,20 +58,20 @@ namespace My.MessageQueue
 
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            _transactionBegin();
+            command = mConnection.CreateCommand();
+            mTransactionBegin();
 
             long newId = -1;
             try
             {
-                _strSQL = "INSERT INTO mmq.DistributionList ( date_added , name, nota, distribution_type ) VALUES ( GETDATE() , @NAME , @NOTA , " + (int)list.distributionType + ")";
-                _addParameter(command, "@NAME", list.name);
-                _addParameter(command, "@NOTA", list.nota);
-                command.CommandText = _strSQL;
+                mStrSQL = "INSERT INTO mmq.DistributionList ( date_added , name, nota, distribution_type ) VALUES ( GETDATE() , @NAME , @NOTA , " + (int)list.distributionType + ")";
+                mAddParameter(command, "@NAME", list.name);
+                mAddParameter(command, "@NOTA", list.nota);
+                command.CommandText = mStrSQL;
 
-                _executeNoQuery(command);
+                mExecuteNoQuery(command);
 
-                newId = _getIdentity();
+                newId = mGetIdentity();
 
                 //Members
                 if (list.Members != null)
@@ -84,19 +84,19 @@ namespace My.MessageQueue
                             insertMember(m);
                         }
 
-                        _strSQL = "INSERT INTO mmq.[DistributionListMembers] ( distribution_id , member_id , date_added ) VALUES (  " + newId + ", " + m.id + " ,  GetDate() )";
-                        command.CommandText = _strSQL;
+                        mStrSQL = "INSERT INTO mmq.[DistributionListMembers] ( distribution_id , member_id , date_added ) VALUES (  " + newId + ", " + m.id + " ,  GetDate() )";
+                        command.CommandText = mStrSQL;
 
-                        _executeNoQuery(command);
+                        mExecuteNoQuery(command);
                     }
                 }
 
 
-                _transactionCommit();
+                 mTransactionCommit();
             }
             catch (Exception ex)
             {
-                _transactionRollback();
+                mTransactionRollback();
                 Debug.WriteLine("Exception: " + ex.Message);
                 throw ex;
             }
@@ -110,18 +110,18 @@ namespace My.MessageQueue
             long newId = -1;
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
 
-            _strSQL = "INSERT INTO mmq.Member ( date_added , name, email ) VALUES ( GETDATE() , @NAME , @EMAIL )";
-            _addParameter(command, "@NAME", m.name);
-            _addParameter(command, "@EMAIL", m.email);
+            mStrSQL = "INSERT INTO mmq.Member ( date_added , name, email ) VALUES ( GETDATE() , @NAME , @EMAIL )";
+            mAddParameter(command, "@NAME", m.name);
+            mAddParameter(command, "@EMAIL", m.email);
 
-            command.CommandText = _strSQL;
+            command.CommandText = mStrSQL;
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            newId = _getIdentity();
+            newId = mGetIdentity();
 
             m.id = newId;
 
@@ -131,30 +131,30 @@ namespace My.MessageQueue
 
         private bool existsMemeber(Member m)
         {
-            _strSQL = "select * from mmq.Member " +
+            mStrSQL = "select * from mmq.Member " +
                " where UPPER(name) = @NAME and UPPER(email) = @EMAIL ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
-            _addParameter(command, "@NAME", m.name.Trim());
-            _addParameter(command, "@EMAIL", m.email.Trim());
+            mAddParameter(command, "@NAME", m.name.Trim());
+            mAddParameter(command, "@EMAIL", m.email.Trim());
 
-            command.CommandText = _strSQL;
+            command.CommandText = mStrSQL;
 
-            _dt = _fillDataTable(command);
+            mDt = mFillDataTable(command);
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return false;
             }
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.Record_duplicato);
             }
                         
-            m.id = long.Parse(_dt.Rows[0]["id"].ToString());
+            m.id = long.Parse(mDt.Rows[0]["id"].ToString());
 
             return true;
         }
@@ -180,8 +180,8 @@ namespace My.MessageQueue
                 m.id = insertMember(m);
             }
 
-            _strSQL = "INSERT INTO mmq.[DistributionListMembers] ( distribution_id , member_id , date_added ) VALUES (  " + distributionListId + ", " + m.id + " ,  GetDate() )";
-            _executeNoQuery(_strSQL);
+            mStrSQL = "INSERT INTO mmq.[DistributionListMembers] ( distribution_id , member_id , date_added ) VALUES (  " + distributionListId + ", " + m.id + " ,  GetDate() )";
+            mExecuteNoQuery(mStrSQL);
 
             return true;
         }
@@ -189,8 +189,8 @@ namespace My.MessageQueue
 
         public bool deleteMember(long distributionListId, long memberId)
         {
-            _strSQL = "DELETE FROM mmq.DistributionListMembers WHERE distribution_id = " + distributionListId + " and member_id = " + memberId;
-            return _executeNoQuery(_strSQL) == 1;
+            mStrSQL = "DELETE FROM mmq.DistributionListMembers WHERE distribution_id = " + distributionListId + " and member_id = " + memberId;
+            return mExecuteNoQuery(mStrSQL) == 1;
         }
 
 
@@ -198,21 +198,21 @@ namespace My.MessageQueue
 
         public DistributionList getDistributionList(long id)
         {
-            _strSQL = "SELECT * FROM mmq.[DistributionList] WHERE id = " + id;
-            _dt = _fillDataTable(_strSQL);
+            mStrSQL = "SELECT * FROM mmq.[DistributionList] WHERE id = " + id;
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.Record_duplicato);
             }
 
             DistributionList list;
-            list = new DistributionList(_dt.Rows[0]);
+            list = new DistributionList(mDt.Rows[0]);
 
             setMembers(list);
 
@@ -221,13 +221,13 @@ namespace My.MessageQueue
 
         public void setMembers(DistributionList list)
         {
-            _strSQL = "select t2.* " +
+            mStrSQL = "select t2.* " +
                 " from mmq.[DistributionListMembers] as t1 " +
                 " join mmq.Member as t2 on t1.member_id = t2.id " +
                 " where distribution_id = " + list.id +
                 " order by t2.name";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
                        
 
             if (list.Members == null)
@@ -235,13 +235,13 @@ namespace My.MessageQueue
                 list.Members = new List<Member>();
             }
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return;
             }
 
             Member member;
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 member = new Member(row);
                 list.Members.Add(member);
@@ -253,17 +253,17 @@ namespace My.MessageQueue
             List<DistributionList> risultato = new List<DistributionList>();
 
 
-            _strSQL = "SELECT * FROM mmq.DistributionList order by name";
-            _dt = _fillDataTable(_strSQL);
+            mStrSQL = "SELECT * FROM mmq.DistributionList order by name";
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return risultato;
             }
 
 
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 risultato.Add(new DistributionList(row));
             }

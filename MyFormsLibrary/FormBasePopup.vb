@@ -1,6 +1,6 @@
 ﻿Public Class FormBasePopup
 
-    Protected _connection As Data.Common.DbConnection
+    Protected mConnection As Data.Common.DbConnection
 
     Public ReadOnly Property MyStatusBar() As Windows.Forms.ToolStripStatusLabel
         Get
@@ -21,7 +21,7 @@
         If Not Me.Owner Is Nothing Then
             Me.Icon = Me.Owner.Icon
         End If
-        Me._connection = connection
+        Me.mConnection = connection
         Return True
     End Function
 

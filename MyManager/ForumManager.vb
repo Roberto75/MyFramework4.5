@@ -42,7 +42,7 @@ Public Class ForumManager
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
 
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
         oleDbCommand.Parameters.Add("@USER_ID", OleDb.OleDbType.VarChar).Value = userId
         oleDbCommand.Parameters.Add("@NOME", OleDb.OleDbType.VarChar).Value = nome
         oleDbCommand.Parameters.Add("@COGNOME", OleDb.OleDbType.VarChar).Value = cognome
@@ -57,15 +57,15 @@ Public Class ForumManager
 
 
     Public Function updateEmail(ByVal userId As Long, ByVal email As String) As Boolean
-        _strSql = "UPDATE UTENTI SET DATE_MODIFIED = NOW ,EMAIL = @email " & _
+        mStrSQL = "UPDATE UTENTI SET DATE_MODIFIED = NOW ,EMAIL = @email " & _
                                                      " WHERE USER_ID=" & userId
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
-        command.CommandText = _strSql
+        command = mConnection.CreateCommand()
+        command.CommandText = mStrSQL
 
-        Me._addParameter(command, "@email", email)
-        Me._executeNoQuery(command)
+        Me.mAddParameter(command, "@email", email)
+        Me.mExecuteNoQuery(command)
 
         Return True
     End Function
@@ -80,7 +80,7 @@ Public Class ForumManager
         Dim strSQL As String = "UPDATE POST SET TESTO = @TESTO" & _
                                                 " WHERE POST_ID=" & postId
 
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
         oleDbCommand.Parameters.Add("@TESTO", OleDb.OleDbType.VarChar).Value = testo
         oleDbCommand.ExecuteNonQuery()
@@ -112,7 +112,7 @@ Public Class ForumManager
                   " VALUES ( NULL, '" & testo.Replace("'", "''") & "', " & userId & ", " & threadId & ", true )"
         End If
 
-        Dim command As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim command As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
         command.ExecuteNonQuery()
 
         'Ottengo in codice id del nuovo elemento appena inserito...
@@ -150,7 +150,7 @@ Public Class ForumManager
         sqlQuery = "INSERT INTO THREAD ( FK_FORUM_ID, NOME, FK_USER_ID )" & _
                    " VALUES ( " & forumId & ", '" & nome.Replace("'", "''") & "', " & userId & " )"
 
-        Dim command As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim command As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
         command.ExecuteNonQuery()
 
         'Ottengo in codice id del nuovo elemento appena inserito...
@@ -173,7 +173,7 @@ Public Class ForumManager
         sqlQuery = "INSERT INTO FORUM (NOME, DESCRIZIONE, fk_discussion_id  )" & _
                    " VALUES (  '" & nome.Replace("'", "''") & "', '" & descrizione.Replace("'", "''") & "' , " & discussion_id & ")"
 
-        Dim command As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim command As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
         command.ExecuteNonQuery()
 
         'Ottengo in codice id del nuovo elemento appena inserito...
@@ -196,7 +196,7 @@ Public Class ForumManager
 
 
     'Public Function getMercatinoList(ByVal discussionId As Long, ByVal ordinamento As String) As Data.DataSet
-    '    Dim command As New System.Data.OleDb.OleDbCommand("listaForumMercatino", _connection)
+    '    Dim command As New System.Data.OleDb.OleDbCommand("listaForumMercatino", mConnection)
     '    command.CommandType = CommandType.StoredProcedure
     '    ' command.Parameters.Add(New System.Data.OleDb.OleDbParameter("THREADID", OleDb.OleDbType.Numeric).Value = threadId)
 
@@ -262,7 +262,7 @@ Public Class ForumManager
 
 
     Public Function getForumListOLD(ByVal discussionId As Long, ByVal ordinamento As String) As Data.DataSet
-        Dim command As New System.Data.OleDb.OleDbCommand("listaForum", _connection)
+        Dim command As New System.Data.OleDb.OleDbCommand("listaForum", mConnection)
         command.CommandType = CommandType.StoredProcedure
         ' command.Parameters.Add(New System.Data.OleDb.OleDbParameter("THREADID", OleDb.OleDbType.Numeric).Value = threadId)
 
@@ -346,7 +346,7 @@ Public Class ForumManager
                 " ORDER BY post.date_added DESC "
 
 
-        'Dim command As New System.Data.OleDb.OleDbCommand("lastPostFromThread", _connection)
+        'Dim command As New System.Data.OleDb.OleDbCommand("lastPostFromThread", mConnection)
         'command.CommandType = CommandType.StoredProcedure
         'command.Parameters.Add("@THREADID", OleDb.OleDbType.Integer).Value = threadId
 
@@ -384,7 +384,7 @@ Public Class ForumManager
                     " WHERE forum.forum_id = " & forumId & _
                     " ORDER BY post.date_added DESC "
 
-        'Dim command As New System.Data.OleDb.OleDbCommand("lastPostFromForum", _connection)
+        'Dim command As New System.Data.OleDb.OleDbCommand("lastPostFromForum", mConnection)
         'command.CommandType = CommandType.StoredProcedure
 
         'command.Parameters.Add("FORUMID", OleDb.OleDbType.Integer).Value = forumId
@@ -421,7 +421,7 @@ Public Class ForumManager
         Dim sqlQuery As String
         sqlQuery = "select fk_thread_id from post where post_id = " & postId
 
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim risultato As Long
         risultato = oleDbCommand.ExecuteScalar()
@@ -435,7 +435,7 @@ Public Class ForumManager
         Dim sqlQuery As String
         sqlQuery = "select fk_forum_id from thread where thread_id = " & threadId
 
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim risultato As Long
         risultato = oleDbCommand.ExecuteScalar()
@@ -449,7 +449,7 @@ Public Class ForumManager
         Dim sqlQuery As String
         sqlQuery = "select TESTO from post where post_id = " & postId
 
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim risultato As String
         risultato = oleDbCommand.ExecuteScalar()
@@ -463,7 +463,7 @@ Public Class ForumManager
         Dim sqlQuery As String
         sqlQuery = "select NOME from thread where thread_id = " & threadId
 
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim risultato As String
         risultato = oleDbCommand.ExecuteScalar()
@@ -477,7 +477,7 @@ Public Class ForumManager
         Dim sqlQuery As String
         sqlQuery = "select NOME from forum where forum_id = " & forumId
 
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim risultato As String
         risultato = oleDbCommand.ExecuteScalar()
@@ -490,7 +490,7 @@ Public Class ForumManager
         Dim sqlQuery As String
         sqlQuery = "select count(*) from post where fk_thread_id = " & threadId
 
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim risultato As Integer
         risultato = oleDbCommand.ExecuteScalar()
@@ -508,10 +508,10 @@ Public Class ForumManager
         Dim esito As Boolean = False
 
         Dim command As System.Data.OleDb.OleDbCommand
-        command = New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        command = New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim transaction As System.Data.OleDb.OleDbTransaction
-        transaction = Me._connection.BeginTransaction()
+        transaction = Me.mConnection.BeginTransaction()
 
         command.Transaction = transaction
         Try
@@ -552,10 +552,10 @@ Public Class ForumManager
         Dim esito As Boolean = False
 
         Dim command As System.Data.OleDb.OleDbCommand
-        command = New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        command = New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim transaction As System.Data.OleDb.OleDbTransaction
-        transaction = Me._connection.BeginTransaction()
+        transaction = Me.mConnection.BeginTransaction()
 
         command.Transaction = transaction
         Try
@@ -596,10 +596,10 @@ Public Class ForumManager
         Dim esito As Boolean = False
 
         Dim command As System.Data.OleDb.OleDbCommand
-        command = New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        command = New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim transaction As System.Data.OleDb.OleDbTransaction
-        transaction = Me._connection.BeginTransaction()
+        transaction = Me.mConnection.BeginTransaction()
 
         command.Transaction = transaction
         Try
@@ -650,10 +650,10 @@ Public Class ForumManager
         Dim esito As Boolean = False
 
         Dim command As System.Data.OleDb.OleDbCommand
-        command = New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        command = New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim transaction As System.Data.OleDb.OleDbTransaction
-        transaction = Me._connection.BeginTransaction()
+        transaction = Me.mConnection.BeginTransaction()
 
         command.Transaction = transaction
         Try

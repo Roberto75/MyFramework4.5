@@ -2,7 +2,7 @@
 
     Protected _statusBar As Windows.Forms.ToolStripStatusLabel
     Protected _progressBar As Windows.Forms.ToolStripProgressBar
-    Protected _connection As System.Data.Common.DbConnection
+    Protected mConnection As System.Data.Common.DbConnection
 
     Private _helpIndexTopicForm As String
     Private _helpNameSpace As String
@@ -12,14 +12,14 @@
 
     'Public Overridable Overloads Function _init() As Boolean
     '    Me._statusBar = Nothing
-    '    Me._connection = Nothing
+    '    Me.mConnection = Nothing
     '    Me._progressBar = Nothing
     '    Return True
     'End Function
 
 
     'Public Overridable Overloads Function _init(ByRef connection As System.Data.Common.DbConnection) As Boolean
-    '    Me._connection = connection
+    '    Me.mConnection = connection
     '    Me._statusBar = Nothing
     '    Me._progressBar = Nothing
     '    Return True
@@ -29,12 +29,12 @@
     'Public Overridable Overloads Function _init(ByRef statusBar As Windows.Forms.ToolStripStatusLabel, ByRef progressBar As Windows.Forms.ToolStripProgressBar) As Boolean
     '    Me._statusBar = statusBar
     '    Me._progressBar = progressBar
-    '    Me._connection = Nothing
+    '    Me.mConnection = Nothing
     '    Return True
     'End Function
 
     Public Overridable Overloads Function _init(ByRef connection As System.Data.Common.DbConnection, ByRef statusBar As Windows.Forms.ToolStripStatusLabel, ByRef progressBar As Windows.Forms.ToolStripProgressBar) As Boolean
-        Me._connection = connection
+        Me.mConnection = connection
         Me._progressBar = progressBar
         Me._statusBar = statusBar
         Return True

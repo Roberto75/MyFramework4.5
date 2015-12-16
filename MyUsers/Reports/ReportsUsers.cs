@@ -23,25 +23,25 @@ namespace MyUsers.Reports
 
         public MyManagerCSharp.RGraph.Models.RGraphModel getLoginByDate(string reportId, MyManagerCSharp.Log.LogManager.Days days, long userId)
         {
-            _strSQL = "select count(*) as valore, CAST(date_added AS DATE)  as label "
+            mStrSQL = "select count(*) as valore, CAST(date_added AS DATE)  as label "
                 + " from MyLogUSer as t1 ";
 
-            _strSQL += " WHERE  (t1.tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' or  t1.tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "' )";
+            mStrSQL += " WHERE  (t1.tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' or  t1.tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "' )";
 
-            _strSQL += getWhereConditionByDate("date_added", days);
+            mStrSQL += getWhereConditionByDate("date_added", days);
 
             if (userId != -1)
             {
-                _strSQL += " AND t1.user_id = " + userId;
+                mStrSQL += " AND t1.user_id = " + userId;
             }
 
-            _strSQL += " GROUP BY CAST(date_added AS DATE) "
+            mStrSQL += " GROUP BY CAST(date_added AS DATE) "
                 + " ORDER BY CAST(date_added AS DATE) ";
 
             MyManagerCSharp.RGraph.Models.RGraphModel report = new MyManagerCSharp.RGraph.Models.RGraphModel();
 
             report.Id = reportId;
-            report.Data = _fillDataTable(_strSQL);
+            report.Data = mFillDataTable(mStrSQL);
             report.Tipo = ReportType.Line;
             report.Label = LabelType.LabelAndValore;
             report.Titolo = "Numero di accessi eseguiti " + days.ToString().Replace("_", " ");
@@ -77,30 +77,30 @@ namespace MyUsers.Reports
         public System.Data.DataTable getLastLogin(MyManagerCSharp.Log.LogManager.Days days)
         {
 
-            _strSQL = "select date_last_login,  my_login, user_id  from Utente Where (1=1) ";
-            _strSQL += getWhereConditionByDate("date_last_login", days);
-            _strSQL += "order by date_last_login desc";
+            mStrSQL = "select date_last_login,  my_login, user_id  from Utente Where (1=1) ";
+            mStrSQL += getWhereConditionByDate("date_last_login", days);
+            mStrSQL += "order by date_last_login desc";
 
-            return _fillDataTable(_strSQL);
+            return mFillDataTable(mStrSQL);
         }
 
 
         public MyManagerCSharp.RGraph.Models.RGraphModel getLoginTopByUser(string reportId, int top, MyManagerCSharp.Log.LogManager.Days days, MyManagerCSharp.Log.LogUserManager.LogType loginType)
         {
-            _strSQL = "select top " + top + " t2.my_login as label, count (*) as valore" +
+            mStrSQL = "select top " + top + " t2.my_login as label, count (*) as valore" +
                 "  from MyLogUSer as t1 " +
                 " join Utente as t2 on t1.user_id = t2.user_id " +
                 " where t1.tipo = '" + loginType.ToString() + "' ";
 
-            _strSQL += getWhereConditionByDate("t1.date_added", days);
+            mStrSQL += getWhereConditionByDate("t1.date_added", days);
 
-            _strSQL += " GROUP BY  my_login " +
+            mStrSQL += " GROUP BY  my_login " +
                " order by count(*) desc";
 
             MyManagerCSharp.RGraph.Models.RGraphModel report = new MyManagerCSharp.RGraph.Models.RGraphModel();
 
             report.Id = reportId;
-            report.Data = _fillDataTable(_strSQL);
+            report.Data = mFillDataTable(mStrSQL);
 
             report.Tipo = ReportType.HBar;
             report.Label = LabelType.LabelAndValore;
@@ -130,16 +130,16 @@ namespace MyUsers.Reports
 
         public MyManagerCSharp.RGraph.Models.RGraphModel getLoginSuccessAndFailure(string reportId, int top, MyManagerCSharp.Log.LogManager.Days days)
         {
-            _strSQL = "SELECT TOP " + top + " MY_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE FROM UTENTE WHERE ( LOGIN_SUCCESS > 0 Or LOGIN_FAILURE > 0 ) AND (DATE_DELETED is null) ";
+            mStrSQL = "SELECT TOP " + top + " MY_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE FROM UTENTE WHERE ( LOGIN_SUCCESS > 0 Or LOGIN_FAILURE > 0 ) AND (DATE_DELETED is null) ";
 
-            //_strSQL +=" ORDER BY MY_LOGIN ";
-            _strSQL += " ORDER BY (LOGIN_SUCCESS +  LOGIN_FAILURE) desc ";
+            //mStrSQL +=" ORDER BY MY_LOGIN ";
+            mStrSQL += " ORDER BY (LOGIN_SUCCESS +  LOGIN_FAILURE) desc ";
 
 
             MyManagerCSharp.RGraph.Models.RGraphModel report = new MyManagerCSharp.RGraph.Models.RGraphModel();
 
             report.Id = reportId;
-            report.Data = _fillDataTable(_strSQL);
+            report.Data = mFillDataTable(mStrSQL);
 
             report.Tipo = ReportType.HBar;
             report.Label = LabelType.LabelAndValore;
@@ -158,45 +158,45 @@ namespace MyUsers.Reports
         public System.Data.DataTable getLoginByDayAsTable(DateTime dataDiRiferimento, long userId)
         {
 
-            _strSQL = "SELECT t1.*, t2.my_login ";
+            mStrSQL = "SELECT t1.*, t2.my_login ";
 
             if (userId != -1)
             {
-                _strSQL = "SELECT t1.date_added as [Data], t1.ip_address as IP";
+                mStrSQL = "SELECT t1.date_added as [Data], t1.ip_address as IP";
             }
 
-            _strSQL += " FROM MyLogUser as t1 " +
+            mStrSQL += " FROM MyLogUser as t1 " +
                     " left join Utente as t2 on t1.user_id = t2.user_id ";
 
-            _strSQL += " WHERE (tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' OR tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "') ";
+            mStrSQL += " WHERE (tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' OR tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "') ";
 
-            _strSQL += String.Format("AND ( DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3} ) ", "t1.date_added", dataDiRiferimento.Day, dataDiRiferimento.Month, dataDiRiferimento.Year);
+            mStrSQL += String.Format("AND ( DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3} ) ", "t1.date_added", dataDiRiferimento.Day, dataDiRiferimento.Month, dataDiRiferimento.Year);
 
 
             if (userId != -1)
             {
-                _strSQL += " AND t1.user_id = " + userId;
+                mStrSQL += " AND t1.user_id = " + userId;
             }
 
 
-            _strSQL += " ORDER BY t1.date_added asc ";
+            mStrSQL += " ORDER BY t1.date_added asc ";
 
-            return _fillDataTable(_strSQL);
+            return mFillDataTable(mStrSQL);
         }
 
         public MyManagerCSharp.RGraph.Models.RGraphModel getLoginByDay(string reportId, DateTime dataDiRiferimento)
         {
-            _strSQL = "SELECT * FROM MyLogUser WHERE (tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' OR tipo = " + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "') ";
+            mStrSQL = "SELECT * FROM MyLogUser WHERE (tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' OR tipo = " + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "') ";
 
-            _strSQL += String.Format("AND ( DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3} ) ", "date_added", dataDiRiferimento.Day, dataDiRiferimento.Month, dataDiRiferimento.Year);
+            mStrSQL += String.Format("AND ( DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3} ) ", "date_added", dataDiRiferimento.Day, dataDiRiferimento.Month, dataDiRiferimento.Year);
 
-            _strSQL += " ORDER BY date_added asc";
+            mStrSQL += " ORDER BY date_added asc";
 
 
             MyManagerCSharp.RGraph.Models.RGraphModel report = new MyManagerCSharp.RGraph.Models.RGraphModel();
 
             report.Id = reportId;
-            report.Data = _fillDataTable(_strSQL);
+            report.Data = mFillDataTable(mStrSQL);
 
             report.Tipo = ReportType.HBar;
             report.Label = LabelType.LabelAndValore;
@@ -218,17 +218,17 @@ namespace MyUsers.Reports
 
         public MyManagerCSharp.RGraph.Models.RGraphModel getLastLogin(string reportId, int top, MyManagerCSharp.Log.LogManager.Days days)
         {
-            _strSQL = "select top " + top + " t1.my_login as label, date_last_login as valore" +
+            mStrSQL = "select top " + top + " t1.my_login as label, date_last_login as valore" +
                 "  from Utente as t1 ";
 
-            _strSQL += " WHERE (1=1) " + getWhereConditionByDate("date_last_login", days);
+            mStrSQL += " WHERE (1=1) " + getWhereConditionByDate("date_last_login", days);
 
-            _strSQL += " order by date_last_login desc";
+            mStrSQL += " order by date_last_login desc";
 
             MyManagerCSharp.RGraph.Models.RGraphModel report = new MyManagerCSharp.RGraph.Models.RGraphModel();
 
             report.Id = reportId;
-            report.Data = _fillDataTable(_strSQL);
+            report.Data = mFillDataTable(mStrSQL);
 
             report.Tipo = ReportType.HBar;
             report.Label = LabelType.LabelAndValore;

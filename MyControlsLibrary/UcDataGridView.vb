@@ -1,6 +1,6 @@
 ﻿Public Class UcDataGridView
 
-    Private _strSQL As String
+    Private mStrSQL As String
 
     Private _withButtonDelete As Boolean
     Public Property MyButtonDelete() As Boolean
@@ -15,7 +15,7 @@
 
 
     Public Function _init(ByVal strSQL As String) As Boolean
-        Me._strSQL = strSQL
+        Me.mStrSQL = strSQL
 
 
         Return True

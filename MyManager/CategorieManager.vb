@@ -17,9 +17,9 @@ Public Class CategorieManager
 
 
     Public Sub addClick(ByVal categoria_id As Long)
-        _strSql = "UPDATE CATEGORIE SET DATE_LAST_CLICK = NOW , COUNT_CLICK = COUNT_CLICK +1 " & _
+        mStrSQL = "UPDATE CATEGORIE SET DATE_LAST_CLICK = NOW , COUNT_CLICK = COUNT_CLICK +1 " & _
                                             " WHERE CATEGORIA_ID=" & categoria_id
-        Me._executeNoQuery(_strSql)
+        Me.mExecuteNoQuery(mStrSQL)
     End Sub
 
 
@@ -27,11 +27,11 @@ Public Class CategorieManager
 
     'elenco delle categorie di primo livello 
     Public Function getComboCategoriaRoot() As System.Data.DataSet
-        _strSql = "select A.nome, A.categoria_id ,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
+        mStrSQL = "select A.nome, A.categoria_id ,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
                     "from CATEGORIE A WHERE FK_PADRE_ID is NULL  AND HIDE = False" & _
                     " ORDER BY nome"
 
-        Return _fillDataSet(_strSql)
+        Return _fillDataSet(mStrSQL)
 
     End Function
 
@@ -40,32 +40,32 @@ Public Class CategorieManager
 
         'Select Case categoria_id
         '    Case CategorieManager.SubCategorie.TestiScolastici
-        '        _strSql = "select 'Testi Scolastici - ' & A.nome, A.categoria_id,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
+        '        mStrSQL = "select 'Testi Scolastici - ' & A.nome, A.categoria_id,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
         '            " from CATEGORIE A WHERE FK_PADRE_ID = " & categoria_id & _
         '            " ORDER BY nome"
 
         '    Case CategorieManager.SubCategorie.TestiUniversitari
-        '        _strSql = "select 'Testi Universitari - ' & A.nome, A.categoria_id,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
+        '        mStrSQL = "select 'Testi Universitari - ' & A.nome, A.categoria_id,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
         '            " from CATEGORIE A WHERE FK_PADRE_ID = " & categoria_id & _
         '            " ORDER BY nome"
         '    Case Else
-        '        _strSql = "select A.nome, A.categoria_id,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
+        '        mStrSQL = "select A.nome, A.categoria_id,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
         '               " from CATEGORIE A WHERE FK_PADRE_ID = " & categoria_id & _
         '               " ORDER BY nome"
         'End Select
 
-        _strSql = "select A.nome, A.categoria_id,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
+        mStrSQL = "select A.nome, A.categoria_id,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
                        " from CATEGORIE A WHERE FK_PADRE_ID = " & categoria_id & _
                        " ORDER BY nome"
 
-        Return _fillDataSet(_strSql)
+        Return _fillDataSet(mStrSQL)
 
     End Function
 
 
     Public Function getCategoriaFromAnnuncio(ByVal annuncioId As Long) As System.Data.DataSet
-        _strSql = "select  CATEGORIE.* FROM CATEGORIE LEFT JOIN ANNUNCIO ON ANNUNCIO.FK_CATEGORIA_ID = CATEGORIE.CATEGORIA_ID WHERE ANNUNCIO_ID =" & annuncioId
-        Return _fillDataSet(_strSql)
+        mStrSQL = "select  CATEGORIE.* FROM CATEGORIE LEFT JOIN ANNUNCIO ON ANNUNCIO.FK_CATEGORIA_ID = CATEGORIE.CATEGORIA_ID WHERE ANNUNCIO_ID =" & annuncioId
+        Return _fillDataSet(mStrSQL)
     End Function
 
 
@@ -77,12 +77,12 @@ Public Class CategorieManager
         Dim dataSet As System.Data.DataSet
 
 
-        _strSql = "select A.*,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
+        mStrSQL = "select A.*,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " & _
                     ", (select count (*) from  ANNUNCIO where FK_CATEGORIA_ID = a.CATEGORIA_ID AND DATE_DELETED IS NULL  ) as COUNT_ANNUNCI " & _
                     " from CATEGORIE A WHERE FK_PADRE_ID is NULL and HIDE = false" & _
                     " ORDER by nome"
 
-        dataSet = _fillDataSet(_strSql, "Categorie", "Categoria")
+        dataSet = _fillDataSet(mStrSQL, "Categorie", "Categoria")
 
         document.LoadXml(dataSet.GetXml)
 
@@ -190,11 +190,11 @@ Public Class CategorieManager
 
     'Dettaglio di una Categoria
     Public Function getCategoria(ByVal categoria_id As String) As System.Data.DataSet
-        _strSql = "SELECT categorie.*" & _
+        mStrSQL = "SELECT categorie.*" & _
                         " FROM  categorie " & _
                         " WHERE categorie.categoria_id = " & categoria_id
 
-        Return _fillDataSet(_strSql)
+        Return _fillDataSet(mStrSQL)
     End Function
 
 
@@ -219,17 +219,17 @@ Public Class CategorieManager
             subCategoria = value.Substring(indice + 3).Trim
         End If
 
-        _strSql = "SELECT categoria_id " & _
+        mStrSQL = "SELECT categoria_id " & _
             " FROM  categorie " & _
             " WHERE UCASE(nome) = @NOME and FK_PADRE_ID = 1000000 "
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
-        command.CommandText = _strSql
+        command = mConnection.CreateCommand()
+        command.CommandText = mStrSQL
 
-        Me._addParameter(command, "@NOME", categoria.ToUpper)
+        Me.mAddParameter(command, "@NOME", categoria.ToUpper)
 
-        temp = _executeScalar(command)
+        temp = mExecuteScalar(command)
 
         If String.IsNullOrEmpty(temp) Then
             Return -1
@@ -240,15 +240,15 @@ Public Class CategorieManager
             Return Long.Parse(temp)
         End If
 
-        _strSql = "SELECT categoria_id " & _
+        mStrSQL = "SELECT categoria_id " & _
             " FROM  categorie " & _
             " WHERE UCASE(nome) = @NOME and FK_PADRE_ID =" & temp
 
-        command = _connection.CreateCommand()
-        command.CommandText = _strSql
+        command = mConnection.CreateCommand()
+        command.CommandText = mStrSQL
 
-        Me._addParameter(command, "@NOME", subCategoria.ToUpper)
-        temp = _executeScalar(command)
+        Me.mAddParameter(command, "@NOME", subCategoria.ToUpper)
+        temp = mExecuteScalar(command)
 
         If String.IsNullOrEmpty(temp) Then
             Return -1

@@ -55,7 +55,7 @@ Public Class RubricaManager
         Dim strSQL As String = "UPDATE CONTATTO_NEWSLETTER SET DATE_UNSUBSCRIBE = NOW WHERE DATE_UNSUBSCRIBE = NULL AND  CONTATTO_ID=" & contattoId
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
         Try
             oleDbCommand.ExecuteNonQuery()
@@ -72,11 +72,11 @@ Public Class RubricaManager
         Dim strSQL As String = ""
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
         Dim transaction As System.Data.OleDb.OleDbTransaction
         ' inzio la transazione... 
-        transaction = Me._connection.BeginTransaction()
+        transaction = Me.mConnection.BeginTransaction()
 
         Try
             oleDbCommand.Transaction = transaction
@@ -151,7 +151,7 @@ Public Class RubricaManager
         strSQLParametri &= fonte
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
 
         If _userId <> "" Then
@@ -334,7 +334,7 @@ Public Class RubricaManager
         Dim strSQL As String = "UPDATE CONTATTI SET DATE_MODIFIED = NOW "
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
         If _nome <> "" Then
             strSQL &= " ,nome = ?"
@@ -426,7 +426,7 @@ Public Class RubricaManager
 
         Dim transaction As System.Data.OleDb.OleDbTransaction
         ' inzio la transazione... 
-        transaction = Me._connection.BeginTransaction()
+        transaction = Me.mConnection.BeginTransaction()
 
         Try
             oleDbCommand.Transaction = transaction
@@ -456,7 +456,7 @@ Public Class RubricaManager
             transaction.Rollback()
             Throw ex
         Finally
-            Me._connection.Close()
+            Me.mConnection.Close()
             oleDbCommand.Dispose()
             oleDbCommand = Nothing
         End Try
@@ -465,14 +465,14 @@ Public Class RubricaManager
 
     Public Sub deleteContatto(ByVal contatto_Id As Long)
         Dim strSQL As String = "DELETE * FROM CONTATTI WHERE CONTATTO_ID=" & contatto_Id
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
         oleDbCommand.ExecuteNonQuery()
     End Sub
 
 
     Public Sub deleteAssociazioneGruppi(ByVal contatto_Id As Long)
         Dim strSQL As String = "DELETE * FROM GRUPPO_CONTATTO WHERE CONTATTO_ID=" & contatto_Id
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
         oleDbCommand.ExecuteNonQuery()
     End Sub
 

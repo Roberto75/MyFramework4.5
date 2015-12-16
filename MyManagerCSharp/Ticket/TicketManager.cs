@@ -131,11 +131,11 @@ namespace MyManagerCSharp.Ticket
         //    command.CommandText = strSQL
         //    command.Connection = Me.mConnection
 
-        //    Me._addParameter(command, "@user_id_cliente", userIdCliente)
-        //    Me._addParameter(command, "@ticket_type_id", ticketType)
+        //    Me.mAddParameter(command, "@user_id_cliente", userIdCliente)
+        //    Me.mAddParameter(command, "@ticket_type_id", ticketType)
 
         //    Dim risultato As String
-        //    risultato = Me._executeScalar(command)
+        //    risultato = Me.mExecuteScalar(command)
         //    If String.IsNullOrEmpty(risultato) Then
         //        Return 0
         //    Else
@@ -441,7 +441,7 @@ namespace MyManagerCSharp.Ticket
         //    command.CommandText = strSQL
         //    command.Connection = Me.mConnection
 
-        //    Me._addParameter(command, "@TICKET_ID", ticketId)
+        //    Me.mAddParameter(command, "@TICKET_ID", ticketId)
 
         //    Return Me._fillDataSet(command).Tables(0)
         //End Function
@@ -457,9 +457,9 @@ namespace MyManagerCSharp.Ticket
         //    command.Connection = Me.mConnection
 
 
-        //    Me._addParameter(command, "@TICKET_ID", ticketId)
+        //    Me.mAddParameter(command, "@TICKET_ID", ticketId)
 
-        //    Me._executeNoQuery(command)
+        //    Me.mExecuteNoQuery(command)
 
         //    Return True
 

@@ -1,7 +1,7 @@
 ﻿Public Class FormBaseSearch
     Friend _pageCurrent As Int16
     Friend _pageSize As Int16
-    Friend _connection As Data.Common.DbConnection
+    Friend mConnection As Data.Common.DbConnection
 
     Protected _columnDelete As System.Windows.Forms.DataGridViewImageColumn
     Protected _columnEdit As System.Windows.Forms.DataGridViewImageColumn
@@ -9,7 +9,7 @@
   
 
     Public Overridable Function _init(ByVal connection As Data.Common.DbConnection) As Boolean
-        Me._connection = connection
+        Me.mConnection = connection
         Me.tsbtnCountItems.Text = ""
         _initColumns()
         Return True

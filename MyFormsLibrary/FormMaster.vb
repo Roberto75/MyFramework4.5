@@ -2,7 +2,7 @@
 
     Public Event MyMenuTopSubItemOnClick(ByVal item As System.Windows.Forms.ToolStripMenuItem)
 
-    Private _connection As Data.Common.DbConnection
+    Private mConnection As Data.Common.DbConnection
     '*** LOGGING ***
     Private _pathFileLogMain As String
     Private _pathFileLogFileProcessed As String
@@ -56,24 +56,24 @@
 
     Public Property MyConnection() As Data.Common.DbConnection
         Get
-            If Me._connection Is Nothing Then
+            If Me.mConnection Is Nothing Then
                 Return Nothing
             End If
 
 
-            If Me._connection.State = ConnectionState.Closed Then
+            If Me.mConnection.State = ConnectionState.Closed Then
                 Try
-                    _connection.Open()
+                    mConnection.Open()
                 Catch ex As Exception
                     Windows.Forms.MessageBox.Show("Impossibile stabilire una connessione con il database. Verificare la stringa di connessione e la presenza dei Driver." & vbCrLf & ex.Message, _
                         My.Application.Info.ProductName, Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Error)
                     Return Nothing
                 End Try
             End If
-            Return Me._connection
+            Return Me.mConnection
         End Get
         Set(ByVal value As Data.Common.DbConnection)
-            Me._connection = value
+            Me.mConnection = value
         End Set
     End Property
 
@@ -137,9 +137,9 @@
         Trace.Flush()
         Trace.Close()
 
-        If _connection IsNot Nothing Then
-            _connection.Close()
-            _connection.Dispose()
+        If mConnection IsNot Nothing Then
+            mConnection.Close()
+            mConnection.Dispose()
         End If
 
         RemoveHandler Me.FormClosing, AddressOf _formMasterOnFormClosing
@@ -194,13 +194,13 @@
                 Dim factory As System.Data.Common.DbProviderFactory
                 factory = System.Data.Common.DbProviderFactories.GetFactory(provider)
 
-                _connection = factory.CreateConnection()
-                _connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings("DefaultConnection").ConnectionString
+                mConnection = factory.CreateConnection()
+                mConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings("DefaultConnection").ConnectionString
 
                 '20/05/2010 Roberto Rutigliano 
                 'apro la connessione 
 
-                _connection.Open()
+                mConnection.Open()
             Catch ex As Exception
                 Windows.Forms.MessageBox.Show("Impossibile stabilire una connessione con il database. Verificare la stringa di connessione e la presenza dei Driver." & vbCrLf & ex.Message, _
                     My.Application.Info.ProductName, Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Error)

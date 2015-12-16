@@ -60,21 +60,21 @@ Public Class LogUserNTManager
 
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = _connection
+        command.Connection = mConnection
 
 
         If nota <> "" Then
             strSQL &= ",nota "
             strSQLParametri &= ",@nota "
-            Me._addParameter(command, "@nota", nota)
+            Me.mAddParameter(command, "@nota", nota)
         End If
 
         If azione <> "" Then
             strSQL &= ",azione "
             strSQLParametri &= ",@azione "
-            Me._addParameter(command, "@azione", azione)
+            Me.mAddParameter(command, "@azione", azione)
         End If
 
 
@@ -101,12 +101,12 @@ Public Class LogUserNTManager
         Dim strSQL As String
         strSQL = "SELECT Count(*) FROM(Log_Utente_NT) WHERE [date_added]=Date() and [account]='" & accountNT.Trim & "'"
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = _connection
+        command.Connection = mConnection
         command.CommandText = strSQL
         command.CommandType = CommandType.Text
-        Return Me._executeScalar(strSQL)
+        Return Me.mExecuteScalar(strSQL)
     End Function
 
 

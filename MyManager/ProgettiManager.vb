@@ -19,7 +19,7 @@ Public Class ProgettiManager
         Dim sqlQuery As String
         sqlQuery = "UPDATE PREVENTIVI SET [date_disabled] =  now(),  user_id_disabled = " & userId & _
                             " WHERE  preventivo_id = " & pianificazioneId
-        Me._executeNoQuery(sqlQuery)
+        Me.mExecuteNoQuery(sqlQuery)
         Return True
     End Function
 
@@ -28,7 +28,7 @@ Public Class ProgettiManager
         Dim sqlQuery As String
         sqlQuery = "UPDATE PREVENTIVI SET [date_disabled] =  NULL,  user_id_disabled = " & userId & _
                             " WHERE  preventivo_id = " & pianificazioneId
-        Me._executeNoQuery(sqlQuery)
+        Me.mExecuteNoQuery(sqlQuery)
         Return True
     End Function
 
@@ -51,10 +51,10 @@ Public Class ProgettiManager
         Dim sqlQuery As String
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
-        command.Connection = Me._connection
+        command = mConnection.CreateCommand()
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@NEWCODICE ", codiceCommessa)
+        Me.mAddParameter(command, "@NEWCODICE ", codiceCommessa)
 
         Dim i As Int16
         Dim conta As Int16 = 0
@@ -138,7 +138,7 @@ Public Class ProgettiManager
         Next
 
         Dim strSQL As String = strSql_1 & " )" & strSql_2 & " )"
-        Me._executeNoQuery(strSQL)
+        Me.mExecuteNoQuery(strSQL)
 
         Return 0
     End Function
@@ -150,7 +150,7 @@ Public Class ProgettiManager
         strSQL = "INSERT INTO PREVENTIVI (MESE, ANNO, FK_USER_ID ) " & _
                  " VALUES (" & mese & "," & anno & ", " & userId & ")"
 
-        Me._executeNoQuery(strSQL)
+        Me.mExecuteNoQuery(strSQL)
         Return True
     End Function
 
@@ -162,16 +162,16 @@ Public Class ProgettiManager
 
         '*** STATO = APERTO
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@FK_USER_ID", userId)
-        Me._addParameter(command, "@MESE", mese)
-        Me._addParameter(command, "@ANNO", anno)
-        Me._addParameter(command, "@FK_PROGETTO_ID", progettoId)
+        Me.mAddParameter(command, "@FK_USER_ID", userId)
+        Me.mAddParameter(command, "@MESE", mese)
+        Me.mAddParameter(command, "@ANNO", anno)
+        Me.mAddParameter(command, "@FK_PROGETTO_ID", progettoId)
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
         'Dim newKey As Long
         'newKey = Me._getIdentity()
@@ -181,7 +181,7 @@ Public Class ProgettiManager
 
     Public Function deleteConsuntivo(ByVal consuntivoId As Long) As Integer
         Dim strSQL As String = "DELETE * FROM CONSUNTIVI WHERE CONSUNTIVO_ID=" & consuntivoId
-        Return Me._executeNoQuery(strSQL)
+        Return Me.mExecuteNoQuery(strSQL)
     End Function
 
     Public Function getPreventivo(ByVal preventivoId As Long) As DataTable
@@ -235,13 +235,13 @@ Public Class ProgettiManager
 
     Public Function getCommessaCliente(ByVal codiceCommessa As String) As String
         Dim sqlQuery As String = "SELECT Cliente FROM V_ELENCO_Commesse WHERE ucase(NOME) = '" & codiceCommessa.ToUpper & "'"
-        Return _executeScalar(sqlQuery)
+        Return mExecuteScalar(sqlQuery)
     End Function
 
 
     Public Function getCommessaDescrizione(ByVal codiceCommessa As String) As String
         Dim sqlQuery As String = "SELECT DESCRIZIONE FROM Commesse WHERE ucase(NOME) = '" & codiceCommessa.ToUpper & "'"
-        Return _executeScalar(sqlQuery)
+        Return mExecuteScalar(sqlQuery)
     End Function
 
     Public Function getCliente(ByVal clienteId As Long) As DataTable
@@ -261,13 +261,13 @@ Public Class ProgettiManager
 
     Public Function deletePreventivo(ByVal preventivoId As Long) As Integer
         Dim strSQL As String = "DELETE * FROM PREVENTIVI WHERE PREVENTIVO_ID=" & preventivoId
-        Return Me._executeNoQuery(strSQL)
+        Return Me.mExecuteNoQuery(strSQL)
     End Function
 
     Public Function checkInsertNewPreventivo(ByVal anno As Int16, ByVal mese As Int16, ByVal user_id As Long) As Boolean
         Dim sqlQuery As String = "SELECT count(*) from preventivi where anno = " & anno & " and mese = " & mese & " and fk_user_id = " & user_id
         Dim esito As Int16
-        esito = Me._executeScalar(sqlQuery)
+        esito = Me.mExecuteScalar(sqlQuery)
         Return (esito = 0)
     End Function
 
@@ -275,19 +275,19 @@ Public Class ProgettiManager
         Dim sqlQuery As String = "SELECT count(*) from CLIENTI where ucase(nome) = ?"
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = sqlQuery
-        Me._addParameter(command, "@nome ", nome.ToUpper)
+        Me.mAddParameter(command, "@nome ", nome.ToUpper)
 
         Dim esito As Int16
-        esito = Me._executeScalar(command)
+        esito = Me.mExecuteScalar(command)
         Return esito = 0
     End Function
 
     'Public Function checkCopiaPreventivo(ByVal annoSRC As Int16, ByVal meseSRC As Int16, ByVal user_idSRC As Long) As Boolean
     '    Dim sqlQuery As String = "SELECT count(*) from preventivi where anno = " & anno & " and mese = " & mese & " and fk_user_id = " & user_id
     '    Dim esito As Int16
-    '    esito = Me._executeScalar(sqlQuery)
+    '    esito = Me.mExecuteScalar(sqlQuery)
     '    Return esito = 0
     'End Function
 
@@ -302,12 +302,12 @@ Public Class ProgettiManager
         'a questo punto devo rinominare TUTTI i preventivi che usano questa commessa
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
-        command.Connection = Me._connection
+        command = mConnection.CreateCommand()
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@NEWCODICE ", newName)
+        Me.mAddParameter(command, "@NEWCODICE ", newName)
         Dim tempParameter As System.Data.Common.DbParameter
-        tempParameter = Me._addParameter(command, "@OLDCODICE", oldName)
+        tempParameter = Me.mAddParameter(command, "@OLDCODICE", oldName)
 
 
         Dim i As Int16
@@ -334,18 +334,18 @@ Public Class ProgettiManager
     Public Function renameCommessa(ByVal commessaId As Long, ByVal newName As String) As Boolean
         Dim oldName As String
         Dim sqlQuery As String = "SELECT nome from COMMESSE where commessa_id = " & commessaId
-        oldName = Me._executeScalar(sqlQuery)
+        oldName = Me.mExecuteScalar(sqlQuery)
 
         'a questo punto devo rinominare TUTTI i preventivi che usano questa commessa
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
-        command.Connection = Me._connection
+        command = mConnection.CreateCommand()
+        command.Connection = Me.mConnection
         command.CommandText = sqlQuery
 
-        Me._addParameter(command, "@NEWCODICE", newName)
+        Me.mAddParameter(command, "@NEWCODICE", newName)
         Dim tempParameter As System.Data.Common.DbParameter
-        tempParameter = Me._addParameter(command, "@OLDCODICE", oldName)
+        tempParameter = Me.mAddParameter(command, "@OLDCODICE", oldName)
 
 
         Dim i As Int16
@@ -367,7 +367,7 @@ Public Class ProgettiManager
         command.CommandText = sqlQuery
         'rimuovo il parametro che non mi serve
         command.Parameters.Remove(tempParameter)
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
         Return True
     End Function
@@ -378,12 +378,12 @@ Public Class ProgettiManager
         Dim sqlQuery As String = "SELECT count(*) from COMMESSE where ucase(nome) = ?"
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = sqlQuery
-        Me._addParameter(command, "@nome", nome.ToUpper)
+        Me.mAddParameter(command, "@nome", nome.ToUpper)
 
         Dim esito As Int16
-        esito = Me._executeScalar(command)
+        esito = Me.mExecuteScalar(command)
         Return (esito = 0)
     End Function
 
@@ -418,34 +418,34 @@ Public Class ProgettiManager
 
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
-        Me._addParameter(command, "@FK_CLIENTE_ID", clienteId)
-        Me._addParameter(command, "@FK_TIPO_ID", tipoId)
-        Me._addParameter(command, "@FK_STATO_ID", statoId)
-        'Me._addParameter(command, "@NOME", nome)
-        Me._addParameter(command, "@DESCRIZIONE", descrizione)
-        Me._addParameter(command, "@NOTE", note)
-        Me._addParameter(command, "@BACKGROUND_COLOR", backgroundColor)
-        Me._addParameter(command, "@FORE_COLOR", foreColor)
-        Me._addParameter(command, "@ORE_PREVENTIVATE", orePreventivate)
+        Me.mAddParameter(command, "@FK_CLIENTE_ID", clienteId)
+        Me.mAddParameter(command, "@FK_TIPO_ID", tipoId)
+        Me.mAddParameter(command, "@FK_STATO_ID", statoId)
+        'Me.mAddParameter(command, "@NOME", nome)
+        Me.mAddParameter(command, "@DESCRIZIONE", descrizione)
+        Me.mAddParameter(command, "@NOTE", note)
+        Me.mAddParameter(command, "@BACKGROUND_COLOR", backgroundColor)
+        Me.mAddParameter(command, "@FORE_COLOR", foreColor)
+        Me.mAddParameter(command, "@ORE_PREVENTIVATE", orePreventivate)
 
         If capoProgetto = -1 Then
-            Me._addParameter(command, "@USER_ID", DBNull.Value)
+            Me.mAddParameter(command, "@USER_ID", DBNull.Value)
         Else
-            Me._addParameter(command, "@USER_ID", capoProgetto)
+            Me.mAddParameter(command, "@USER_ID", capoProgetto)
         End If
 
 
         If businessUnit = -1 Then
-            Me._addParameter(command, "@BUSINESS_UNIT", DBNull.Value)
+            Me.mAddParameter(command, "@BUSINESS_UNIT", DBNull.Value)
         Else
-            Me._addParameter(command, "@BUSINESS_UNIT", businessUnit)
+            Me.mAddParameter(command, "@BUSINESS_UNIT", businessUnit)
         End If
 
 
 
-        Me._addParameter(command, "@COMMESSA_ID", commessaId)
+        Me.mAddParameter(command, "@COMMESSA_ID", commessaId)
 
         command.CommandText = strSQL
         Dim numeroRecord As Integer = command.ExecuteNonQuery()
@@ -460,12 +460,12 @@ Public Class ProgettiManager
                  " VALUES (@NOME )"
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@NOME", nome)
-        Me._executeNoQuery(command)
+        Me.mAddParameter(command, "@NOME", nome)
+        Me.mExecuteNoQuery(command)
 
         Return Me._getIdentity()
     End Function
@@ -491,43 +491,43 @@ Public Class ProgettiManager
             " VALUES (@FK_CLIENTE_ID ,@FK_TIPO_ID ,@FK_STATO_ID ,@NOME ,@DESCRIZIONE ,@NOTE ,@BACKGROUND_COLOR ,@FORE_COLOR ,@ORE_PREVENTIVATE ,@USER_ID ,@BUSINESS_UNIT )"
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@FK_CLIENTE_ID ", clienteId)
-        Me._addParameter(command, "@FK_TIPO_ID ", tipoId)
-        Me._addParameter(command, "@FK_STATO_ID ", statoId)
-        Me._addParameter(command, "@NOME ", nome)
-        Me._addParameter(command, "@DESCRIZIONE", descrizione)
-        Me._addParameter(command, "@NOTE", note)
-        Me._addParameter(command, "@BACKGROUND_COLOR", backgroundColor)
-        Me._addParameter(command, "@FORE_COLOR", foreColor)
-        Me._addParameter(command, "@ORE_PREVENTIVATE", orePreventivate)
+        Me.mAddParameter(command, "@FK_CLIENTE_ID ", clienteId)
+        Me.mAddParameter(command, "@FK_TIPO_ID ", tipoId)
+        Me.mAddParameter(command, "@FK_STATO_ID ", statoId)
+        Me.mAddParameter(command, "@NOME ", nome)
+        Me.mAddParameter(command, "@DESCRIZIONE", descrizione)
+        Me.mAddParameter(command, "@NOTE", note)
+        Me.mAddParameter(command, "@BACKGROUND_COLOR", backgroundColor)
+        Me.mAddParameter(command, "@FORE_COLOR", foreColor)
+        Me.mAddParameter(command, "@ORE_PREVENTIVATE", orePreventivate)
 
 
         If capoProgetto = -1 Then
-            Me._addParameter(command, "@USER_ID", DBNull.Value)
+            Me.mAddParameter(command, "@USER_ID", DBNull.Value)
         Else
-            Me._addParameter(command, "@USER_ID", capoProgetto)
+            Me.mAddParameter(command, "@USER_ID", capoProgetto)
         End If
 
         If businessUnit = -1 Then
-            Me._addParameter(command, "@BUSINESS_UNIT", DBNull.Value)
+            Me.mAddParameter(command, "@BUSINESS_UNIT", DBNull.Value)
         Else
-            Me._addParameter(command, "@BUSINESS_UNIT", businessUnit)
+            Me.mAddParameter(command, "@BUSINESS_UNIT", businessUnit)
         End If
 
 
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
         Return Me._getIdentity()
     End Function
 
     Public Function deleteCommessa(ByVal commessaId As Long) As Integer
         Dim strSQL As String = "DELETE * FROM COMMESSE WHERE COMMESSA_ID=" & commessaId
-        Return Me._executeNoQuery(strSQL)
+        Return Me.mExecuteNoQuery(strSQL)
     End Function
 
 

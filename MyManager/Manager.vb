@@ -16,11 +16,11 @@ Public Class Manager
     'Da Oracle a SQL Server 
     'http://vyaskn.tripod.com/oracle_sql_server_differences_equivalents.htm
 
-    Protected _connection As System.Data.Common.DbConnection
+    Protected mConnection As System.Data.Common.DbConnection
     Protected _factory As System.Data.Common.DbProviderFactory
-    Protected _connectionName As String
+    Protected mConnectionName As String
     Protected _provider As String
-    Protected _strSql As String
+    Protected mStrSQL As String
     Protected _transaction As Data.Common.DbTransaction
 
 
@@ -72,7 +72,7 @@ Public Class Manager
             Throw New ManagerException("Transazione già aperta")
             Exit Sub
         End If
-        _transaction = Me._connection.BeginTransaction()
+        _transaction = Me.mConnection.BeginTransaction()
     End Sub
 
     Public Sub _transactionCommit()
@@ -109,14 +109,14 @@ Public Class Manager
 
     Sub New(ByVal connection As System.Data.Common.DbConnection)
         'In questo costruttore viene passata la connessione da utilizzare 
-        _connection = connection
+        mConnection = connection
 
-        If _connection Is Nothing Then
+        If mConnection Is Nothing Then
             Exit Sub
         End If
 
 
-        Select Case _connection.GetType().Name
+        Select Case mConnection.GetType().Name
             Case "OdbcConnection"
                 _provider = "System.Data.Odbc"
             Case "OleDbConnection"
@@ -130,7 +130,7 @@ Public Class Manager
             Case "NpgsqlConnection"
                 _provider = "Npgsql"
             Case Else
-                Throw New ManagerException("Il costruttore non gestisce  questo tipo di connessione: " & _connection.GetType().Name)
+                Throw New ManagerException("Il costruttore non gestisce  questo tipo di connessione: " & mConnection.GetType().Name)
         End Select
 
         _factory = System.Data.Common.DbProviderFactories.GetFactory(_provider)
@@ -144,8 +144,8 @@ Public Class Manager
 
         _factory = System.Data.Common.DbProviderFactories.GetFactory(_provider)
 
-        _connection = _factory.CreateConnection()
-        _connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings(connectionName).ConnectionString
+        mConnection = _factory.CreateConnection()
+        mConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings(connectionName).ConnectionString
     End Sub
 
     Sub New()
@@ -154,13 +154,13 @@ Public Class Manager
 
     'Friend Sub New(ByVal connectionString As String)
     '    '_pathDB = pathDB
-    '    '_connectionString _connectionString "PROVIDER=Microsoft.Jet.OLEDB.4.0; DATA Source= " & _pathDB
-    '    _connectionString = connectionString
-    '    _connection = New System.Data.OleDb.OleDbConnection(_connectionString)
+    '    'mConnectionString mConnectionString "PROVIDER=Microsoft.Jet.OLEDB.4.0; DATA Source= " & _pathDB
+    '    mConnectionString = connectionString
+    '    mConnection = New System.Data.OleDb.OleDbConnection(mConnectionString)
     'End Sub
 
     'Friend Sub New(ByVal connection As System.Data.OleDb.OleDbConnection)
-    '    _connection = connection
+    '    mConnection = connection
     'End Sub
 
     Public Function getFactory() As System.Data.Common.DbProviderFactory
@@ -168,18 +168,18 @@ Public Class Manager
     End Function
 
     Public Function getConnection() As System.Data.Common.DbConnection
-        Return Me._connection
+        Return Me.mConnection
     End Function
 
     Public Sub openConnection()
-        If _connection.State <> ConnectionState.Open Then
-            _connection.Open()
+        If mConnection.State <> ConnectionState.Open Then
+            mConnection.Open()
         End If
     End Sub
 
     Public Sub closeConnection()
-        _connection.Close()
-        _connection.Dispose()
+        mConnection.Close()
+        mConnection.Dispose()
     End Sub
 
 
@@ -376,7 +376,7 @@ Public Class Manager
 
 
 
-    Public Function _addParameter(ByRef command As System.Data.Common.DbCommand, ByVal name As String, ByVal value As Object) As System.Data.Common.DbParameter
+    Public Function mAddParameter(ByRef command As System.Data.Common.DbCommand, ByVal name As String, ByVal value As Object) As System.Data.Common.DbParameter
         Dim parameter As System.Data.Common.DbParameter = Nothing
 
         Select Case command.GetType().Name
@@ -471,8 +471,8 @@ Public Class Manager
 
 
         'Roberto Rutigliano 21/12/2009
-        If Me._connection.GetType().Name = "OleDbConnection" _
-            OrElse Me._connection.GetType().Name = "OdbcConnection" Then
+        If Me.mConnection.GetType().Name = "OleDbConnection" _
+            OrElse Me.mConnection.GetType().Name = "OdbcConnection" Then
             'Per ACCESS e PostgreSQL ...
             command.CommandText = parseSQLforAccessAndPostgreSQL(command.CommandText)
         End If
@@ -552,7 +552,7 @@ Public Class Manager
     End Function
 
 
-    Public Function _fillDataTable(ByVal sqlQuery As String) As DataTable
+    Public Function mFillDataTable(ByVal sqlQuery As String) As DataTable
         Return _fillDataSet(sqlQuery).Tables(0)
     End Function
 
@@ -562,8 +562,8 @@ Public Class Manager
                             Optional ByVal table As String = Nothing)
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
-        command.Connection = _connection
+        command = mConnection.CreateCommand()
+        command.Connection = mConnection
         command.CommandText = sqlQuery
 
         If Not _transaction Is Nothing Then
@@ -572,8 +572,8 @@ Public Class Manager
 
 
         'Roberto Rutigliano 21/12/2009
-        If Me._connection.GetType().Name = "OleDbConnection" _
-            OrElse Me._connection.GetType().Name = "OdbcConnection" Then
+        If Me.mConnection.GetType().Name = "OleDbConnection" _
+            OrElse Me.mConnection.GetType().Name = "OdbcConnection" Then
             'Per ACCESS e PostgreSQL ...
             command.CommandText = parseSQLforAccessAndPostgreSQL(command.CommandText)
         End If
@@ -654,13 +654,13 @@ Public Class Manager
 
     End Function
 
-    Public Function _executeNoQuery(ByVal sqlQuery As String) As Integer
+    Public Function mExecuteNoQuery(ByVal sqlQuery As String) As Integer
         Dim numeroDiRecordAggiornati As Integer = 0
         Dim command As System.Data.Common.DbCommand
 
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = sqlQuery
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
 
         If Not _transaction Is Nothing Then
@@ -708,10 +708,10 @@ Public Class Manager
     End Function
 
 
-    Protected Function _executeNoQuery(ByVal command As System.Data.Common.DbCommand) As Integer
+    Protected Function mExecuteNoQuery(ByVal command As System.Data.Common.DbCommand) As Integer
         'Roberto Rutigliano 04/04/2008
-        If Me._connection.GetType().Name = "OleDbConnection" _
-            OrElse Me._connection.GetType().Name = "OdbcConnection" Then
+        If Me.mConnection.GetType().Name = "OleDbConnection" _
+            OrElse Me.mConnection.GetType().Name = "OdbcConnection" Then
             'Per ACCESS e PostgreSQL ...
             command.CommandText = parseSQLforAccessAndPostgreSQL(command.CommandText)
         End If
@@ -735,23 +735,23 @@ Public Class Manager
         Return risultato
     End Function
 
-    Public Function _executeScalar(ByVal sqlQuery As String) As String
+    Public Function mExecuteScalar(ByVal sqlQuery As String) As String
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = sqlQuery
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
         If Not _transaction Is Nothing Then
             command.Transaction = _transaction
         End If
 
-        Return _executeScalar(command)
+        Return mExecuteScalar(command)
     End Function
 
-    Public Function _executeScalar(ByVal command As System.Data.Common.DbCommand) As String
+    Public Function mExecuteScalar(ByVal command As System.Data.Common.DbCommand) As String
         'Roberto Rutigliano 21/12/2009
-        If Me._connection.GetType().Name = "OleDbConnection" _
-            OrElse Me._connection.GetType().Name = "OdbcConnection" Then
+        If Me.mConnection.GetType().Name = "OleDbConnection" _
+            OrElse Me.mConnection.GetType().Name = "OdbcConnection" Then
             'Per ACCESS e PostgreSQL ...
             command.CommandText = parseSQLforAccessAndPostgreSQL(command.CommandText)
         End If
@@ -781,7 +781,7 @@ Public Class Manager
 
     Protected Function _getSequence(ByVal nameSequence As String) As Integer
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         Select Case command.GetType().Name
             Case "OleDbCommand"
@@ -794,8 +794,8 @@ Public Class Manager
             Case Else
                 Throw New ManagerException("Get Sequence non supportato per il seguente comando: " & command.GetType().Name)
         End Select
-        command.Connection = Me._connection
-        Return Long.Parse(Me._executeScalar(command))
+        command.Connection = Me.mConnection
+        Return Long.Parse(Me.mExecuteScalar(command))
     End Function
 
     ''' <summary>
@@ -825,7 +825,7 @@ Public Class Manager
 
     Protected Function _getIdentity() As Long
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         Select Case command.GetType().Name
             Case "MySqlCommand"
@@ -836,7 +836,7 @@ Public Class Manager
                 Throw New ManagerException("GetIdentity(): tipo non supportato " & command.GetType().Name)
         End Select
 
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
 
         If Not _transaction Is Nothing Then
@@ -844,7 +844,7 @@ Public Class Manager
         End If
 
 
-        'Return Long.Parse(Me._executeScalar(command))
+        'Return Long.Parse(Me.mExecuteScalar(command))
         '26/12/2009
         'Se passo per la funzione di Pasing della stringa di blocca con @@identity
 
@@ -869,15 +869,15 @@ Public Class Manager
 
     'Public Function _getIdentityOLD() As Long
     '    'Dim a As String
-    '    'a = _executeScalar("SELECT SCOPE_IDENTITY() AS MY_ID")
+    '    'a = mExecuteScalar("SELECT SCOPE_IDENTITY() AS MY_ID")
     '    'Return Int64.Parse(a)
 
 
     '    Dim command As System.Data.Common.DbCommand
-    '    command = _connection.CreateCommand()
+    '    command = mConnection.CreateCommand()
     '    command.CommandText = "SELECT @IDENTITY"
     '    'command.CommandText = "SELECT SCOPE_IDENTITY()"
-    '    'command.Connection = Me._connection
+    '    'command.Connection = Me.mConnection
 
 
     '    'Dim reader As System.Data.Common.DbDataReader
@@ -894,7 +894,7 @@ Public Class Manager
     'End Function
 
 
-    Public Function _fillDataTable(ByVal value As Hashtable) As Data.DataTable
+    Public Function mFillDataTable(ByVal value As Hashtable) As Data.DataTable
         Dim en As IDictionaryEnumerator
         en = value.GetEnumerator
 
@@ -937,8 +937,8 @@ Public Class Manager
     Public Sub _initAdapterWithInsertAndUpdate(ByVal selectQuery As String)
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
-        command.Connection = _connection
+        command = mConnection.CreateCommand()
+        command.Connection = mConnection
         command.CommandText = selectQuery
 
 
@@ -989,7 +989,7 @@ Public Class Manager
         Dim objAdap As System.Data.Common.DataAdapter
 
 
-        Select Case _connection.GetType().Name
+        Select Case mConnection.GetType().Name
 #If MySQL Then
                 Case "MySqlConnection"
                         objAdap = New MySql.Data.MySqlClient.MySqlDataAdapter
@@ -1020,7 +1020,7 @@ Public Class Manager
                 DirectCast(objAdap, Npgsql.NpgsqlDataAdapter).SelectCommand = DirectCast(command, Npgsql.NpgsqlCommand)
 #End If
             Case Else
-                Throw New ManagerException("Tipo di connessione non riconosciuta: " & _connection.GetType().Name)
+                Throw New ManagerException("Tipo di connessione non riconosciuta: " & mConnection.GetType().Name)
         End Select
 
         Return objAdap
@@ -1095,20 +1095,20 @@ Public Class Manager
     Public Function _openFileAccess(ByVal fileAccess As IO.FileInfo) As Boolean
         _provider = "System.Data.OleDb"
         _factory = System.Data.Common.DbProviderFactories.GetFactory(_provider)
-        _connection = _factory.CreateConnection()
+        mConnection = _factory.CreateConnection()
 
         If fileAccess.Name.ToLower.EndsWith(".mdb") Then
             'Access 2003
-            _connection.ConnectionString = String.Format("Provider=Microsoft.Jet.Oledb.4.0;Data Source={0};", fileAccess.FullName)
+            mConnection.ConnectionString = String.Format("Provider=Microsoft.Jet.Oledb.4.0;Data Source={0};", fileAccess.FullName)
         ElseIf fileAccess.Name.ToLower.EndsWith(".accdb") Then
             'Access 2007
-            _connection.ConnectionString = String.Format("Provider=Microsoft.ACE.OLEDB.12.0;Persist Security Info=False;Data Source={0};", fileAccess.FullName)
+            mConnection.ConnectionString = String.Format("Provider=Microsoft.ACE.OLEDB.12.0;Persist Security Info=False;Data Source={0};", fileAccess.FullName)
         Else
             Throw New MyManager.ManagerException("Database Access non riconosciuto" & fileAccess.Name)
             Return False
         End If
 
-        _connection.Open()
+        mConnection.Open()
 
         Return True
     End Function

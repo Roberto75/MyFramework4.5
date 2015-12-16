@@ -31,7 +31,7 @@ Public Class CatalogoManager
     Public Sub addClick(ByVal oggettoId As Long)
         Dim sqlQuery As String = "UPDATE OGGETTO SET DATE_LAST_CLICK = NOW , COUNT_CLICK = COUNT_CLICK +1 " & _
                                             " WHERE OGGETTO_ID=" & oggettoId
-        Me._executeNoQuery(sqlQuery)
+        Me.mExecuteNoQuery(sqlQuery)
     End Sub
 
 
@@ -51,7 +51,7 @@ Public Class CatalogoManager
         strSQLParametri = " VALUES ( Now(), Now() "
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
 
 
@@ -157,7 +157,7 @@ Public Class CatalogoManager
 
     Public Sub delete(ByVal oggettoId As Long)
         Dim strSQL As String = "DELETE * FROM OGGETTO WHERE OGGETTO_ID=" & oggettoId
-        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        Dim oleDbCommand As New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
         oleDbCommand.ExecuteNonQuery()
     End Sub
 
@@ -167,7 +167,7 @@ Public Class CatalogoManager
         Dim sqlQuery As String
         sqlQuery = "SELECT PHOTO" & numeroPhoto & " FROM OGGETTO WHERE OGGETTO_ID=" & oggettoId
 
-        Return _executeScalar(sqlQuery)
+        Return mExecuteScalar(sqlQuery)
     End Function
 
     Public Sub deletePhoto(ByVal oggettoId As Long, ByVal numeroPhoto As Integer)
@@ -192,7 +192,7 @@ Public Class CatalogoManager
                                 " WHERE OGGETTO_ID=" & oggettoId
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
         oleDbCommand.ExecuteNonQuery()
 
@@ -212,7 +212,7 @@ Public Class CatalogoManager
         Dim strSQL As String = "UPDATE OGGETTO SET DATE_MODIFIED = NOW "
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
         strSQL &= ",ISPUBLIC = @ISPUBLIC "
         oleDbCommand.Parameters.Add("@ISPUBLIC", OleDb.OleDbType.Boolean).Value = _isPubblico

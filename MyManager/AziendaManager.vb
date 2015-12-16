@@ -29,17 +29,17 @@ Public Class AziendaManager
         Dim strSQL As String
         strSQL = "INSERT INTO CUSTOMER (DATE_ADDED, RAGIONE_SOCIALE, CODICE_FISCALE) VALUES ( getDate(),  @RAGIONE_SOCIALE ,  @codice_Fiscale  )"
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         If ragioneSociale <> "" Then
-            Me._addParameter(command, "@RAGIONE_SOCIALE", ragioneSociale)
+            Me.mAddParameter(command, "@RAGIONE_SOCIALE", ragioneSociale)
         End If
 
         If codiceFiscale <> "" Then
-            Me._addParameter(command, "@codice_Fiscale", codiceFiscale)
+            Me.mAddParameter(command, "@codice_Fiscale", codiceFiscale)
         End If
 
         'Dim command As System.Data.Common.DbCommand
-        'command = _connection.CreateCommand()
+        'command = mConnection.CreateCommand()
         command.CommandText = strSQL
         command.ExecuteNonQuery()
 
@@ -51,51 +51,51 @@ Public Class AziendaManager
 
         Dim strSQL As String = "UPDATE CUSTOMER SET DATE_MODIFIED = getDate()"
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         If Me._ragioneSociale <> "" Then
             strSQL &= " ,RAGIONE_SOCIALE = @RAGIONE_SOCIALE"
-            Me._addParameter(command, "@RAGIONE_SOCIALE", Me._ragioneSociale)
+            Me.mAddParameter(command, "@RAGIONE_SOCIALE", Me._ragioneSociale)
         End If
 
         If Me._codiceFiscale <> "" Then
             strSQL &= " ,CODICE_FISCALE = @CODICE_FISCALE"
-            Me._addParameter(command, "@CODICE_FISCALE", Me._codiceFiscale)
+            Me.mAddParameter(command, "@CODICE_FISCALE", Me._codiceFiscale)
         End If
 
         If Me._partitaiva <> "" Then
             strSQL &= " ,PARTITA_IVA = @PARTITA_IVA"
-            Me._addParameter(command, "@PARTITA_IVA", Me._partitaiva)
+            Me.mAddParameter(command, "@PARTITA_IVA", Me._partitaiva)
         End If
 
         If Me._indirizzo <> "" Then
             strSQL &= " ,INDIRIZZO = @INDIRIZZO"
-            Me._addParameter(command, "@INDIRIZZO", Me._indirizzo)
+            Me.mAddParameter(command, "@INDIRIZZO", Me._indirizzo)
         End If
 
         If Me._numeroCivico <> "" Then
             strSQL &= " ,NUMERO_CIVICO = @NUMERO_CIVICO"
-            Me._addParameter(command, "@NUMERO_CIVICO", Me._numeroCivico)
+            Me.mAddParameter(command, "@NUMERO_CIVICO", Me._numeroCivico)
         End If
 
         If Me._citta <> "" Then
             strSQL &= " ,CITTA = @CITTA"
-            Me._addParameter(command, "@CITTA", Me._citta)
+            Me.mAddParameter(command, "@CITTA", Me._citta)
         End If
 
         If Me._provincia <> "" Then
             strSQL &= " ,PROVINCIA = @PROVINCIA"
-            Me._addParameter(command, "@PROVINCIA", Me._provincia)
+            Me.mAddParameter(command, "@PROVINCIA", Me._provincia)
         End If
 
         If Me._cap <> "" Then
             strSQL &= " ,CAP = @CAP"
-            Me._addParameter(command, "@CAP", Me._cap)
+            Me.mAddParameter(command, "@CAP", Me._cap)
         End If
 
         If Me._http <> "" Then
             strSQL &= ", HTTP = @HTTP"
-            Me._addParameter(command, "@HTTP", Me._http)
+            Me.mAddParameter(command, "@HTTP", Me._http)
         End If
 
         strSQL &= " WHERE CUSTOMER_ID=" & aziendaId
@@ -121,14 +121,14 @@ Public Class AziendaManager
     Public Function getNumAccount(ByVal AziendaId As Long) As Integer
 
         Dim sqlQuery As String = "SELECT count(*) FROM UTENTI where DATE_DELETED is null and CUSTOMER_ID = " & AziendaId
-        Return CInt(Me._executeScalar(sqlQuery))
+        Return CInt(Me.mExecuteScalar(sqlQuery))
 
     End Function
 
     Public Function getNumAccountActive(ByVal AziendaId As Long) As Integer
 
         Dim sqlQuery As String = "SELECT count(*) FROM UTENTI where DATE_DELETED is null and is_enabled = 1 and CUSTOMER_ID = " & AziendaId
-        Return CInt(Me._executeScalar(sqlQuery))
+        Return CInt(Me.mExecuteScalar(sqlQuery))
 
     End Function
 
@@ -161,12 +161,12 @@ Public Class AziendaManager
         strSQLParametri = " VALUES ( Now()  "
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         If Not String.IsNullOrEmpty(_ragioneSociale) Then
             strSQL &= ",RAGIONE_SOCIALE "
             strSQLParametri &= ", @RAGIONE_SOCIALE "
-            _addParameter(command, "@RAGIONE_SOCIALE", _ragioneSociale)
+            mAddParameter(command, "@RAGIONE_SOCIALE", _ragioneSociale)
         End If
 
         command.CommandText = strSQL & " ) " & strSQLParametri & " )"

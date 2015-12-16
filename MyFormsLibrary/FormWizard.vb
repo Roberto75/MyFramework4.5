@@ -2,7 +2,7 @@
 Partial Public Class FormWizard
 
     Protected _currentStep As Integer
-    Protected _connection As System.Data.Common.DbConnection
+    Protected mConnection As System.Data.Common.DbConnection
     Delegate Function Esegui(ByVal parametri() As Object) As Boolean
     Private m_eseguiAzione As MyFormsLibrary.FormWizard.Esegui
     Private colorSelNode As Drawing.Color = Color.FromArgb(165, 203, 247)
@@ -60,7 +60,7 @@ Partial Public Class FormWizard
         If Not Me.Owner Is Nothing Then
             Me.Icon = Me.Owner.Icon
         End If
-        Me._connection = connection
+        Me.mConnection = connection
 
         For Each t As Windows.Forms.TreeNode In _treeView.Nodes
             t.BackColor = Drawing.SystemColors.Window

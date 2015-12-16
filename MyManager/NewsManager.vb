@@ -25,7 +25,7 @@ Public Class NewsManager
     Public Sub addClick(ByVal newsId As Long)
         Dim sqlQuery As String = "UPDATE NEWS SET DATE_LAST_CLICK = NOW , COUNT_CLICK = COUNT_CLICK +1 " & _
                                             " WHERE NEWS_ID=" & newsId
-        Me._executeNoQuery(sqlQuery)
+        Me.mExecuteNoQuery(sqlQuery)
     End Sub
 
 
@@ -63,14 +63,14 @@ Public Class NewsManager
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
 
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
         oleDbCommand.Parameters.Add("@TITOLO", OleDb.OleDbType.VarChar).Value = titolo
         oleDbCommand.Parameters.Add("@SOTTOTITOLO", OleDb.OleDbType.VarChar).Value = sottotitolo
         oleDbCommand.Parameters.Add("@HTML", OleDb.OleDbType.VarChar).Value = bodyHTML
         oleDbCommand.Parameters.Add("@IS_PUBBLICA", OleDb.OleDbType.Boolean).Value = isPubblica
 
 
-        Me._executeNoQuery(oleDbCommand)
+        Me.mExecuteNoQuery(oleDbCommand)
 
 
 
@@ -86,10 +86,10 @@ Public Class NewsManager
         Dim esito As Boolean = False
 
         Dim command As System.Data.OleDb.OleDbCommand
-        command = New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        command = New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim transaction As System.Data.OleDb.OleDbTransaction
-        transaction = Me._connection.BeginTransaction()
+        transaction = Me.mConnection.BeginTransaction()
 
         command.Transaction = transaction
         Try

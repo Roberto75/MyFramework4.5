@@ -22,7 +22,7 @@
     End Enum
 
     Public _returnTotale As Long = 0
-    Public _dt As Data.DataTable
+    Public mDt As Data.DataTable
 
 
     Public _showLegend As Boolean = False
@@ -86,7 +86,7 @@
         'End If
 
 
-        _dt = dataTable
+        mDt = dataTable
 
 
         Dim indexColor As Int16 = 0

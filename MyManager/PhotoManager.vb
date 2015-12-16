@@ -144,15 +144,15 @@ Public Class PhotoManager
                    " VALUES ( @PATH , @DESCRIPTION , @FK_USER_ID ,  @FK_EXTERNAL_ID   ) "
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
-        _addParameter(command, "@PATH", absolutePath)
-        _addParameter(command, "@DESCRIPTION", description)
-        _addParameter(command, "@FK_USER_ID", userId)
-        _addParameter(command, "@FK_EXTERNAL_ID", externalId)
+        command = mConnection.CreateCommand()
+        mAddParameter(command, "@PATH", absolutePath)
+        mAddParameter(command, "@DESCRIPTION", description)
+        mAddParameter(command, "@FK_USER_ID", userId)
+        mAddParameter(command, "@FK_EXTERNAL_ID", externalId)
 
         command.CommandText = strSQL
 
-        _executeNoQuery(command)
+        mExecuteNoQuery(command)
 
         'Return _getIdentity()
         Return 1
@@ -167,8 +167,8 @@ Public Class PhotoManager
     Public Function deletePhoto(ByVal photoId As Long, ByVal absoluteServerPath As String) As Boolean
 
         Dim path As String
-        _strSql = "SELECT PATH FROM PHOTO WHERE PHOTO_ID = " & photoId
-        path = Me._executeScalar(_strSql)
+        mStrSQL = "SELECT PATH FROM PHOTO WHERE PHOTO_ID = " & photoId
+        path = Me.mExecuteScalar(mStrSQL)
 
 
         If Not String.IsNullOrEmpty(path) AndAlso Not path.StartsWith("http") AndAlso Not String.IsNullOrEmpty(absoluteServerPath) Then
@@ -196,26 +196,26 @@ Public Class PhotoManager
 
         End If
 
-        _strSql = "DELETE * FROM PHOTO WHERE PHOTO_ID = " & photoId
-        Me._executeNoQuery(_strSql)
+        mStrSQL = "DELETE * FROM PHOTO WHERE PHOTO_ID = " & photoId
+        Me.mExecuteNoQuery(mStrSQL)
 
         Return True
     End Function
 
 
     Public Function getPhotosIsPlanimetria(ByVal externalId As Long) As Data.DataTable
-        _strSql = "SELECT * FROM PHOTO WHERE  DATE_DELETED IS NULL AND DESCRIPTION = 'PLANIMETRIA' AND  FK_EXTERNAL_ID  = " & externalId
-        Return Me._fillDataTable(_strSql)
+        mStrSQL = "SELECT * FROM PHOTO WHERE  DATE_DELETED IS NULL AND DESCRIPTION = 'PLANIMETRIA' AND  FK_EXTERNAL_ID  = " & externalId
+        Return Me.mFillDataTable(mStrSQL)
     End Function
 
     Public Function getPhotosIsNotPlanimetria(ByVal externalId As Long) As Data.DataTable
-        _strSql = "SELECT * FROM PHOTO WHERE  DATE_DELETED IS NULL AND DESCRIPTION <> 'PLANIMETRIA' AND  FK_EXTERNAL_ID  = " & externalId
-        Return Me._fillDataTable(_strSql)
+        mStrSQL = "SELECT * FROM PHOTO WHERE  DATE_DELETED IS NULL AND DESCRIPTION <> 'PLANIMETRIA' AND  FK_EXTERNAL_ID  = " & externalId
+        Return Me.mFillDataTable(mStrSQL)
     End Function
 
     Public Function getPhotos(ByVal externalId As Long) As Data.DataTable
-        _strSql = "SELECT * FROM PHOTO WHERE  DATE_DELETED IS NULL AND  FK_EXTERNAL_ID  = " & externalId
-        Return Me._fillDataTable(_strSql)
+        mStrSQL = "SELECT * FROM PHOTO WHERE  DATE_DELETED IS NULL AND  FK_EXTERNAL_ID  = " & externalId
+        Return Me.mFillDataTable(mStrSQL)
     End Function
 
 

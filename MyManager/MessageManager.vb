@@ -21,14 +21,14 @@
             " VALUES (@FK_USER_ID, @TESTO)"
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@USER_ID_ADDED ", userId)
-        Me._addParameter(command, "@TESTO", testo)
+        Me.mAddParameter(command, "@USER_ID_ADDED ", userId)
+        Me.mAddParameter(command, "@TESTO", testo)
        
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
     End Function
 
 
@@ -41,14 +41,14 @@
                  " WHERE MESSAGE_ID =  " & messageId
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
-        Me._addParameter(command, "@USER_ID ", userId)
-        Me._addParameter(command, "@TESTO ", testo)
+        Me.mAddParameter(command, "@USER_ID ", userId)
+        Me.mAddParameter(command, "@TESTO ", testo)
     
         command.CommandText = strSQL
         
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
     End Function
 
 
@@ -59,7 +59,7 @@
 
     Public Function getMessageText(ByVal messageId As Long) As String
         Dim sqlQuery As String = "SELECT testo FROM MESSAGE WHERE message_id = " & messageId
-        Return _executeScalar(sqlQuery).ToString
+        Return mExecuteScalar(sqlQuery).ToString
     End Function
 
 End Class

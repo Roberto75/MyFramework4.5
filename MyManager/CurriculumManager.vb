@@ -28,7 +28,7 @@ Public Class CurriculumManager
         command = Me.buildInsertCommand()
         Console.WriteLine(command.CommandText)
 
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
         command.ExecuteNonQuery()
 
         Return _getIdentity()
@@ -49,7 +49,7 @@ Public Class CurriculumManager
 
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
 
         'If _userId <> "" Then

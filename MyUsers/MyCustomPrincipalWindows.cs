@@ -10,7 +10,7 @@ namespace MyUsers
     {
 
         //List<string> _roles;
-        string _roles;
+        string _roles= "";
 
         public MyCustomPrincipalWindows(System.Security.Principal.WindowsIdentity identity)
             : base(identity)
@@ -20,7 +20,7 @@ namespace MyUsers
 
 
             MyUsers.UserManager manager = new MyUsers.UserManager("DefaultConnection");
-            manager.openConnection();
+            manager.mOpenConnection();
             try
             {
                 System.Security.Principal.SecurityIdentifier sid = new System.Security.Principal.SecurityIdentifier( identity.User.Value);
@@ -31,7 +31,7 @@ namespace MyUsers
             }
             finally
             {
-                manager.closeConnection();
+                manager.mCloseConnection();
             }
 
         }

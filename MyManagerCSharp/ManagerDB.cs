@@ -1,7 +1,7 @@
 ﻿//Direttive di compilazione per le librerire esterne
 
 //#define MySQL
-#define Oracle
+//#define Oracle
 //#Const SqlServerCe = False
 //#Const PostgreSQL = False
 //#Const Oracle = False
@@ -16,6 +16,7 @@ using System.Diagnostics;
 
 namespace MyManagerCSharp
 {
+  
     public class ManagerDB : Manager
     {
 
@@ -50,11 +51,11 @@ namespace MyManagerCSharp
         protected System.Data.Common.DbProviderFactory mFactory;
         protected System.Data.Common.DbTransaction mTransaction;
         protected string mConnectionName;
-
-        private string _provider;
-
         protected string mStrSQL;
         protected DataTable mDt;
+
+        private string _provider;
+               
 
         public ManagerDB(string connectionName)
         {
@@ -106,17 +107,17 @@ namespace MyManagerCSharp
             mFactory = System.Data.Common.DbProviderFactories.GetFactory(_provider);
         }
 
-        public System.Data.Common.DbConnection getConnection()
+        public System.Data.Common.DbConnection mGetConnection()
         {
             return  mConnection;
         }
 
-        public void changeConnectionString(string connectionString)
+        public void mChangeConnectionString(string connectionString)
         {
              mConnection.ConnectionString = connectionString;
         }
 
-        public void openConnection()
+        public void mOpenConnection()
         {
             if (String.IsNullOrEmpty( mConnection.ConnectionString))
             {
@@ -137,7 +138,7 @@ namespace MyManagerCSharp
             }
         }
 
-        public void closeConnection()
+        public void mCloseConnection()
         {
              mConnection.Close();
              mConnection.Dispose();
@@ -340,7 +341,6 @@ namespace MyManagerCSharp
             return objAdap;
         }
         
-
         protected string mParseSQLforOracle(string strSQL)
         {
             strSQL = strSQL.Replace("GetDate()", "Sysdate");
@@ -349,7 +349,6 @@ namespace MyManagerCSharp
 
             return strSQL;
         }
-
 
         protected string mParseSQLforMySQL(string strSQL)
         {
@@ -366,7 +365,6 @@ namespace MyManagerCSharp
 
             return strSQL;
         }
-
 
         protected string mParseSQLforAccessAndPostgreSQL(string strSQL)
         {
@@ -396,11 +394,7 @@ namespace MyManagerCSharp
 
             return strSQL;
         }
-
-
-
-
-
+        
         public System.Data.Common.DbParameter mAddParameter(System.Data.Common.DbCommand command, string name, Object value)
         {
             System.Data.Common.DbParameter parameter = null;
@@ -518,8 +512,7 @@ namespace MyManagerCSharp
                     throw new MyException("Tipo di dato non supportato: " + value.GetType().Name);
             }
         }
-
-
+        
         protected System.Data.OleDb.OleDbType mGetOleDbType(Object value)
         {
             switch (value.GetType().Name)
@@ -744,7 +737,7 @@ namespace MyManagerCSharp
             }
 
 
-            //'Return Long.Parse(Me._executeScalar(command))
+            //'Return Long.Parse(Me.mExecuteScalar(command))
             //'26/12/2009
             //'Se passo per la funzione di Pasing della stringa di blocca con @@identity
 
@@ -771,9 +764,7 @@ namespace MyManagerCSharp
             return long.Parse(obj.ToString());
         }
 
-
-
-
+        
         protected long mGetSequence(string sequenceName)
         {
             string strSQL = "select " + sequenceName + ".nextval from dual";
@@ -786,7 +777,7 @@ namespace MyManagerCSharp
         }
 
 
-        #region "__TRANSACTION___"
+        #region "_mTransaction___"
 
         public void mTransactionBegin(ref System.Data.Common.DbTransaction transaction)
         {
@@ -832,7 +823,7 @@ namespace MyManagerCSharp
         public System.Data.Common.DbTransaction mGetTransaction()
         {
             //'26/01/2012 commento
-            //' If _transaction Is Nothing Then
+            //' If mTransaction Is Nothing Then
             //' Throw New ManagerException("Transazione NON inizializzata")
             //'xit Function
             //'  End If
@@ -908,7 +899,6 @@ namespace MyManagerCSharp
             return obj.ToString();
 
         }
-
 
         protected int mExecuteNoQueryWithDuplicateKey(string sqlQuery)
         {
@@ -1175,14 +1165,14 @@ namespace MyManagerCSharp
         }
 
 
-        public void reseedIdentity(string tableName, int newValue)
+        public void mReseedIdentity(string tableName, int newValue)
         {
             mStrSQL = String.Format("DBCC CHECKIDENT ( {0}, RESEED, {1} ) WITH NO_INFOMSGS", tableName, newValue);
             mExecuteNoQuery(mStrSQL);
         }
 
 
-        public string getLastMigrationId()
+        public string mGetLastMigrationId()
         {
             mStrSQL = "SELECT MigrationId   FROM __MigrationHistory";
             mDt = mFillDataTable(mStrSQL);

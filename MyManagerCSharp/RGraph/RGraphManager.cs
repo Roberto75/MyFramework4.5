@@ -183,10 +183,10 @@ namespace MyManagerCSharp.RGraph
             string strLabel = "";
 
 
-            string strMyKeys = "";
+           // string strMyKeys = "";
 
 
-            decimal totale = 0;
+          //  decimal totale = 0;
 
 
             int paletteColors;
@@ -374,7 +374,7 @@ namespace MyManagerCSharp.RGraph
             //{
             //    decimal percentuale;
 
-            //    foreach (System.Data.DataRow row in _dt.Rows)
+            //    foreach (System.Data.DataRow row in mDt.Rows)
             //    {
             //        percentuale = 0;
             //        if (decimal.Parse(row["valore"].ToString()) != 0)
@@ -452,7 +452,7 @@ namespace MyManagerCSharp.RGraph
             strJavaScript += String.Format("{0}.Draw();", report.Id) + Environment.NewLine;
 
 
-            //if (_dt.Columns.Contains("my_key"))
+            //if (mDt.Columns.Contains("my_key"))
             //{
             //    //strJavaScript += strMyKeys + Environment.NewLine;
             //    report.MyKeys = strMyKeys;
@@ -810,7 +810,7 @@ namespace MyManagerCSharp.RGraph
         //    //'End If
 
 
-        //    _dt = dataTable;
+        //    mDt = dataTable;
 
 
         //    int indexColor = 0;
@@ -859,7 +859,7 @@ namespace MyManagerCSharp.RGraph
         //    long indice = 0;
 
 
-        //    foreach (System.Data.DataRow row in _dt.Rows)
+        //    foreach (System.Data.DataRow row in mDt.Rows)
         //    {
         //        strData += row["valore"] + ",";
 
@@ -896,7 +896,7 @@ namespace MyManagerCSharp.RGraph
         //        totale = totale + Decimal.Parse(row["valore"].ToString());
 
 
-        //        if (_dt.Columns.Contains("my_key"))
+        //        if (mDt.Columns.Contains("my_key"))
         //        {
         //            //'strMyKeys &= String.Format("'{0}',", row("my_key").ToString().Replace("'", "\'"))
         //            strMyKeys += String.Format(" myKey{0}[{1}] = '{2}';", name, indice, row["my_key"].ToString().Replace("'", "\'"));
@@ -910,10 +910,10 @@ namespace MyManagerCSharp.RGraph
 
         //    if (OrderColor)
         //    {
-        //        _dt.DefaultView.Sort = "valore desc";
+        //        mDt.DefaultView.Sort = "valore desc";
         //        indexColor = 0;
 
-        //        foreach (System.Data.DataRowView row in _dt.DefaultView)
+        //        foreach (System.Data.DataRowView row in mDt.DefaultView)
         //        {
         //            strColors = strColors.Replace(String.Format("'{0}'", row["label"].ToString().Replace("'", "\'")), String.Format("'{0}'", "#" + _palette[indexColor % paletteColors]));
 
@@ -947,7 +947,7 @@ namespace MyManagerCSharp.RGraph
 
         //    if (ShowPercentuale)
         //    {
-        //        foreach (System.Data.DataRow row in _dt.Rows)
+        //        foreach (System.Data.DataRow row in mDt.Rows)
         //        {
         //            strLabel = strLabel.Replace(String.Format("'{0}'", row["label"].ToString().Replace("'", "\'")), String.Format("'{0} {1:N2}%'", row["label"].ToString().Replace("'", "\'"), (decimal.Parse(row["valore"].ToString()) / totale) * 100));
         //            strLegend = strLegend.Replace(String.Format("'{0}'", row["label"].ToString().Replace("'", "\'")), String.Format("'{0} {1:N2}%'", row["label"].ToString().Replace("'", "\'"), (decimal.Parse(row["valore"].ToString()) / totale) * 100));
@@ -998,7 +998,7 @@ namespace MyManagerCSharp.RGraph
         //    strJavaScript += String.Format("{0}.Draw();", name) + Environment.NewLine;
 
 
-        //    if (_dt.Columns.Contains("my_key"))
+        //    if (mDt.Columns.Contains("my_key"))
         //    {
         //        //' strMyKeys = strMyKeys.Substring(0, strMyKeys.Length - 1)
         //        //'strMyKeys &= ");"

@@ -16,13 +16,13 @@ namespace My.MessageQueue
         public MailManager(string connectionName)
             : base(connectionName)
         {
-            _log = new LogManager(_connection);
+            _log = new LogManager(mConnection);
         }
 
         public MailManager(System.Data.Common.DbConnection connection)
             : base(connection)
         {
-            _log = new LogManager(_connection);
+            _log = new LogManager(mConnection);
         }
 
         public bool send(long emailId)
@@ -45,38 +45,38 @@ namespace My.MessageQueue
             MyManagerCSharp.MailManager mail = new MyManagerCSharp.MailManager();
             // DataModel.EarlyWarningEmailMessage mail = new DataModel.EarlyWarningEmailMessage(System.Configuration.ConfigurationManager.AppSettings["application.name"], System.Configuration.ConfigurationManager.AppSettings["application.url"]);
 
-            mail._Subject = model.Subject;
-            mail._Body = model.Body;
+            mail.Subject = model.Subject;
+            mail.Body = model.Body;
 
             if (!String.IsNullOrEmpty(model.To))
             {
-                mail._To(model.To);
+                mail.To(model.To);
                 _log.info(model.id, String.Format("To: {0}", model.To));
             }
 
             if (!String.IsNullOrEmpty(model.Cc))
             {
-                mail._Cc(model.Cc);
+                mail.Cc(model.Cc);
                 _log.info(model.id, String.Format("Cc: {0}", model.Cc));
             }
 
             if (!String.IsNullOrEmpty(model.Bcc))
             {
-                mail._Bcc(model.Bcc);
+                mail.Bcc(model.Bcc);
                 _log.info(model.id, String.Format("Bcc: {0}", model.Bcc));
             }
 
             //Attachment 
             if (model.Attachments.Count > 0)
             {
-                mail._Attachments = new List<System.Net.Mail.Attachment>();
+                mail.Attachments = new List<System.Net.Mail.Attachment>();
 
                 System.Net.Mail.Attachment att;
                 foreach (Attachment attachment in model.Attachments)
                 {
                     att = new System.Net.Mail.Attachment(new System.IO.MemoryStream(attachment.fileStream), attachment.name);
 
-                    mail._Attachments.Add(att);
+                    mail.Attachments.Add(att);
                 }
             }
 
@@ -89,7 +89,7 @@ namespace My.MessageQueue
                 {
                     foreach (Member member in list.Members)
                     {
-                        mail._To(member.email, member.name);
+                        mail.To(member.email, member.name);
                         Debug.WriteLine(String.Format("Member {0}-{1}", member.email, member.name));
                     }
 
@@ -102,7 +102,7 @@ namespace My.MessageQueue
             esito = mail.send();
 
             //UPDATE STATUS
-            MessaggeQueueManager manager = new MessaggeQueueManager(_connection);
+            MessaggeQueueManager manager = new MessaggeQueueManager(mConnection);
             if (String.IsNullOrEmpty(esito))
             {
                 //OK
@@ -120,25 +120,25 @@ namespace My.MessageQueue
 
         public Email getEmail(long emailId)
         {
-            _strSQL = "SELECT t1.* , t2.distribution_list_id " +
+            mStrSQL = "SELECT t1.* , t2.distribution_list_id " +
                        " FROM mmq.Email as t1 " +
                        " join mmq.Message as t2 on t1.id = t2.id " +
                        " WHERE t1.id = " + emailId;
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.Record_duplicato);
             }
 
             Email email;
-            email = new Email(_dt.Rows[0]);
+            email = new Email(mDt.Rows[0]);
 
             setAttachments(email);
 
@@ -147,16 +147,16 @@ namespace My.MessageQueue
 
         public void setAttachments(Email email)
         {
-            _strSQL = "SELECT * FROM mmq.Attachment WHERE message_id = " + email.id;
-            _dt = _fillDataTable(_strSQL);
+            mStrSQL = "SELECT * FROM mmq.Attachment WHERE message_id = " + email.id;
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return;
             }
 
             Attachment attachment;
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 attachment = new Attachment(row);
                 email.Attachments.Add(attachment);
@@ -165,7 +165,7 @@ namespace My.MessageQueue
 
         public DistributionList getDistributionList(long id)
         {
-            DistributionListManager manager = new DistributionListManager(_connection);
+            DistributionListManager manager = new DistributionListManager(mConnection);
             return manager.getDistributionList(id);
         }
 

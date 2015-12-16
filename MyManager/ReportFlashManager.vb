@@ -149,7 +149,7 @@ Public Class ReportFlashManager
 
 
         Dim risultato As String
-        risultato = _executeScalar(sqlQuery)
+        risultato = mExecuteScalar(sqlQuery)
 
 
         'risultato &= "<div style=""font-size:28:px; color:  > """

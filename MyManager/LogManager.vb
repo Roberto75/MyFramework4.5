@@ -29,40 +29,40 @@
         strSQLParametri = " VALUES ( @DATE_ADDED  "
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = _connection
+        command.Connection = mConnection
 
-        Me._addParameter(command, "@DATE_ADDED", DateTime.Now)
+        Me.mAddParameter(command, "@DATE_ADDED", DateTime.Now)
 
         If Not String.IsNullOrEmpty(nota) Then
             strSQL &= ",nota "
             strSQLParametri &= ", @nota "
-            Me._addParameter(command, "@nota", nota)
+            Me.mAddParameter(command, "@nota", nota)
         End If
 
         If Not String.IsNullOrEmpty(tipo) Then
             strSQL &= ",tipo "
             strSQLParametri &= ", @tipo "
-            Me._addParameter(command, "@tipo", tipo)
+            Me.mAddParameter(command, "@tipo", tipo)
         End If
 
         If Not String.IsNullOrEmpty(referenceId) Then
             strSQL &= ",reference_id "
             strSQLParametri &= ", @referenceId "
-            Me._addParameter(command, "@referenceId", referenceId)
+            Me.mAddParameter(command, "@referenceId", referenceId)
         End If
 
         If Not String.IsNullOrEmpty(referenceType) Then
             strSQL &= ",reference_type "
             strSQLParametri &= ", @referenceType "
-            Me._addParameter(command, "@referenceType", referenceType)
+            Me.mAddParameter(command, "@referenceType", referenceType)
         End If
 
         If myLevel <> LogManager.MyLevel.undefined Then
             strSQL &= ",my_level "
             strSQLParametri &= ", @MY_LEVEL "
-            Me._addParameter(command, "@MY_LEVEL", myLevel.ToString)
+            Me.mAddParameter(command, "@MY_LEVEL", myLevel.ToString)
         End If
 
         command.CommandText = strSQL & " ) " & strSQLParametri & " )"
@@ -74,7 +74,7 @@
 
 
     Public Function getLogById(logId As Long) As Data.DataTable
-        _strSql = "select * from LOG  WHERE LOG_ID = " & logId
-        Return _fillDataTable(_strSql)
+        mStrSQL = "select * from LOG  WHERE LOG_ID = " & logId
+        Return mFillDataTable(mStrSQL)
     End Function
 End Class

@@ -31,11 +31,11 @@ namespace MyUsers
             List<Models.MyCustomer> risultato;
             risultato = new List<Models.MyCustomer>();
 
-            _strSQL = "SELECT * FROM CUSTOMER";
+            mStrSQL = "SELECT * FROM CUSTOMER";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 risultato.Add(new Models.MyCustomer(row));
             }
@@ -66,22 +66,22 @@ namespace MyUsers
 
         public Models.MyCustomer getCustomer(long cutomerId)
         {
-            _strSQL = "SELECT * FROM CUSTOMER WHERE customer_id = " + cutomerId;
+            mStrSQL = "SELECT * FROM CUSTOMER WHERE customer_id = " + cutomerId;
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("id > 0");
             }
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
             Models.MyCustomer c;
-            c = new Models.MyCustomer(_dt.Rows[0]);
+            c = new Models.MyCustomer(mDt.Rows[0]);
 
             return c;
 
@@ -92,32 +92,32 @@ namespace MyUsers
             long newId = -1;
             string strSQLParametri = "";
 
-            _strSQL = "INSERT INTO CUSTOMER ( DATE_ADDED  ";
+            mStrSQL = "INSERT INTO CUSTOMER ( DATE_ADDED  ";
             strSQLParametri = " VALUES ( GetDate()  ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
             if (!String.IsNullOrEmpty(c.ragioneSociale))
             {
-                _strSQL += ",RAGIONE_SOCIALE ";
+                mStrSQL += ",RAGIONE_SOCIALE ";
                 strSQLParametri += ", @RAGIONE_SOCIALE ";
-                _addParameter(command, "@RAGIONE_SOCIALE", c.ragioneSociale);
+                mAddParameter(command, "@RAGIONE_SOCIALE", c.ragioneSociale);
             }
 
 
-            command.CommandText = _strSQL + " ) " + strSQLParametri + " )";
+            command.CommandText = mStrSQL + " ) " + strSQLParametri + " )";
 
             //If test_mode = True) {
-            //    Me._transactionBegin()
-            //    _executeNoQuery(command)
-            //    Me._transactionRollback()
+            //    Me.mTransactionBegin()
+            //    mExecuteNoQuery(command)
+            //    Me.mTransactionRollback()
             //    Return -1
             //}
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            newId = _getIdentity();
+            newId = mGetIdentity();
 
             return newId;
         }

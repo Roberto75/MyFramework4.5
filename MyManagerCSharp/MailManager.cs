@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyManagerCSharp
 {
-     public class MailManager
+    public class MailManager
     {
         //chiavi per cifrare e decifrare le credenziali persenti nel file di configurazione
         protected string mKey;
@@ -27,9 +27,9 @@ namespace MyManagerCSharp
 
         #region "TO"
 
-        private List<System.Net.Mail.MailAddress> p_To = new List<System.Net.Mail.MailAddress>();
+        private List<System.Net.Mail.MailAddress> _to = new List<System.Net.Mail.MailAddress>();
 
-        public void _To(string address)
+        public void To(string address)
         {
             if (!String.IsNullOrEmpty(address))
             {
@@ -43,7 +43,7 @@ namespace MyManagerCSharp
                     if (!String.IsNullOrEmpty(value))
                     {
                         temp = value.Replace("\"", "");
-                        p_To.Add(new System.Net.Mail.MailAddress(temp));
+                        _to.Add(new System.Net.Mail.MailAddress(temp));
                     }
 
                 }
@@ -52,24 +52,23 @@ namespace MyManagerCSharp
 
         }
 
-        public void _To(string address, string displayName)
+        public void To(string address, string displayName)
         {
             if (!String.IsNullOrEmpty(address))
             {
-                p_To.Add(new System.Net.Mail.MailAddress(address, displayName));
+                _to.Add(new System.Net.Mail.MailAddress(address, displayName));
             }
 
         }
 
-        public void _To(System.Net.Mail.MailAddress item)
+        public void To(System.Net.Mail.MailAddress item)
         {
-            p_To.Add(item);
+            _to.Add(item);
         }
 
-
-        public void _ToClearField()
+        public void ToClearField()
         {
-            p_To.Clear();
+            _to.Clear();
         }
         #endregion
 
@@ -77,29 +76,29 @@ namespace MyManagerCSharp
 
         #region "FROM"
 
-        private System.Net.Mail.MailAddress p_From = null;
+        private System.Net.Mail.MailAddress _from = null;
 
-        public void _From(string address)
+        public void From(string address)
         {
             if (!String.IsNullOrEmpty(address))
             {
-                p_From = new System.Net.Mail.MailAddress(address);
+                _from = new System.Net.Mail.MailAddress(address);
             }
         }
 
 
-        public void _From(string address, string displayName)
+        public void From(string address, string displayName)
         {
             if (!String.IsNullOrEmpty(address))
             {
-                p_From = new System.Net.Mail.MailAddress(address, displayName);
+                _from = new System.Net.Mail.MailAddress(address, displayName);
             }
 
         }
 
-        public void _From(System.Net.Mail.MailAddress item)
+        public void From(System.Net.Mail.MailAddress item)
         {
-            p_From = item;
+            _from = item;
         }
 
 
@@ -110,9 +109,9 @@ namespace MyManagerCSharp
 
         #region "Cc"
 
-        private List<System.Net.Mail.MailAddress> p_Cc = new List<System.Net.Mail.MailAddress>();
+        private List<System.Net.Mail.MailAddress> _cc = new List<System.Net.Mail.MailAddress>();
 
-        public void _Cc(string address)
+        public void Cc(string address)
         {
             if (!String.IsNullOrEmpty(address))
             {
@@ -126,7 +125,7 @@ namespace MyManagerCSharp
                     if (!String.IsNullOrEmpty(value))
                     {
                         temp = value.Replace("\"", "");
-                        p_Cc.Add(new System.Net.Mail.MailAddress(temp));
+                        _cc.Add(new System.Net.Mail.MailAddress(temp));
                     }
 
                 }
@@ -135,24 +134,24 @@ namespace MyManagerCSharp
 
         }
 
-        public void _Cc(string address, string displayName)
+        public void Cc(string address, string displayName)
         {
             if (!String.IsNullOrEmpty(address))
             {
-                p_Cc.Add(new System.Net.Mail.MailAddress(address, displayName));
+                _cc.Add(new System.Net.Mail.MailAddress(address, displayName));
             }
 
         }
 
-        public void _Cc(System.Net.Mail.MailAddress item)
+        public void Cc(System.Net.Mail.MailAddress item)
         {
-            p_Cc.Add(item);
+            _cc.Add(item);
         }
 
 
-        public void _CcClearField()
+        public void CcClearField()
         {
-            p_Cc.Clear();
+            _cc.Clear();
         }
 
         #endregion
@@ -161,10 +160,10 @@ namespace MyManagerCSharp
 
         #region "Bcc"
 
-        private List<System.Net.Mail.MailAddress> p_Bcc = new List<System.Net.Mail.MailAddress>();
+        private List<System.Net.Mail.MailAddress> _bcc = new List<System.Net.Mail.MailAddress>();
 
 
-        public void _Bcc(string address)
+        public void Bcc(string address)
         {
             if (!String.IsNullOrEmpty(address))
             {
@@ -178,7 +177,7 @@ namespace MyManagerCSharp
                     if (!String.IsNullOrEmpty(value))
                     {
                         temp = value.Replace("\"", "");
-                        p_Bcc.Add(new System.Net.Mail.MailAddress(temp));
+                        _bcc.Add(new System.Net.Mail.MailAddress(temp));
                     }
 
                 }
@@ -187,24 +186,24 @@ namespace MyManagerCSharp
 
         }
 
-        public void _Bcc(string address, string displayName)
+        public void Bcc(string address, string displayName)
         {
             if (!String.IsNullOrEmpty(address))
             {
-                p_Bcc.Add(new System.Net.Mail.MailAddress(address, displayName));
+                _bcc.Add(new System.Net.Mail.MailAddress(address, displayName));
             }
 
         }
 
-        public void _Bcc(System.Net.Mail.MailAddress item)
+        public void Bcc(System.Net.Mail.MailAddress item)
         {
-            p_Bcc.Add(item);
+            _bcc.Add(item);
         }
 
 
-        public void _BccClearField()
+        public void BccClearField()
         {
-            p_Bcc.Clear();
+            _bcc.Clear();
         }
 
         #endregion
@@ -212,13 +211,13 @@ namespace MyManagerCSharp
 
 
 
-        public string _Subject;
+        public string Subject;
 
-        public string _Body;
+        public string Body;
 
-        public string _MailServer;
+        public string MailServer;
 
-        public List<System.Net.Mail.Attachment> _Attachments;
+        public List<System.Net.Mail.Attachment> Attachments;
 
 
         public string send()
@@ -232,64 +231,64 @@ namespace MyManagerCSharp
             System.Net.Mail.MailMessage MyMail = new System.Net.Mail.MailMessage();
 
 
-            if (p_From == null)
+            if (_from == null)
             {
                 if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.From.displayName"]))
                 {
-                    this._From(System.Configuration.ConfigurationManager.AppSettings["mail.From"], System.Configuration.ConfigurationManager.AppSettings["mail.From.displayName"]);
+                    this.From(System.Configuration.ConfigurationManager.AppSettings["mail.From"], System.Configuration.ConfigurationManager.AppSettings["mail.From.displayName"]);
                 }
                 else
                 {
-                    this._From(System.Configuration.ConfigurationManager.AppSettings["mail.From"]);
+                    this.From(System.Configuration.ConfigurationManager.AppSettings["mail.From"]);
                 }
             }
 
-            MyMail.From = p_From;
+            MyMail.From = _from;
 
 
-            foreach (System.Net.Mail.MailAddress item in p_To)
+            foreach (System.Net.Mail.MailAddress item in _to)
             {
                 MyMail.To.Add(item);
             }
 
 
-            foreach (System.Net.Mail.MailAddress item in p_Cc)
+            foreach (System.Net.Mail.MailAddress item in _cc)
             {
                 MyMail.CC.Add(item);
             }
 
-            foreach (System.Net.Mail.MailAddress item in p_Bcc)
+            foreach (System.Net.Mail.MailAddress item in _bcc)
             {
                 MyMail.Bcc.Add(item);
             }
 
             //*** SPAMMING: G.a.p.p.y - T.e.x.t
-            MyMail.Subject = _Subject.Replace(".", "");
+            MyMail.Subject = Subject.Replace(".", "");
 
-            if (_Body.ToLower().StartsWith("<html>"))
+            if (Body.ToLower().StartsWith("<html>"))
             {
-                MyMail.Body = _Body;
+                MyMail.Body = Body;
             }
             else
             {
-                MyMail.Body = "<html><body>" + _Body + "</body></html>";
+                MyMail.Body = "<html><body>" + Body + "</body></html>";
             }
 
             MyMail.IsBodyHtml = true;
 
             //*** Attachment ***
-            if (_Attachments != null)
+            if (Attachments != null)
             {
-                foreach (System.Net.Mail.Attachment attachment in _Attachments)
+                foreach (System.Net.Mail.Attachment attachment in Attachments)
                 {
                     MyMail.Attachments.Add(attachment);
                 }
             }
 
-            if (String.IsNullOrEmpty(_MailServer))
+            if (String.IsNullOrEmpty(MailServer))
             {
                 //leggo il nome del mail server dal file Web.Config
-                _MailServer = System.Configuration.ConfigurationManager.AppSettings["mail.server"];
+                MailServer = System.Configuration.ConfigurationManager.AppSettings["mail.server"];
             }
 
 
@@ -299,7 +298,7 @@ namespace MyManagerCSharp
                 port = int.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.port"]);
             }
 
-            System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(_MailServer, port);
+            System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(MailServer, port);
 
             if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"]))
             {
@@ -376,10 +375,9 @@ namespace MyManagerCSharp
         }
 
 
-
-        public string  sendException(Exception ex)
+        public string sendException(Exception ex)
         {
-           return sendException(ex, "");
+            return sendException(ex, "");
         }
 
         public string sendException(Exception ex, string messaggio)
@@ -419,29 +417,29 @@ namespace MyManagerCSharp
 
             temp += "</body></html>";
 
-            _Body = temp;
+            Body = temp;
 
 
             //in caso di errore invio l'email a me stesso e anche a .... se è presente nel file di configurazione 
-            _ToClearField();
-            p_To.Add(new System.Net.Mail.MailAddress(System.Configuration.ConfigurationManager.AppSettings["mail.From"]));
+            ToClearField();
+            _to.Add(new System.Net.Mail.MailAddress(System.Configuration.ConfigurationManager.AppSettings["mail.From"]));
 
             if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.To.Ccn"]))
             {
-                p_Bcc.Add(new System.Net.Mail.MailAddress(System.Configuration.ConfigurationManager.AppSettings["mail.To.Ccn"]));
+                _bcc.Add(new System.Net.Mail.MailAddress(System.Configuration.ConfigurationManager.AppSettings["mail.To.Ccn"]));
             }
 
 
             if ((ex.Source == null) || String.IsNullOrEmpty(ex.Source))
             {
-                _Subject = System.Net.Dns.GetHostName() + " - Exception ";
+                Subject = System.Net.Dns.GetHostName() + " - Exception ";
             }
             else
             {
-                _Subject = System.Net.Dns.GetHostName() + " - Exception: " + ex.Source;
+                Subject = System.Net.Dns.GetHostName() + " - Exception: " + ex.Source;
             }
 
-           return send();
+            return send();
         }
 
 

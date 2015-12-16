@@ -33,7 +33,7 @@ Public Class iTextDocumentBase
 
     Public Sub New(ByVal connectionName As String)
         MyBase.New(connectionName)
-        '   _ChartManager = New DotNetChartingManager.DotNetChartingManager(Me._connection.ConnectionString)
+        '   _ChartManager = New DotNetChartingManager.DotNetChartingManager(Me.mConnection.ConnectionString)
         initPage()
         initHeader()
         initFooter()
@@ -52,7 +52,7 @@ Public Class iTextDocumentBase
 
     '    '_chart = New dotnetCHARTING.Chart
 
-    '    '' _chart.DefaultSeries.ConnectionString = Me._connection.ConnectionString
+    '    '' _chart.DefaultSeries.ConnectionString = Me.mConnection.ConnectionString
     '    '_chart.ImageFormat = dotnetCHARTING.ImageFormat.Jpg
     '    ''Enable streaming
     '    '_chart.UseFile = False
@@ -236,7 +236,7 @@ Public Class iTextDocumentBase
 
     Public Function getPdfTable(ByVal param As Hashtable, Optional ByVal showHeader As Boolean = True) As iTextSharp.text.pdf.PdfPTable
         'trasformo il mio Hashtable in un DataTable
-        Return getPdfTable(_fillDataTable(param), showHeader)
+        Return getPdfTable(mFillDataTable(param), showHeader)
     End Function
 
 

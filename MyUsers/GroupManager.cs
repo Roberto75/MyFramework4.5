@@ -45,23 +45,23 @@ namespace MyUsers
             List<Models.MyGroup> risultato;
             risultato = new List<Models.MyGroup>();
 
-            _strSQL = "SELECT * FROM GRUPPO  WHERE (1=1) " ;
+            mStrSQL = "SELECT * FROM GRUPPO  WHERE (1=1) " ;
             
             if (model.filter != null && !String.IsNullOrEmpty (model.filter.tipo )){
-                _strSQL += " AND tipo_id = '" + model.filter.tipo  + "'";
+                mStrSQL += " AND tipo_id = '" + model.filter.tipo  + "'";
             }
 
             if (model.hideGroupAdministrators)
             {
-                _strSQL += " AND nome <> 'Administrators'";
+                mStrSQL += " AND nome <> 'Administrators'";
 
             }
 
-            _strSQL += " order by nome";
+            mStrSQL += " order by nome";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 risultato.Add(new Models.MyGroup(row));
             }
@@ -75,14 +75,14 @@ namespace MyUsers
 
         public long countUsers(long gruppoId)
         {
-            _strSQL = "SELECT COUNT(*) FROM UtenteGruppo  WHERE  gruppo_id = " + gruppoId;
-            return long.Parse(_executeScalar(_strSQL));
+            mStrSQL = "SELECT COUNT(*) FROM UtenteGruppo  WHERE  gruppo_id = " + gruppoId;
+            return long.Parse(mExecuteScalar(mStrSQL));
         }
 
         public long countRoles(long gruppoId)
         {
-            _strSQL = "SELECT COUNT(*) FROM GruppoRuolo  WHERE  gruppo_id = " + gruppoId;
-            return long.Parse(_executeScalar(_strSQL));
+            mStrSQL = "SELECT COUNT(*) FROM GruppoRuolo  WHERE  gruppo_id = " + gruppoId;
+            return long.Parse(mExecuteScalar(mStrSQL));
         }
 
 
@@ -91,27 +91,27 @@ namespace MyUsers
             long newId = -1;
             string strSQLParametri = "";
 
-            _strSQL = "INSERT INTO GRUPPO ( nome , date_added ";
+            mStrSQL = "INSERT INTO GRUPPO ( nome , date_added ";
             strSQLParametri = " VALUES ( @nome , GetDate()  ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
-            _addParameter(command, "@nome", g.nome);
+            mAddParameter(command, "@nome", g.nome);
 
 
-            command.CommandText = _strSQL + " ) " + strSQLParametri + " )";
+            command.CommandText = mStrSQL + " ) " + strSQLParametri + " )";
 
             //If test_mode = True Then
-            //    Me._transactionBegin()
-            //    _executeNoQuery(command)
-            //    Me._transactionRollback()
+            //    Me.mTransactionBegin()
+            //    mExecuteNoQuery(command)
+            //    Me.mTransactionRollback()
             //    Return -1
             //End If
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            newId = _getIdentity();
+            newId = mGetIdentity();
 
             return newId;
         }
@@ -130,17 +130,17 @@ namespace MyUsers
 
         public bool addUser(long gruppoId, long userId)
         {
-            _strSQL = "INSERT INTO UtenteGruppo ( date_added,  gruppo_id, user_id ) VALUES ( GetDate() , " + gruppoId + "," + userId + ")";
+            mStrSQL = "INSERT INTO UtenteGruppo ( date_added,  gruppo_id, user_id ) VALUES ( GetDate() , " + gruppoId + "," + userId + ")";
 
-            _executeNoQuery(_strSQL);
+            mExecuteNoQuery(mStrSQL);
             return true;
         }
 
 
         public bool update(IEnumerable<Models.MyGroup> gruppi, long userId)
         {
-            _strSQL = "DELETE FROM  UtenteGruppo WHERE user_id = " + userId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM  UtenteGruppo WHERE user_id = " + userId;
+            mExecuteNoQuery(mStrSQL);
 
             foreach (Models.MyGroup g in gruppi)
             {
@@ -153,19 +153,19 @@ namespace MyUsers
 
         public List<Models.MyGroup> getMyGroupFromRole(long userId, string ruoloId)
         {
-            _strSQL = "select t4.* " +
+            mStrSQL = "select t4.* " +
                 " from GruppoRuolo as t1 " +
                 " join Ruolo as t2 on t1.ruolo_id = t2.ruolo_id " +
                 " join UtenteGruppo as t3 on t1.gruppo_id = t3.gruppo_id " +
                 " join Gruppo as t4 on t3.gruppo_id = t4.gruppo_id " +
                 " where t2.ruolo_id = '" + ruoloId + "'and t3.user_id = " + userId;
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             List<Models.MyGroup> risultato = new List<Models.MyGroup>();
             Models.MyGroup group;
 
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 //Escludo il gluppo administrators
                 if (row["nome"].ToString().ToUpper() == "ADMINISTRATORS")
@@ -184,65 +184,65 @@ namespace MyUsers
 
         public long getGroupIdFromName(string groupName)
         {
-            _strSQL = "SELECT GRUPPO_ID FROM  GRUPPO WHERE UPPER(NOME)= @NOME ";
+            mStrSQL = "SELECT GRUPPO_ID FROM  GRUPPO WHERE UPPER(NOME)= @NOME ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
-            _addParameter(command, "@NOME", groupName.ToUpper().Trim());
+            mAddParameter(command, "@NOME", groupName.ToUpper().Trim());
 
-            command.CommandText = _strSQL;
-            _dt = _fillDataTable(command);
+            command.CommandText = mStrSQL;
+            mDt = mFillDataTable(command);
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.Record_duplicato);
             }
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return -1;
             }
 
-            return long.Parse(_dt.Rows[0]["GRUPPO_ID"].ToString());
+            return long.Parse(mDt.Rows[0]["GRUPPO_ID"].ToString());
         }
 
         public Models.MyGroup getGroup(long id)
         {
-            _strSQL = "SELECT * FROM gruppo WHERE gruppo_id = " + id;
+            mStrSQL = "SELECT * FROM gruppo WHERE gruppo_id = " + id;
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.Record_duplicato);
             }
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            return new Models.MyGroup(_dt.Rows[0]);
+            return new Models.MyGroup(mDt.Rows[0]);
         }
 
 
         public bool update(Models.MyGroup g)
         {
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
-            _strSQL = "UPDATE GRUPPO SET date_modified = GetDate() , nome = @NOME  ";
-            _addParameter(command, "@NOME", g.nome);
+            mStrSQL = "UPDATE GRUPPO SET date_modified = GetDate() , nome = @NOME  ";
+            mAddParameter(command, "@NOME", g.nome);
 
-            _strSQL += ", tipo_id = @TIPO ";
-            _addParameter(command, "@TIPO", g.tipo);
+            mStrSQL += ", tipo_id = @TIPO ";
+            mAddParameter(command, "@TIPO", g.tipo);
             
 
-            _strSQL += " WHERE gruppo_id = " + g.gruppoId;
-            command.CommandText = _strSQL;
+            mStrSQL += " WHERE gruppo_id = " + g.gruppoId;
+            command.CommandText = mStrSQL;
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
             return true;
         }
 
@@ -253,8 +253,8 @@ namespace MyUsers
 
         public bool updateRuoli(Models.MyGroup g)
         {
-            _strSQL = "DELETE FROM  GruppoRuolo WHERE gruppo_id = " + g.gruppoId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM  GruppoRuolo WHERE gruppo_id = " + g.gruppoId;
+            mExecuteNoQuery(mStrSQL);
 
             foreach (Models.MyRole p in g.Ruoli)
             {
@@ -267,10 +267,10 @@ namespace MyUsers
 
         private bool insertRuolo(long gruppoId, string ruoloId)
         {
-            _strSQL = "INSERT INTO GruppoRuolo ( gruppo_id, ruolo_id )" +
+            mStrSQL = "INSERT INTO GruppoRuolo ( gruppo_id, ruolo_id )" +
                         " VALUES ( " + gruppoId + ",'" + ruoloId + "')";
 
-            _executeNoQuery(_strSQL);
+            mExecuteNoQuery(mStrSQL);
 
             return true;
         }
@@ -279,22 +279,22 @@ namespace MyUsers
 
         public bool delete(long gruppoId)
         {
-            _strSQL = "DELETE FROM UtenteGruppo WHERE gruppo_id = " + gruppoId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM UtenteGruppo WHERE gruppo_id = " + gruppoId;
+            mExecuteNoQuery(mStrSQL);
 
-            _strSQL = "DELETE FROM GruppoRuolo WHERE gruppo_id = " + gruppoId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM GruppoRuolo WHERE gruppo_id = " + gruppoId;
+            mExecuteNoQuery(mStrSQL);
 
-            _strSQL = "DELETE FROM Gruppo WHERE gruppo_id = " + gruppoId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM Gruppo WHERE gruppo_id = " + gruppoId;
+            mExecuteNoQuery(mStrSQL);
             return true;
         }
 
 
         public bool deleteUser(long gruppoId, long usertId)
         {
-            _strSQL = "DELETE FROM UtenteGruppo WHERE gruppo_id = " + gruppoId + " AND user_id = " + usertId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM UtenteGruppo WHERE gruppo_id = " + gruppoId + " AND user_id = " + usertId;
+            mExecuteNoQuery(mStrSQL);
 
             return true;
         }
@@ -305,21 +305,21 @@ namespace MyUsers
 
         public bool setGroups(Models.MyUser u)
         {
-            _strSQL = "select t2.* from UtenteGruppo as t1 left join gruppo  as t2 on (t1.gruppo_id = t2.gruppo_id) WHERE t1.user_id = " + u.userId;
+            mStrSQL = "select t2.* from UtenteGruppo as t1 left join gruppo  as t2 on (t1.gruppo_id = t2.gruppo_id) WHERE t1.user_id = " + u.userId;
 
 
             //if (hideAdministrators)
             //{
-            //    _strSQL += " AND T2.NOME <> 'Administrators' ";
+            //    mStrSQL += " AND T2.NOME <> 'Administrators' ";
 
             //}
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             List<Models.MyGroup> listaGruppi = new List<Models.MyGroup>();
             Models.MyGroup g;
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 g = new Models.MyGroup(row);
                 listaGruppi.Add(g);
@@ -332,14 +332,14 @@ namespace MyUsers
 
         public List<Models.MyUser> getUsers(long gruppoId)
         {
-            _strSQL = UserManager._sqlElencoUtenti + " from utente as t1 left join  UtenteGruppo  as t2 on (t1.user_id = t2.user_id) WHERE t2.gruppo_id = " + gruppoId;
-            _dt = _fillDataTable(_strSQL);
+            mStrSQL = UserManager._sqlElencoUtenti + " from utente as t1 left join  UtenteGruppo  as t2 on (t1.user_id = t2.user_id) WHERE t2.gruppo_id = " + gruppoId;
+            mDt = mFillDataTable(mStrSQL);
 
 
             List<Models.MyUser> listaUtenti = new List<Models.MyUser>();
             Models.MyUser u;
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 u = new Models.MyUser(row, Models.MyUser.SelectFileds.Lista);
                 //u = new Models.MyUser(row);
@@ -352,14 +352,14 @@ namespace MyUsers
 
         public void setRoles(Models.MyGroup g)
         {
-            _strSQL = "select t2.ruolo_id as ruolo_id  ,t2.nome as nome   from gruppoRuolo as t1 left join Ruolo as t2  on t1.ruolo_id  = t2.ruolo_id  WHERE t1.gruppo_id = " + g.gruppoId + " order by t2.nome  ";
+            mStrSQL = "select t2.ruolo_id as ruolo_id  ,t2.nome as nome   from gruppoRuolo as t1 left join Ruolo as t2  on t1.ruolo_id  = t2.ruolo_id  WHERE t1.gruppo_id = " + g.gruppoId + " order by t2.nome  ";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             List<Models.MyRole> risultato = new List<Models.MyRole>();
             Models.MyRole p;
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 p = new Models.MyRole(row);
 
@@ -372,7 +372,7 @@ namespace MyUsers
 
         public bool setRoles(Models.MyUser u)
         {
-            _strSQL = "select t4.ruolo_id , t4.nome ,  t5.gruppo_id , t5.nome as gruppo  " +
+            mStrSQL = "select t4.ruolo_id , t4.nome ,  t5.gruppo_id , t5.nome as gruppo  " +
                 " from Utente as t1 " +
                 " join UtenteGruppo as t2 on (t1.user_id = t2.user_id ) " +
                 " join GruppoRuolo as t3 on (t2.gruppo_id = t3.gruppo_id) " +
@@ -381,12 +381,12 @@ namespace MyUsers
                 " where t1.user_id = " + u.userId;
 
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             List<Models.MyRole> risultato = new List<Models.MyRole>();
             Models.MyRole p;
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 p = new Models.MyRole(row);
 
@@ -406,11 +406,11 @@ namespace MyUsers
             List<Models.MyRole> risultato;
             risultato = new List<Models.MyRole>();
 
-            _strSQL = "SELECT * FROM RUOLO order by nome";
+            mStrSQL = "SELECT * FROM RUOLO order by nome";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 risultato.Add(new Models.MyRole(row));
             }
@@ -423,11 +423,11 @@ namespace MyUsers
 
             List<MyManagerCSharp.Models.MyItem> risultato = new List<MyManagerCSharp.Models.MyItem>();
 
-            _strSQL = "SELECT * FROM GruppoTipo order by nome";
+            mStrSQL = "SELECT * FROM GruppoTipo order by nome";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 risultato.Add(new MyManagerCSharp.Models.MyItem(row["id"].ToString(), row["nome"].ToString()));
             }

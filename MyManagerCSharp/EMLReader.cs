@@ -2,18 +2,15 @@
 
 
 
-
-
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
-[assembly: CLSCompliant(true)]
 
 namespace MyManagerCSharp
 {
-    [CLSCompliant(true)]
+
     public class EMLReader
     {
         private string _x_Sender;

@@ -69,7 +69,7 @@ namespace My.Shared.Tasks
 
             try
             {
-                _log.openConnection();
+                _log.mOpenConnection();
             }
             catch (Exception e)
             {
@@ -299,12 +299,12 @@ namespace My.Shared.Tasks
                         // DataModel.EarlyWarningEmailMessage mail = new DataModel.EarlyWarningEmailMessage(System.Configuration.ConfigurationManager.AppSettings["application.name"], System.Configuration.ConfigurationManager.AppSettings["application.url"]);
 
                         MyManagerCSharp.MailMessageManager mail = new MailMessageManager(System.Configuration.ConfigurationManager.AppSettings["application.name"], System.Configuration.ConfigurationManager.AppSettings["application.url"]);
-                        mail._Subject = System.Net.Dns.GetHostName() + " - " + _taskName + " - Errore durante il download";
+                        mail.Subject = System.Net.Dns.GetHostName() + " - " + _taskName + " - Errore durante il download";
 
-                        mail._Body = String.Format("Errore durante il download file {0} " + Environment.NewLine + "{1}", sourceFile, esito);
+                        mail.Body = String.Format("Errore durante il download file {0} " + Environment.NewLine + "{1}", sourceFile, esito);
                         try
                         {
-                            mail._To(System.Configuration.ConfigurationManager.AppSettings["mail.support"]);
+                            mail.To(System.Configuration.ConfigurationManager.AppSettings["mail.support"]);
                             mail.send();
                         }
                         catch (Exception ex)
@@ -477,7 +477,7 @@ namespace My.Shared.Tasks
                     {
                         client.Disconnect();
                     }
-                    catch (Exception ex)
+                    catch (Exception )
                     {
                         //ignoro
                     }
@@ -581,7 +581,7 @@ namespace My.Shared.Tasks
             }
             finally
             {
-                _log.closeConnection();
+                _log.mCloseConnection();
             }
         }
 
@@ -665,7 +665,7 @@ namespace My.Shared.Tasks
                 {
                     option = (SearchOption)Enum.Parse(typeof(SearchOption), valore);
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
                     throw new Exception("[App.config] task.folder.attachments.SearchOption valore non riconosciuto: " + valore + " (AllDirectories || TopDirectoryOnly)");
                 }
@@ -1031,7 +1031,7 @@ namespace My.Shared.Tasks
                     {
                         client.Disconnect();
                     }
-                    catch (Exception ex)
+                    catch (Exception )
                     {
                         //ignoro
                     }

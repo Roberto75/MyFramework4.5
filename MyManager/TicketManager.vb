@@ -15,7 +15,7 @@ Public Class TicketManager
         Dim sqlQuery As String
 
         sqlQuery = "SELECT TICKET_TYPE_ID FROM TICKET where ticket_ID = " & tickeTId
-        Return Long.Parse(_executeScalar(sqlQuery))
+        Return Long.Parse(mExecuteScalar(sqlQuery))
     End Function
 
 
@@ -28,15 +28,15 @@ Public Class TicketManager
         strSQL = "select ticket_id from Ticket where ticket_status_id = 'OPEN' and user_id_cliente = @user_id_cliente and ticket_type_id= @ticket_type_id"
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@user_id_cliente", userIdCliente)
-        Me._addParameter(command, "@ticket_type_id", ticketType)
+        Me.mAddParameter(command, "@user_id_cliente", userIdCliente)
+        Me.mAddParameter(command, "@ticket_type_id", ticketType)
 
         Dim risultato As String
-        risultato = Me._executeScalar(command)
+        risultato = Me.mExecuteScalar(command)
         If String.IsNullOrEmpty(risultato) Then
             Return 0
         Else
@@ -52,17 +52,17 @@ Public Class TicketManager
 
         '*** STATO = APERTO
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@USER_ID_CLIENTE", userIdCliente)
-        Me._addParameter(command, "@NOME", descrizione)
-        Me._addParameter(command, "@TICKET_TYPE_ID", ticketType)
+        Me.mAddParameter(command, "@USER_ID_CLIENTE", userIdCliente)
+        Me.mAddParameter(command, "@NOME", descrizione)
+        Me.mAddParameter(command, "@TICKET_TYPE_ID", ticketType)
 
 
         Dim newTicketId As Long
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
         newTicketId = Me._getIdentity()
 
 
@@ -71,11 +71,11 @@ Public Class TicketManager
                    " VALUES (1, @USER_ID_OPERATORE, @TICKET_ID, @NOTE )"
         command.Parameters.Clear()
         command.CommandText = strSQL
-        Me._addParameter(command, "@USER_ID_OPERATORE", userIdOperatore)
-        Me._addParameter(command, "@TICKET_ID", newTicketId)
-        Me._addParameter(command, "@NOTE", testo)
+        Me.mAddParameter(command, "@USER_ID_OPERATORE", userIdOperatore)
+        Me.mAddParameter(command, "@TICKET_ID", newTicketId)
+        Me.mAddParameter(command, "@NOTE", testo)
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
 
         Return newTicketId
@@ -90,21 +90,21 @@ Public Class TicketManager
         strSQL = "INSERT INTO TICKET_POST ( isFirstPost, USER_ID_OPERATORE, TICKET_ID, NOTE )" & _
                     " VALUES (0, @USER_ID_OPERATORE, @TICKET_ID, @NOTE )"
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@USER_ID_OPERATORE", userIdOperatore)
-        Me._addParameter(command, "@TICKET_ID", ticket_id)
-        Me._addParameter(Command, "@NOTE", testo)
+        Me.mAddParameter(command, "@USER_ID_OPERATORE", userIdOperatore)
+        Me.mAddParameter(command, "@TICKET_ID", ticket_id)
+        Me.mAddParameter(Command, "@NOTE", testo)
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
         newPost = Me._getIdentity()
 
 
         strSQL = "UPDATE TICKET SET  DATE_LAST_MODIFIED = GETDATE() WHERE TICKET_ID =  " & ticket_id
-        Me._executeNoQuery(strSQL)
+        Me.mExecuteNoQuery(strSQL)
 
         Return newPost
 
@@ -130,11 +130,11 @@ Public Class TicketManager
                         " group by ticket_post_id "
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
-        Me._addParameter(command, "@TICKET_ID", ticketId)
+        Me.mAddParameter(command, "@TICKET_ID", ticketId)
 
         Return Me._fillDataSet(command).Tables(0)
     End Function
@@ -145,14 +145,14 @@ Public Class TicketManager
         Dim strSQL As String = "UPDATE TICKET SET DATE_CLOSED = GETDATE(), DATE_LAST_MODIFIED = GETDATE(), TICKET_STATUS_ID = 'CLOSED' WHERE TICKET_ID = @TICKET_ID "
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
-        command.Connection = Me._connection
+        command.Connection = Me.mConnection
 
 
-        Me._addParameter(command, "@TICKET_ID", ticketId)
+        Me.mAddParameter(command, "@TICKET_ID", ticketId)
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
         Return True
 

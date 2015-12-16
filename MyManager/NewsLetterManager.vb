@@ -58,10 +58,10 @@ Public Class NewsLetterManager
         Dim esito As Boolean = False
 
         Dim command As System.Data.OleDb.OleDbCommand
-        command = New System.Data.OleDb.OleDbCommand(sqlQuery, _connection)
+        command = New System.Data.OleDb.OleDbCommand(sqlQuery, mConnection)
 
         Dim transaction As System.Data.OleDb.OleDbTransaction
-        transaction = Me._connection.BeginTransaction()
+        transaction = Me.mConnection.BeginTransaction()
 
         command.Transaction = transaction
         Try
@@ -107,7 +107,7 @@ Public Class NewsLetterManager
 
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
         oleDbCommand.Parameters.Add("@OGGETTO", OleDb.OleDbType.VarChar).Value = oggetto
         oleDbCommand.Parameters.Add("@DESCRIZIONE", OleDb.OleDbType.VarChar).Value = descrizione
         oleDbCommand.Parameters.Add("@MITTENTE_INDIRIZZO", OleDb.OleDbType.VarChar).Value = mittente_indirizzo
@@ -154,7 +154,7 @@ Public Class NewsLetterManager
         Dim strSQL As String = "UPDATE CONTATTO_NEWSLETTER SET DATE_UNSUBSCRIBE = NOW WHERE DATE_UNSUBSCRIBE = NULL AND  CONTATTO_ID=" & contattoId
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
 
         Try
             oleDbCommand.ExecuteNonQuery()
@@ -188,7 +188,7 @@ Public Class NewsLetterManager
 
         Dim oleDbCommand As System.Data.OleDb.OleDbCommand
 
-        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, _connection)
+        oleDbCommand = New System.Data.OleDb.OleDbCommand(strSQL, mConnection)
         oleDbCommand.Parameters.Add("@OGGETTO", OleDb.OleDbType.VarChar).Value = oggetto
         oleDbCommand.Parameters.Add("@DESCRIZIONE", OleDb.OleDbType.VarChar).Value = descrizione
         oleDbCommand.Parameters.Add("@MITTENTE_INDIRIZZO", OleDb.OleDbType.VarChar).Value = mittente_indirizzo

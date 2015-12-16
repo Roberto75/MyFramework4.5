@@ -18,7 +18,7 @@
         _manager = New MyApplicationManager(CType(Me.Owner, FormMain).MyConnection)
 
         Dim dt As DataTable
-        dt = _manager._fillDataTable("Select * from employee")
+        dt = _manager.mFillDataTable("Select * from employee")
 
 
         If _excel Is Nothing Then

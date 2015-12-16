@@ -66,11 +66,11 @@ Public Class UserManager2
         Dim strSQL As String = "update utenti set Profilo_ID = @profiloNew where user_Id = " & userId
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
 
-        Me._addParameter(command, "@profiloNew", profiloNew)
-        Return _executeNoQuery(command)
+        Me.mAddParameter(command, "@profiloNew", profiloNew)
+        Return mExecuteNoQuery(command)
     End Function
 
     Public Function isVisibleUser(ByVal aziendaId As Long, ByVal userId As Long) As Boolean
@@ -95,7 +95,7 @@ Public Class UserManager2
         Dim sqlQuery As String
         sqlQuery = "select count(*) as tot  from utenti where not(DATE_ACTIVATION_ACCOUNT is null) AND (DATE_DELETED IS NULL)  AND codice_attivazione is null and  user_id = " & userId
 
-        Return CInt(Me._executeScalar(sqlQuery)) > 0
+        Return CInt(Me.mExecuteScalar(sqlQuery)) > 0
     End Function
 
 
@@ -103,11 +103,11 @@ Public Class UserManager2
         Dim sqlQuery As String
         sqlQuery = "select date_activation_account from utenti where user_id = " & userId
 
-        Return Me._executeScalar(sqlQuery)
+        Return Me.mExecuteScalar(sqlQuery)
 
         'Dim dataSet As New DataSet
         'Dim command As System.Data.Common.DbCommand
-        'command = _connection.CreateCommand()
+        'command = mConnection.CreateCommand()
         'command.CommandText = sqlQuery
         'dataSet = _fillDataSet(sqlQuery)
 
@@ -127,7 +127,7 @@ Public Class UserManager2
         sqlQuery = "select is_enabled from utenti where user_id = " & userId
 
         Dim temp As String
-        temp = Me._executeScalar(sqlQuery)
+        temp = Me.mExecuteScalar(sqlQuery)
 
         If String.IsNullOrEmpty(temp) Then
             Return False
@@ -139,7 +139,7 @@ Public Class UserManager2
     Public Function isAuthenticated(ByVal myLogin As String, ByVal myPassword As String, ByRef mySessionData As MyManager.SessionData) As Long
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         Dim dataSet As New DataSet
         Dim row As System.Data.DataRow
@@ -158,7 +158,7 @@ Public Class UserManager2
                             " where UPPER(my_login) = @MY_LOGIN and DATE_DELETED is null"
 
 
-            Me._addParameter(command, "@MY_LOGIN", myLogin.ToUpper.Trim)
+            Me.mAddParameter(command, "@MY_LOGIN", myLogin.ToUpper.Trim)
             command.CommandText = sqlQuery
             ' verifico l'esistenza dell'utente
             dataSet = _fillDataSet(command)
@@ -240,14 +240,14 @@ Public Class UserManager2
                                      "where user_id=" & userId
             command.Parameters.Clear()
             If (mySessionData.getIp() = "") Then
-                _addParameter(command, "@IP", System.DBNull.Value)
+                mAddParameter(command, "@IP", System.DBNull.Value)
             Else
-                _addParameter(command, "@IP", mySessionData.getIp())
+                mAddParameter(command, "@IP", mySessionData.getIp())
             End If
             command.CommandText = sqlQuery
             command.ExecuteNonQuery()
 
-            'Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+            'Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
             'managerLogUser.insert(userId, MyManager.LogUserManager.LogType.Login)
 
             mySessionData.setUserId(userId)
@@ -290,7 +290,7 @@ Public Class UserManager2
         Dim sqlQuery As String
 
         sqlQuery = "Update UTENTI SET IS_ENABLED = 0, DATE_DELETED = getDate() where user_id=" & userId
-        _executeNoQuery(sqlQuery)
+        mExecuteNoQuery(sqlQuery)
     End Sub
 
     Public Function getUtente(ByVal userId As Long) As System.Data.DataSet
@@ -304,10 +304,10 @@ Public Class UserManager2
     Public Function getUtenteFromCodiceAttivazione(ByVal codiceAttivazione As String) As DataTable
         Dim sqlQuery As String = "SELECT * FROM UTENTI WHERE  (DATE_DELETED IS NULL)  AND (CODICE_ATTIVAZIONE = @CODICE_ATTIVAZIONE)"
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = sqlQuery
 
-        Me._addParameter(command, "@CODICE_ATTIVAZIONE", codiceAttivazione.Trim())
+        Me.mAddParameter(command, "@CODICE_ATTIVAZIONE", codiceAttivazione.Trim())
 
         Return _fillDataSet(command).Tables(0)
     End Function
@@ -316,36 +316,36 @@ Public Class UserManager2
         ' Il codice_attivazione viene valorizzato a NULL altrimenti l'utente potrebbe ri-eseguire la procedura di registrazione
         Dim strSQL As String = "UPDATE UTENTI SET DATE_ACTIVATION_ACCOUNT = getDate(), DATE_MODIFIED = getDate(), CODICE_ATTIVAZIONE = null "
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         If Me._login <> "" Then
             strSQL &= " ,MY_LOGIN = @MY_LOGIN"
-            Me._addParameter(command, "@MY_LOGIN", Me._login)
+            Me.mAddParameter(command, "@MY_LOGIN", Me._login)
         End If
 
         If Me._nome <> "" Then
             strSQL &= " ,NOME = @NOME"
-            Me._addParameter(command, "@NOME", Me._nome)
+            Me.mAddParameter(command, "@NOME", Me._nome)
         End If
 
         If Me._codiceFiscale <> "" Then
             strSQL &= " ,CODICE_FISCALE = @CODICE_FISCALE"
-            Me._addParameter(command, "@CODICE_FISCALE", Me._codiceFiscale)
+            Me.mAddParameter(command, "@CODICE_FISCALE", Me._codiceFiscale)
         End If
 
         If Me._cognome <> "" Then
             strSQL &= " ,COGNOME = @COGNOME"
-            Me._addParameter(command, "@COGNOME", Me._cognome)
+            Me.mAddParameter(command, "@COGNOME", Me._cognome)
         End If
 
         If Me._email <> "" Then
             strSQL &= " ,EMAIL = @EMAIL"
-            Me._addParameter(command, "@EMAIL", Me._email)
+            Me.mAddParameter(command, "@EMAIL", Me._email)
         End If
 
         If Me._telefono <> "" Then
             strSQL &= " ,TELEFONO = @TELEFONO"
-            Me._addParameter(command, "@TELEFONO", Me._telefono)
+            Me.mAddParameter(command, "@TELEFONO", Me._telefono)
         End If
 
         strSQL &= " WHERE USER_ID=" & userId
@@ -359,18 +359,18 @@ Public Class UserManager2
                                             " VALUES (getdate(),  @NOME , @cognome , @email , @codiceAttivazione , @profiloId, @customerId) "
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
 
-        Me._addParameter(command, "@NOME", nome)
-        Me._addParameter(command, "@cognome", cognome)
-        Me._addParameter(command, "@email", email)
-        Me._addParameter(command, "@codiceAttivazione", codiceAttivazione)
-        Me._addParameter(command, "@profiloId", profiloId)
-        Me._addParameter(command, "@customerId", customerId)
+        Me.mAddParameter(command, "@NOME", nome)
+        Me.mAddParameter(command, "@cognome", cognome)
+        Me.mAddParameter(command, "@email", email)
+        Me.mAddParameter(command, "@codiceAttivazione", codiceAttivazione)
+        Me.mAddParameter(command, "@profiloId", profiloId)
+        Me.mAddParameter(command, "@customerId", customerId)
 
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
         Return _getIdentity()
     End Function
 
@@ -381,12 +381,12 @@ Public Class UserManager2
                                                " WHERE USER_ID=" & userId
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
 
-        Me._addParameter(command, "@email", email)
+        Me.mAddParameter(command, "@email", email)
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
     End Sub
 
     Public Function updateEmailChanging(ByVal userId As Long, ByVal email As String) As String
@@ -400,13 +400,13 @@ Public Class UserManager2
                                             " WHERE USER_ID=" & userId
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
 
-        Me._addParameter(command, "@email", email)
-        Me._addParameter(command, "@codiceAttivazioneEmail", codiceAttivazioneEmail)
+        Me.mAddParameter(command, "@email", email)
+        Me.mAddParameter(command, "@codiceAttivazioneEmail", codiceAttivazioneEmail)
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
         Return codiceAttivazioneEmail
     End Function
@@ -419,7 +419,7 @@ Public Class UserManager2
 
     'Public Sub updateTelefono(ByVal userId As Long, ByVal telefono As String)
     '    Dim strSQL As String = "UPDATE UTENTI SET TELEFONO = '" & telefono & "' WHERE USER_ID=" & userId
-    '    Me._executeNoQuery(strSQL)
+    '    Me.mExecuteNoQuery(strSQL)
     'End Sub
 
 
@@ -431,12 +431,12 @@ Public Class UserManager2
         Dim strSQL As String = "UPDATE UTENTI SET CODICE_ATTIVAZIONE = @codice WHERE USER_ID=" & userId
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
 
-        Me._addParameter(command, "@codice", codice)
+        Me.mAddParameter(command, "@codice", codice)
         
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
         Return codice
     End Function
@@ -445,17 +445,17 @@ Public Class UserManager2
         Dim strSQL As String = "UPDATE UTENTI SET DATE_MODIFIED = getDate() "
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = strSQL
 
         If (telefono <> "-1") Then
             strSQL &= ", TELEFONO = @telefono "
-            Me._addParameter(command, "@telefono", telefono)
+            Me.mAddParameter(command, "@telefono", telefono)
         End If
 
         strSQL &= " WHERE USER_ID=" & userId
 
-        Me._executeNoQuery(command)
+        Me.mExecuteNoQuery(command)
 
     End Sub
 
@@ -469,16 +469,16 @@ Public Class UserManager2
         Dim where As String = " WHERE USER_ID=" & userId
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         ' verifico se devo generare la password o meno 
         If CBool(enabled) Then
             password = resetPassword(userId)
             strSQL &= " , MY_PASSWORD = '" & MyManager.SecurityManager.getMD5Hash(password) & "'"
-            Me._addParameter(command, "@IS_ENABLED", 1)
+            Me.mAddParameter(command, "@IS_ENABLED", 1)
         Else
             strSQL &= " , MY_PASSWORD =  null "
-            Me._addParameter(command, "@IS_ENABLED", 0)
+            Me.mAddParameter(command, "@IS_ENABLED", 0)
         End If
 
         command.CommandText = strSQL & where
@@ -503,12 +503,12 @@ Public Class UserManager2
         Dim strSQL As String = "SELECT count(*) as tot  FROM UTENTI WHERE  (DATE_DELETED IS NULL)  AND  codice_attivazione = @codice_attivazione"
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         command.CommandText = strSQL
-        Me._addParameter(command, "@codice_attivazione", value)
+        Me.mAddParameter(command, "@codice_attivazione", value)
 
-        Return CInt(Me._executeScalar(command)) > 0
+        Return CInt(Me.mExecuteScalar(command)) > 0
     End Function
 
     Public Shared Function GeneraCodiceRandom(ByVal length As Integer) As String
@@ -693,14 +693,14 @@ Public Class UserManager2
     End Function
 
     Private Function verificaLogin(ByVal login As String) As Boolean
-        Dim m As New MyManager.UserManager(_connection)
+        Dim m As New MyManager.UserManager(mConnection)
         Return m.verificaLogin(login)
     End Function
 
     Public Function getNewEmailChanging(ByVal activationCodeEmail As String, ByVal userId As Long) As String
         Dim sqlQuery As String
         sqlQuery = "SELECT EMAIL_CHANGING FROM UTENTI WHERE  (DATE_DELETED IS NULL)  AND  USER_ID = " & userId & " and EMAIL_ACTIVATION_CODE = '" & activationCodeEmail.Replace("'", "''") & "'"
-        Return (Me._executeScalar(sqlQuery)).ToString
+        Return (Me.mExecuteScalar(sqlQuery)).ToString
     End Function
 
 
@@ -712,12 +712,12 @@ Public Class UserManager2
         End If
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = sqlQuery
 
-        Me._addParameter(command, "@codFiscale", codFiscale)
+        Me.mAddParameter(command, "@codFiscale", codFiscale)
 
-        Return CInt(Me._executeScalar(command)) > 0
+        Return CInt(Me.mExecuteScalar(command)) > 0
     End Function
 
     Public Function verificaCodiceFiscale(ByVal codFiscale As String) As Boolean
@@ -733,13 +733,13 @@ Public Class UserManager2
         sqlQuery &= " AND PROFILO_ID = 'DELEGATO'"
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = sqlQuery
 
-        Me._addParameter(command, "@email", email)
-        Me._addParameter(command, "@email2", email)
+        Me.mAddParameter(command, "@email", email)
+        Me.mAddParameter(command, "@email2", email)
 
-        Return CInt(Me._executeScalar(command)) > 0
+        Return CInt(Me.mExecuteScalar(command)) > 0
 
     End Function
 
@@ -759,19 +759,19 @@ Public Class UserManager2
         End If
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         command.CommandText = sqlQuery
 
-        Me._addParameter(command, "@email", email)
-        Me._addParameter(command, "@email2", email)
+        Me.mAddParameter(command, "@email", email)
+        Me.mAddParameter(command, "@email2", email)
 
-        Return CInt(Me._executeScalar(command)) > 0
+        Return CInt(Me.mExecuteScalar(command)) > 0
 
     End Function
 
     Public Function getCodiceFiscale(ByVal userId As Long) As String
         Dim sqlQuery As String = "SELECT CODICE_FISCALE FROM UTENTI WHERE  (DATE_DELETED IS NULL)  AND  USER_ID = " & userId
-        Return Me._executeScalar(sqlQuery)
+        Return Me.mExecuteScalar(sqlQuery)
     End Function
 
 
@@ -784,44 +784,44 @@ Public Class UserManager2
     End Function
 
     Public Function creaLogin(ByVal nome As String, ByVal cognome As String) As String
-        Dim m As New MyManager.UserManager(Me._connection)
+        Dim m As New MyManager.UserManager(Me.mConnection)
         Return m.creaLogin(nome, cognome)
     End Function
 
     Public Function getLogin(ByVal user_id As Long) As String
         Dim strSQL As String = "SELECT MY_LOGIN FROM UTENTI WHERE user_id = " & user_id
-        Return Me._executeScalar(strSQL)
+        Return Me.mExecuteScalar(strSQL)
     End Function
 
 
     Public Function getNomeAziendaByUSerId(ByVal user_id As Long) As String
         Dim strSQL As String = "SELECT customer.RAGIONE_SOCIALE    FROM [TechSecurity].[UTENTI] join CUSTOMER on utenti.CUSTOMER_ID  = customer.CUSTOMER_ID " & _
                 "   where user_id = " & user_id
-        Return Me._executeScalar(strSQL)
+        Return Me.mExecuteScalar(strSQL)
     End Function
 
 
     Public Function getEmail(ByVal user_id As Long) As String
         Dim strSQL As String = "SELECT EMAIL FROM UTENTI WHERE user_id = " & user_id
-        Return Me._executeScalar(strSQL)
+        Return Me.mExecuteScalar(strSQL)
     End Function
 
     Public Function getUserIdFromLoginAndEmail(ByVal login As String, ByVal email As String) As Long
         Dim sqlQuery As String = ""
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
         'eseguo questa doppia query come controllo
         sqlQuery = "select USER_ID from  utenti  " & _
                     "where (DATE_DELETED is NULL) AND  UPPER(MY_LOGIN)=@mylogin  "
 
-        Me._addParameter(command, "mylogin", login.ToUpper)
+        Me.mAddParameter(command, "mylogin", login.ToUpper)
 
         
         If email <> "" Then
             sqlQuery &= " and UPPER(EMAIL)=  @email"
-            Me._addParameter(command, "email", email.ToUpper)
+            Me.mAddParameter(command, "email", email.ToUpper)
         End If
 
         command.CommandText = sqlQuery
@@ -869,20 +869,20 @@ Public Class UserManager2
         Dim sqlQuery As String = "UPDATE UTENTI SET DATE_MODIFIED = getDate(), DATE_MODIFIED_PASSWORD = getDate()" & _
                     " ,MY_PASSWORD=@MY_Password   WHERE USER_ID=@UserId"
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
 
 
         Try
 
             command.CommandText = sqlQuery
 
-            Me._addParameter(command, "@MY_Password", MyManager.SecurityManager.getMD5Hash(passwordGenerata))
-            Me._addParameter(command, "@UserId", userId)
+            Me.mAddParameter(command, "@MY_Password", MyManager.SecurityManager.getMD5Hash(passwordGenerata))
+            Me.mAddParameter(command, "@UserId", userId)
 
-            Me._executeNoQuery(command)
+            Me.mExecuteNoQuery(command)
 
 
-            Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+            Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
             managerLogUser.insert(userId, MyManager.LogUserManager.LogType.ResetPassword)
 
 

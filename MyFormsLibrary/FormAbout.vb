@@ -214,10 +214,10 @@ Public Class FormAbout
 
 
     Private Class pgItemDBConn
-        Private _connectionLock As Boolean
-        Private _connectionSource As String
-        Private _connectionString As String
-        Private _connectionName As String
+        Private mConnectionLock As Boolean
+        Private mConnectionSource As String
+        Private mConnectionString As String
+        Private mConnectionName As String
         Private _provider As String
 
         Public Sub New()
@@ -242,37 +242,37 @@ Public Class FormAbout
         <Description("Indicatore dello stato della connessione al database corrente"), Category("Connessione"), ReadOnlyAttribute(True)> _
                 Public Property ConnectionLock() As Boolean
             Get
-                Return _connectionLock
+                Return mConnectionLock
             End Get
             Set(ByVal Value As Boolean)
-                _connectionLock = Value
+                mConnectionLock = Value
             End Set
         End Property
         <Description("Origine della connessione al database corrente"), Category("Connessione"), ReadOnlyAttribute(True)> _
                 Public Property ConnectionSource() As String
             Get
-                Return _connectionSource
+                Return mConnectionSource
             End Get
             Set(ByVal Value As String)
-                _connectionSource = Value
+                mConnectionSource = Value
             End Set
         End Property
         <Description("Stringa di connessione al database corrente"), Category("Connessione"), ReadOnlyAttribute(True)> _
                 Public Property ConnectionString() As String
             Get
-                Return _connectionString
+                Return mConnectionString
             End Get
             Set(ByVal Value As String)
-                _connectionString = Value
+                mConnectionString = Value
             End Set
         End Property
         <Description("Nome della connessione al database corrente"), Category("Connessione"), ReadOnlyAttribute(True)> _
         Public Property ConnectionName() As String
             Get
-                Return _connectionName
+                Return mConnectionName
             End Get
             Set(ByVal Value As String)
-                _connectionName = Value
+                mConnectionName = Value
             End Set
         End Property
         <Description("Nome del Provider della connessione al Database corrente"), Category("Connessione"), ReadOnlyAttribute(True)> _

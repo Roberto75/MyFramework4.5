@@ -56,7 +56,7 @@ Public Class LogUserManager
         Dim strSQLParametri As String = " values ("
 
         Dim command As System.Data.Common.DbCommand
-        command = _connection.CreateCommand()
+        command = mConnection.CreateCommand()
         If (userId <> -1) Then
             strSQLParametri &= userId
         Else
@@ -69,7 +69,7 @@ Public Class LogUserManager
             strSQLParametri &= ", null "
         Else
             strSQLParametri &= ",@tipo "
-            Me._addParameter(command, "@tipo", tipo.ToString)
+            Me.mAddParameter(command, "@tipo", tipo.ToString)
         End If
 
 
@@ -77,7 +77,7 @@ Public Class LogUserManager
             strSQLParametri &= ", null "
         Else
             strSQLParametri &= ",@nota "
-            Me._addParameter(command, "@nota", nota)
+            Me.mAddParameter(command, "@nota", nota)
         End If
 
 

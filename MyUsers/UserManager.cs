@@ -29,7 +29,7 @@ namespace MyUsers
 
         public byte[] exportToCSV()
         {
-            _strSQL = "select t2.my_login as Login , t1.date_added as Access, " +
+            mStrSQL = "select t2.my_login as Login , t1.date_added as Access, " +
                 " CASE tipo  " +
                 "   WHEN '" + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "' THEN 'Mobile' " +
                 "	ELSE '' " +
@@ -39,10 +39,10 @@ namespace MyUsers
                 " where tipo='" + MyManagerCSharp.Log.LogUserManager.LogType.Login.ToString() + "' or tipo = '" + MyManagerCSharp.Log.LogUserManager.LogType.LoginMobile.ToString() + "' " +
                 " order by t2.my_login, t1.date_added";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             string content;
-            content = MyManagerCSharp.CSVManager.toCSV(_dt, ";", true);
+            content = MyManagerCSharp.CSVManager.toCSV(mDt, ";", true);
 
             byte[] contentByte = new byte[content.Length * sizeof(char)];
             System.Buffer.BlockCopy(content.ToCharArray(), 0, contentByte, 0, contentByte.Length);
@@ -58,10 +58,10 @@ namespace MyUsers
             List<Models.MyUser> risultato;
             risultato = new List<Models.MyUser>();
 
-            _strSQL = " FROM UTENTE as t1";
+            mStrSQL = " FROM UTENTE as t1";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
 
 
@@ -71,68 +71,68 @@ namespace MyUsers
                 if (!String.IsNullOrEmpty(model.filter.nome))
                 {
                     strWHERE += " AND UPPER(nome) like  @NOME";
-                    _addParameter(command, "@NOME", "%" + model.filter.nome.ToUpper().Trim() + "%");
+                    mAddParameter(command, "@NOME", "%" + model.filter.nome.ToUpper().Trim() + "%");
                 }
 
                 if (!String.IsNullOrEmpty(model.filter.cognome))
                 {
                     strWHERE += " AND UPPER(cognome) like  @COGNOME";
-                    _addParameter(command, "@COGNOME", "%" + model.filter.cognome.ToUpper().Trim() + "%");
+                    mAddParameter(command, "@COGNOME", "%" + model.filter.cognome.ToUpper().Trim() + "%");
                 }
 
                 if (!String.IsNullOrEmpty(model.filter.email))
                 {
                     strWHERE += " AND UPPER(email) like  @EMAIL";
-                    _addParameter(command, "@EMAIL", "%" + model.filter.email.ToUpper().Trim() + "%");
+                    mAddParameter(command, "@EMAIL", "%" + model.filter.email.ToUpper().Trim() + "%");
                 }
 
                 if (!String.IsNullOrEmpty(model.filter.login))
                 {
                     strWHERE += " AND UPPER(my_login) like  @MY_LOGIN";
-                    _addParameter(command, "@MY_LOGIN", "%" + model.filter.login.ToUpper().Trim() + "%");
+                    mAddParameter(command, "@MY_LOGIN", "%" + model.filter.login.ToUpper().Trim() + "%");
                 }
             }
 
 
             if (!String.IsNullOrEmpty(strWHERE))
             {
-                _strSQL += " WHERE (1=1) " + strWHERE;
+                mStrSQL += " WHERE (1=1) " + strWHERE;
             }
 
             string temp;
             int totalRecords;
 
             //paginazione
-            if (model.PageSize > 0 && (_connection is System.Data.SqlClient.SqlConnection))
+            if (model.PageSize > 0 && (mConnection is System.Data.SqlClient.SqlConnection))
             {
-                temp = "SELECT COUNT(*) " + _strSQL;
+                temp = "SELECT COUNT(*) " + mStrSQL;
                 command.CommandText = temp;
 
-                totalRecords = int.Parse(_executeScalar(command));
+                totalRecords = int.Parse(mExecuteScalar(command));
                 model.TotalRows = totalRecords;
             }
 
 
 
-            temp = _sqlElencoUtenti + _strSQL + " ORDER BY " + model.Sort + " " + model.SortDir;
+            temp = _sqlElencoUtenti + mStrSQL + " ORDER BY " + model.Sort + " " + model.SortDir;
 
 
-            if (model.PageSize > 0 && (_connection is System.Data.SqlClient.SqlConnection))
+            if (model.PageSize > 0 && (mConnection is System.Data.SqlClient.SqlConnection))
             {
                 temp += " OFFSET " + ((model.PageNumber - 1) * model.PageSize) + " ROWS FETCH NEXT " + model.PageSize + " ROWS ONLY";
             }
 
 
             command.CommandText = temp;
-            command.Connection = _connection;
-            _dt = _fillDataTable(command);
+            command.Connection = mConnection;
+            mDt = mFillDataTable(command);
 
-            if (model.PageSize > 0 && !(_connection is System.Data.SqlClient.SqlConnection))
+            if (model.PageSize > 0 && !(mConnection is System.Data.SqlClient.SqlConnection))
             {
-                model.TotalRows = _dt.Rows.Count;
+                model.TotalRows = mDt.Rows.Count;
 
                 // apply paging
-                IEnumerable<DataRow> rows = _dt.AsEnumerable().Skip((model.PageNumber - 1) * model.PageSize).Take(model.PageSize);
+                IEnumerable<DataRow> rows = mDt.AsEnumerable().Skip((model.PageNumber - 1) * model.PageSize).Take(model.PageSize);
                 foreach (DataRow row in rows)
                 {
                     risultato.Add(new Models.MyUser(row, Models.MyUser.SelectFileds.Lista));
@@ -140,7 +140,7 @@ namespace MyUsers
             }
             else
             {
-                foreach (DataRow row in _dt.Rows)
+                foreach (DataRow row in mDt.Rows)
                 {
                     risultato.Add(new Models.MyUser(row, Models.MyUser.SelectFileds.Lista));
                 }
@@ -153,22 +153,22 @@ namespace MyUsers
 
         public Models.MyUser getUser(long id)
         {
-            _strSQL = "SELECT * FROM UTENTE WHERE user_id = " + id;
-            _dt = _fillDataTable(_strSQL);
+            mStrSQL = "SELECT * FROM UTENTE WHERE user_id = " + id;
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("id > 0");
             }
 
             Models.MyUser u;
-            u = new Models.MyUser(_dt.Rows[0], Models.MyUser.SelectFileds.Full);
-            //u = new Models.MyUser(_dt.Rows[0]);
+            u = new Models.MyUser(mDt.Rows[0], Models.MyUser.SelectFileds.Full);
+            //u = new Models.MyUser(mDt.Rows[0]);
 
             return u;
         }
@@ -177,23 +177,23 @@ namespace MyUsers
         public Models.MyUser getUserFromSID(System.Security.Principal.SecurityIdentifier sid)
         {
 
-            _strSQL = "SELECT * FROM UTENTE WHERE SID = '" + sid.ToString() + "'";
+            mStrSQL = "SELECT * FROM UTENTE WHERE SID = '" + sid.ToString() + "'";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("id > 0");
             }
 
             Models.MyUser u;
-            u = new Models.MyUser(_dt.Rows[0], Models.MyUser.SelectFileds.Full);
-            //u = new Models.MyUser(_dt.Rows[0]);
+            u = new Models.MyUser(mDt.Rows[0], Models.MyUser.SelectFileds.Full);
+            //u = new Models.MyUser(mDt.Rows[0]);
 
             return u;
         }
@@ -201,7 +201,7 @@ namespace MyUsers
         public long getUserIdFromSID(System.Security.Principal.SecurityIdentifier sid)
         {
             string temp;
-            temp = _executeScalar("SELECT user_id FROM UTENTE WHERE SID = '" + sid.ToString() + "'");
+            temp = mExecuteScalar("SELECT user_id FROM UTENTE WHERE SID = '" + sid.ToString() + "'");
 
             if (String.IsNullOrEmpty(temp))
             {
@@ -215,18 +215,18 @@ namespace MyUsers
 
         public int addLoginSucces(System.Security.Principal.SecurityIdentifier sid, string login, string ip)
         {
-            _strSQL = "update UTENTE set date_last_login= GetDate() , login_success= login_success +1 , ip_address = '" + ip + "' where UPPER(SID) = @SID ";
+            mStrSQL = "update UTENTE set date_last_login= GetDate() , login_success= login_success +1 , ip_address = '" + ip + "' where UPPER(SID) = @SID ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.CommandText = _strSQL;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
 
-            _addParameter(command, "@SID", sid.ToString().ToUpper());
+            mAddParameter(command, "@SID", sid.ToString().ToUpper());
 
             try
             {
                 int esito;
-                esito = _executeNoQuery(command);
+                esito = mExecuteNoQuery(command);
 
                 //if (esito == 0)
                 //{
@@ -245,15 +245,15 @@ namespace MyUsers
 
         public void addLoginSucces(long userId, string ip)
         {
-            _strSQL = "update UTENTE set date_last_login= GetDate() , login_success= login_success +1 , [date_previous_login] = date_last_login ";
+            mStrSQL = "update UTENTE set date_last_login= GetDate() , login_success= login_success +1 , [date_previous_login] = date_last_login ";
 
             if (!String.IsNullOrEmpty(ip))
             {
-                _strSQL += ", ip_address = '" + ip + "'";
+                mStrSQL += ", ip_address = '" + ip + "'";
             }
-            _strSQL += " WHERE user_id = " + userId;
+            mStrSQL += " WHERE user_id = " + userId;
 
-            _executeNoQuery(_strSQL);
+            mExecuteNoQuery(mStrSQL);
         }
 
         public long isAuthenticated(string myLogin, string myPassword)
@@ -266,15 +266,15 @@ namespace MyUsers
             long userId = -1;
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
-            _strSQL = "select user_id, is_enabled, my_password, email from utente where UPPER(my_login) = @mylogin ";
-            _addParameter(command, "@mylogin", myLogin.ToUpper());
-            command.CommandText = _strSQL;
+            mStrSQL = "select user_id, is_enabled, my_password, email from utente where UPPER(my_login) = @mylogin ";
+            mAddParameter(command, "@mylogin", myLogin.ToUpper());
+            command.CommandText = mStrSQL;
 
             try
             {
-                _dt = _fillDataTable(command);
+                mDt = mFillDataTable(command);
             }
             catch (Exception ex)
             {
@@ -283,26 +283,26 @@ namespace MyUsers
 
 
             // Controllo se l'utente è censito
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 //utente non è censito
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.LoginPasswordErrati);
             }
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 //utente non è censito
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.LoginPasswordErrati);
             }
 
-            userId = long.Parse(_dt.Rows[0]["USER_ID"].ToString());
+            userId = long.Parse(mDt.Rows[0]["USER_ID"].ToString());
 
             if (userId == -1)
             {
 
             }
 
-            if (!bool.Parse(_dt.Rows[0]["is_enabled"].ToString()))
+            if (!bool.Parse(mDt.Rows[0]["is_enabled"].ToString()))
             {
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.UtenteDisabilitato);
             }
@@ -311,13 +311,13 @@ namespace MyUsers
             string passwordMD5;
             passwordMD5 = MyManagerCSharp.SecurityManager.getMD5Hash(myPassword.Trim());
 
-            //Debug.WriteLine(String.Format("psw:{0} MD5:{1} USER:{2} ", myPassword.Trim(), passwordMD5, _dt.Rows[0]["my_password"]));
+            //Debug.WriteLine(String.Format("psw:{0} MD5:{1} USER:{2} ", myPassword.Trim(), passwordMD5, mDt.Rows[0]["my_password"]));
 
 
-            if (!passwordMD5.Equals(_dt.Rows[0]["my_password"]))
+            if (!passwordMD5.Equals(mDt.Rows[0]["my_password"]))
             {
-                _strSQL = "update UTENTE set login_failure=login_failure +1 where user_id=  " + userId;
-                _executeNoQuery(_strSQL);
+                mStrSQL = "update UTENTE set login_failure=login_failure +1 where user_id=  " + userId;
+                mExecuteNoQuery(mStrSQL);
                 throw new MyManagerCSharp.MyException(MyManagerCSharp.MyException.ErrorNumber.LoginPasswordErrati);
             }
 
@@ -331,16 +331,16 @@ namespace MyUsers
 
         public string getRoles(long userId)
         {
-            _strSQL = "select t1.ruolo_id from ruolo as t1 " +
+            mStrSQL = "select t1.ruolo_id from ruolo as t1 " +
                 " join GruppoRuolo as t2 on t1.ruolo_id = t2.ruolo_id " +
                 " join UtenteGruppo as t3 on t2.gruppo_id = t3.gruppo_id " +
                 " where t3.user_id = " + userId;
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             string roles;
             roles = "";
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 roles += row[0] + ";";
             }
@@ -352,11 +352,11 @@ namespace MyUsers
         public List<Models.MyRole> getRoles()
         {
             List<Models.MyRole> risultato = new List<Models.MyRole>();
-            _strSQL = "select t1.ruolo_id , t1.nome from ruolo as t1  order by nome";
+            mStrSQL = "select t1.ruolo_id , t1.nome from ruolo as t1  order by nome";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
             Models.MyRole ruolo;
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 ruolo = new Models.MyRole(row);
                 risultato.Add(ruolo);
@@ -368,13 +368,13 @@ namespace MyUsers
 
         public bool updateProfili(IEnumerable<Models.MyProfile> profili, long userId)
         {
-            _strSQL = "DELETE FROM  UtenteProfilo WHERE user_id = " + userId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM  UtenteProfilo WHERE user_id = " + userId;
+            mExecuteNoQuery(mStrSQL);
 
             foreach (Models.MyProfile p in profili)
             {
-                _strSQL = "INSERT INTO UtenteProfilo ( date_added,  profilo_id, user_id ) VALUES ( GetDate() , '" + p.profiloId + "'," + userId + ")";
-                _executeNoQuery(_strSQL);
+                mStrSQL = "INSERT INTO UtenteProfilo ( date_added,  profilo_id, user_id ) VALUES ( GetDate() , '" + p.profiloId + "'," + userId + ")";
+                mExecuteNoQuery(mStrSQL);
             }
 
             return true;
@@ -384,17 +384,17 @@ namespace MyUsers
 
         public string getRoles(System.Security.Principal.SecurityIdentifier sid)
         {
-            _strSQL = "select t1.ruolo_id from ruolo as t1 " +
+            mStrSQL = "select t1.ruolo_id from ruolo as t1 " +
                 " join GruppoRuolo as t2 on t1.ruolo_id = t2.ruolo_id " +
                 " join UtenteGruppo as t3 on t2.gruppo_id = t3.gruppo_id " +
                 " join Utente as t4 on t3.user_id = t4.user_id " +
                 " where t4.sid = '" + sid.ToString() + "'";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             string roles;
             roles = "";
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 roles += row[0] + ";";
             }
@@ -408,11 +408,11 @@ namespace MyUsers
             List<MyManagerCSharp.Models.MyGroupSmall> risultato = new List<MyManagerCSharp.Models.MyGroupSmall>();
             MyManagerCSharp.Models.MyGroupSmall gruppo;
 
-            _strSQL = "select t2.* from UtenteGruppo as t1 left join gruppo  as t2 on (t1.gruppo_id = t2.gruppo_id) WHERE t1.user_id = " + userId;
+            mStrSQL = "select t2.* from UtenteGruppo as t1 left join gruppo  as t2 on (t1.gruppo_id = t2.gruppo_id) WHERE t1.user_id = " + userId;
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 gruppo = new MyManagerCSharp.Models.MyGroupSmall(row);
                 risultato.Add(gruppo);
@@ -424,13 +424,13 @@ namespace MyUsers
 
         public string getProfili(long userId)
         {
-            _strSQL = "select t1.profilo_id from UtenteProfilo as t1  where t1.user_id = " + userId;
+            mStrSQL = "select t1.profilo_id from UtenteProfilo as t1  where t1.user_id = " + userId;
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
             string profili;
             profili = "";
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 profili += row[0] + ";";
             }
@@ -440,8 +440,8 @@ namespace MyUsers
 
         public string getEmail(long userId)
         {
-            _strSQL = "SELECT EMAIL FROM UTENTE WHERE USER_ID = " + userId;
-            return _executeScalar(_strSQL);
+            mStrSQL = "SELECT EMAIL FROM UTENTE WHERE USER_ID = " + userId;
+            return mExecuteScalar(mStrSQL);
         }
 
 
@@ -462,228 +462,228 @@ namespace MyUsers
             long newId = -1;
             string strSQLParametri = "";
 
-            _strSQL = "INSERT INTO UTENTE ( date_added  ";
+            mStrSQL = "INSERT INTO UTENTE ( date_added  ";
             strSQLParametri = " VALUES ( GetDate()  ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
             if (!String.IsNullOrEmpty(u.nome))
             {
-                _strSQL += ",NOME ";
+                mStrSQL += ",NOME ";
                 strSQLParametri += ", @NOME ";
-                _addParameter(command, "@NOME", u.nome);
+                mAddParameter(command, "@NOME", u.nome);
             }
 
             if (!String.IsNullOrEmpty(u.cognome))
             {
-                _strSQL += ",COGNOME ";
+                mStrSQL += ",COGNOME ";
                 strSQLParametri += ", @COGNOME ";
-                _addParameter(command, "@COGNOME", u.cognome);
+                mAddParameter(command, "@COGNOME", u.cognome);
             }
 
             if (!String.IsNullOrEmpty(u.email))
             {
-                _strSQL += ",EMAIL ";
+                mStrSQL += ",EMAIL ";
                 strSQLParametri += ", @EMAIL ";
-                _addParameter(command, "@EMAIL", u.email);
+                mAddParameter(command, "@EMAIL", u.email);
             }
 
             if (!String.IsNullOrEmpty(u.login))
             {
-                _strSQL += ",MY_LOGIN ";
+                mStrSQL += ",MY_LOGIN ";
                 strSQLParametri += ", @MY_LOGIN ";
-                _addParameter(command, "@MY_LOGIN", u.login);
+                mAddParameter(command, "@MY_LOGIN", u.login);
             }
 
             if (!String.IsNullOrEmpty(u.password))
             {
-                _strSQL += ",MY_PASSWORD";
+                mStrSQL += ",MY_PASSWORD";
                 strSQLParametri += ", @MY_PASSWORD ";
-                //_addParameter(command, "@MY_PASSWORD", u.password);
-                _addParameter(command, "@MY_PASSWORD", MyManagerCSharp.SecurityManager.getMD5Hash(u.password));
+                //mAddParameter(command, "@MY_PASSWORD", u.password);
+                mAddParameter(command, "@MY_PASSWORD", MyManagerCSharp.SecurityManager.getMD5Hash(u.password));
             }
 
             if (!String.IsNullOrEmpty(u.indirizzo))
             {
-                _strSQL += ",INDIRIZZO ";
+                mStrSQL += ",INDIRIZZO ";
                 strSQLParametri += " ,@INDIRIZZO ";
-                _addParameter(command, "@INDIRIZZO", u.indirizzo);
+                mAddParameter(command, "@INDIRIZZO", u.indirizzo);
             }
 
             if (!String.IsNullOrEmpty(u.telefono))
             {
-                _strSQL += ",TELEFONO ";
+                mStrSQL += ",TELEFONO ";
                 strSQLParametri += ", @TELEFONO ";
-                _addParameter(command, "@TELEFONO", u.telefono);
+                mAddParameter(command, "@TELEFONO", u.telefono);
             }
 
             if (!String.IsNullOrEmpty(u.numero_civico))
             {
-                _strSQL += ",NUMERO_CIVICO ";
+                mStrSQL += ",NUMERO_CIVICO ";
                 strSQLParametri += ", @NUMERO_CIVICO ";
-                _addParameter(command, "@NUMERO_CIVICO", u.numero_civico);
+                mAddParameter(command, "@NUMERO_CIVICO", u.numero_civico);
             }
 
             //if (!String.IsNullOrEmpty(u.citta)) {
-            //    _strSQL += ",CITTA ";
+            //    mStrSQL += ",CITTA ";
             //    strSQLParametri += ", @CITTA ";
-            //    _addParameter(command, "@CITTA", u.citta);
+            //    mAddParameter(command, "@CITTA", u.citta);
             //}
 
             if (u.isEnabled != null)
             {
-                _strSQL += ",is_enabled ";
+                mStrSQL += ",is_enabled ";
                 strSQLParametri += ", @IS_ENABLED ";
-                _addParameter(command, "@IS_ENABLED", u.isEnabled);
+                mAddParameter(command, "@IS_ENABLED", u.isEnabled);
             }
 
             if (!String.IsNullOrEmpty(u.cap))
             {
-                _strSQL += ",CAP ";
+                mStrSQL += ",CAP ";
                 strSQLParametri += ", @CAP ";
-                _addParameter(command, "@CAP", u.cap);
+                mAddParameter(command, "@CAP", u.cap);
             }
 
             if (u.havePhoto != null)
             {
-                _strSQL += ",PHOTO ";
+                mStrSQL += ",PHOTO ";
                 strSQLParametri += ", @PHOTO ";
-                _addParameter(command, "@PHOTO", u.havePhoto);
+                mAddParameter(command, "@PHOTO", u.havePhoto);
             }
 
             if (u.dataDiNascita != null && u.dataDiNascita != DateTime.MinValue)
             {
-                _strSQL += ",date_of_birth ";
+                mStrSQL += ",date_of_birth ";
                 strSQLParametri += ", @data_nascita ";
-                _addParameter(command, "@data_nascita", u.dataDiNascita);
+                mAddParameter(command, "@data_nascita", u.dataDiNascita);
             }
 
             //if (!String.IsNullOrEmpty(u.cittaNascita)) {
-            //    _strSQL += ",CITTA_NASCITA ";
+            //    mStrSQL += ",CITTA_NASCITA ";
             //    strSQLParametri += ", @CITTA_NASCITA ";
-            //    _addParameter(command, "@CITTA_NASCITA", u.cittaNascita);
+            //    mAddParameter(command, "@CITTA_NASCITA", u.cittaNascita);
             //}
 
             if (!String.IsNullOrEmpty(u.mobile))
             {
-                _strSQL += ",MOBILE ";
+                mStrSQL += ",MOBILE ";
                 strSQLParametri += ", @MOBILE ";
-                _addParameter(command, "@MOBILE", u.mobile);
+                mAddParameter(command, "@MOBILE", u.mobile);
             }
 
             if (!String.IsNullOrEmpty(u.codiceFiscale))
             {
-                _strSQL += ",CODICE_FISCALE ";
+                mStrSQL += ",CODICE_FISCALE ";
                 strSQLParametri += ", @CODICEFISCALE ";
-                _addParameter(command, "@CODICEFISCALE", u.codiceFiscale);
+                mAddParameter(command, "@CODICEFISCALE", u.codiceFiscale);
             }
 
             if (!String.IsNullOrEmpty(u.sesso))
             {
-                _strSQL += ",SESSO ";
+                mStrSQL += ",SESSO ";
                 strSQLParametri += ", @SESSO ";
-                _addParameter(command, "@SESSO", u.sesso);
+                mAddParameter(command, "@SESSO", u.sesso);
             }
 
             //'Giugno 2007
             if (!String.IsNullOrEmpty(u.http))
             {
-                _strSQL += ",HTTP ";
+                mStrSQL += ",HTTP ";
                 strSQLParametri += ", @HTTP ";
-                _addParameter(command, "@HTTP", u.http);
+                mAddParameter(command, "@HTTP", u.http);
             }
 
             if (!String.IsNullOrEmpty(u.fax))
             {
-                _strSQL += ",FAX ";
+                mStrSQL += ",FAX ";
                 strSQLParametri += ", @FAX ";
-                _addParameter(command, "@FAX", u.fax);
+                mAddParameter(command, "@FAX", u.fax);
             }
 
             if (!String.IsNullOrEmpty(u.regione))
             {
-                _strSQL += ",REGIONE ";
+                mStrSQL += ",REGIONE ";
                 strSQLParametri += ", @REGIONE ";
-                _addParameter(command, "@REGIONE", u.regione);
+                mAddParameter(command, "@REGIONE", u.regione);
             }
 
             if (!String.IsNullOrEmpty(u.provincia))
             {
-                _strSQL += ",PROVINCIA ";
+                mStrSQL += ",PROVINCIA ";
                 strSQLParametri += ", @PROVINCIA ";
-                _addParameter(command, "@PROVINCIA", u.provincia);
+                mAddParameter(command, "@PROVINCIA", u.provincia);
             }
 
             if (!String.IsNullOrEmpty(u.comune))
             {
-                _strSQL += ", COMUNE ";
+                mStrSQL += ", COMUNE ";
                 strSQLParametri += ", @COMUNE ";
-                _addParameter(command, "@COMUNE", u.comune);
+                mAddParameter(command, "@COMUNE", u.comune);
             }
 
             if (u.regioneId != null && u.regioneId != -1)
             {
-                _strSQL += ",REGIONE_ID ";
+                mStrSQL += ",REGIONE_ID ";
                 strSQLParametri += ", @REGIONE_ID ";
-                _addParameter(command, "@REGIONE_ID", u.regioneId);
+                mAddParameter(command, "@REGIONE_ID", u.regioneId);
             }
 
             //' If _provinciaId <> -1 ){
             if (!String.IsNullOrEmpty(u.provinciaId))
             {
-                _strSQL += ",PROVINCIA_ID ";
+                mStrSQL += ",PROVINCIA_ID ";
                 strSQLParametri += ", @PROVINCIA_ID ";
-                _addParameter(command, "@PROVINCIA_ID", u.provinciaId);
+                mAddParameter(command, "@PROVINCIA_ID", u.provinciaId);
             }
 
             //'If _comuneId <> -1 ){
             if (!String.IsNullOrEmpty(u.comuneId))
             {
-                _strSQL += ", COMUNE_ID ";
+                mStrSQL += ", COMUNE_ID ";
                 strSQLParametri += ", @COMUNE_ID ";
-                _addParameter(command, "@COMUNE_ID", u.comuneId);
+                mAddParameter(command, "@COMUNE_ID", u.comuneId);
             }
 
             //if (!String.IsNullOrEmpty(u.profiloId))
             //{
-            //    _strSQL += ", PROFILO_ID ";
+            //    mStrSQL += ", PROFILO_ID ";
             //    strSQLParametri += ", @PROFILO_ID ";
-            //    _addParameter(command, "@PROFILO_ID", u.profiloId);
+            //    mAddParameter(command, "@PROFILO_ID", u.profiloId);
             //}
             //else
             //{
-            //    _strSQL += ", PROFILO_ID ";
+            //    mStrSQL += ", PROFILO_ID ";
             //    strSQLParametri += ", NULL ";
             //}
 
             if (u.customerId != null && u.customerId != -1)
             {
-                _strSQL += ", customer_id ";
+                mStrSQL += ", customer_id ";
                 strSQLParametri += ", @CUSTOMER_ID ";
-                _addParameter(command, "@CUSTOMER_ID", u.customerId);
+                mAddParameter(command, "@CUSTOMER_ID", u.customerId);
             }
 
             if (u.SID != null)
             {
-                _strSQL += ", SID ";
+                mStrSQL += ", SID ";
                 strSQLParametri += ", @SID ";
-                _addParameter(command, "@SID", u.SID.ToString());
+                mAddParameter(command, "@SID", u.SID.ToString());
             }
 
 
-            command.CommandText = _strSQL + " ) " + strSQLParametri + " )";
+            command.CommandText = mStrSQL + " ) " + strSQLParametri + " )";
 
             //If test_mode = True) {
-            //    Me._transactionBegin()
-            //    _executeNoQuery(command)
-            //    Me._transactionRollback()
+            //    Me.mTransactionBegin()
+            //    mExecuteNoQuery(command)
+            //    Me.mTransactionRollback()
             //    Return -1
             //}
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            newId = _getIdentity();
+            newId = mGetIdentity();
 
             return newId;
         }
@@ -691,19 +691,19 @@ namespace MyUsers
 
         public bool delete(long userId)
         {
-            _strSQL = "DELETE FROM UtenteGruppo WHERE user_id = " + userId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM UtenteGruppo WHERE user_id = " + userId;
+            mExecuteNoQuery(mStrSQL);
 
 
-            _strSQL = "DELETE FROM UtenteProfilo WHERE user_id = " + userId;
-            _executeNoQuery(_strSQL);
+            mStrSQL = "DELETE FROM UtenteProfilo WHERE user_id = " + userId;
+            mExecuteNoQuery(mStrSQL);
 
             //Cancello l'integrità referenziale sull DB tra la tabella dei Logs e la tabella Utente in modo da poter conservare i log degli utenti eliminati
-            //_strSQL = "DELETE FROM MyLogUser WHERE user_id = " + userId;
-            //_executeNoQuery(_strSQL);
+            //mStrSQL = "DELETE FROM MyLogUser WHERE user_id = " + userId;
+            //mExecuteNoQuery(mStrSQL);
 
-            _strSQL = "DELETE FROM UTENTE WHERE user_id = " + userId;
-            return _executeNoQuery(_strSQL) == 1;
+            mStrSQL = "DELETE FROM UTENTE WHERE user_id = " + userId;
+            return mExecuteNoQuery(mStrSQL) == 1;
         }
 
 
@@ -714,11 +714,11 @@ namespace MyUsers
             List<Models.MyProfile> risultato;
             risultato = new List<Models.MyProfile>();
 
-            _strSQL = "SELECT * FROM PROFILO ORDER BY NOME";
+            mStrSQL = "SELECT * FROM PROFILO ORDER BY NOME";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 risultato.Add(new Models.MyProfile(row));
             }
@@ -727,28 +727,26 @@ namespace MyUsers
         }
 
 
-
-
         public Models.MyProfile getProfilo(string profiloId)
         {
-            _strSQL = "SELECT * FROM PROFILO WHERE profilo_id = '" + profiloId + "'";
+            mStrSQL = "SELECT * FROM PROFILO WHERE profilo_id = '" + profiloId + "'";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("id > 0");
             }
 
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 return null;
             }
 
 
             Models.MyProfile p;
-            p = new Models.MyProfile(_dt.Rows[0]);
+            p = new Models.MyProfile(mDt.Rows[0]);
 
             return p;
 
@@ -757,16 +755,16 @@ namespace MyUsers
         public bool setProfili(Models.MyUser u)
         {
 
-            _strSQL = "select t2.* from UtenteProfilo as t1 left join profilo  as t2 on (t1.profilo_id = t2.profilo_id) WHERE t1.user_id = " + u.userId;
+            mStrSQL = "select t2.* from UtenteProfilo as t1 left join profilo  as t2 on (t1.profilo_id = t2.profilo_id) WHERE t1.user_id = " + u.userId;
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
 
             List<Models.MyProfile> listaProfili = new List<Models.MyProfile>();
 
             Models.MyProfile p;
 
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 p = new Models.MyProfile(row);
                 listaProfili.Add(p);
@@ -781,21 +779,21 @@ namespace MyUsers
 
         //public bool setGroupsWithoutAdministrators(Models.MyUser u)
         //{
-        //    GroupManager gManager = new GroupManager(this._connection);
+        //    GroupManager gManager = new GroupManager(this.mConnection);
         //    return gManager.setGroups(u, true);
         //}
 
 
         public bool setGroups(Models.MyUser u)
         {
-            GroupManager gManager = new GroupManager(this._connection);
+            GroupManager gManager = new GroupManager(this.mConnection);
             return gManager.setGroups(u);
         }
 
 
         public bool setRoles(Models.MyUser u)
         {
-            GroupManager gManager = new GroupManager(this._connection);
+            GroupManager gManager = new GroupManager(this.mConnection);
             return gManager.setRoles(u);
         }
 
@@ -804,163 +802,163 @@ namespace MyUsers
         public bool update(Models.MyUser u)
         {
 
-            _strSQL = "UPDATE UTENTE SET DATE_MODIFIED = GetDate()  ";
+            mStrSQL = "UPDATE UTENTE SET DATE_MODIFIED = GetDate()  ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
 
             if (!String.IsNullOrEmpty(u.email))
             {
-                _strSQL += " ,EMAIL = @EMAIL ";
-                _addParameter(command, "@EMAIL", u.email);
+                mStrSQL += " ,EMAIL = @EMAIL ";
+                mAddParameter(command, "@EMAIL", u.email);
             }
 
             if (!String.IsNullOrEmpty(u.login))
             {
-                _strSQL += " ,MY_LOGIN = @LOGIN ";
-                _addParameter(command, "@LOGIN", u.login);
+                mStrSQL += " ,MY_LOGIN = @LOGIN ";
+                mAddParameter(command, "@LOGIN", u.login);
             }
 
             if (!String.IsNullOrEmpty(u.nome))
             {
-                _strSQL += ",NOME = @NOME ";
-                _addParameter(command, "@NOME", u.nome);
+                mStrSQL += ",NOME = @NOME ";
+                mAddParameter(command, "@NOME", u.nome);
             }
 
 
             if (!String.IsNullOrEmpty(u.cognome))
             {
-                _strSQL += ",COGNOME = @COGNOME ";
-                _addParameter(command, "@COGNOME", u.cognome);
+                mStrSQL += ",COGNOME = @COGNOME ";
+                mAddParameter(command, "@COGNOME", u.cognome);
             }
 
             if (!String.IsNullOrEmpty(u.indirizzo))
             {
-                _strSQL += ",INDIRIZZO = @INDIRIZZO ";
-                _addParameter(command, "@INDIRIZZO", u.indirizzo);
+                mStrSQL += ",INDIRIZZO = @INDIRIZZO ";
+                mAddParameter(command, "@INDIRIZZO", u.indirizzo);
             }
 
             if (!String.IsNullOrEmpty(u.telefono))
             {
-                _strSQL += ",TELEFONO = @TELEFONO ";
-                _addParameter(command, "@TELEFONO", u.telefono);
+                mStrSQL += ",TELEFONO = @TELEFONO ";
+                mAddParameter(command, "@TELEFONO", u.telefono);
             }
 
             if (!String.IsNullOrEmpty(u.numero_civico))
             {
-                _strSQL += ",NUMERO_CIVICO = @NUMERO_CIVICO ";
-                _addParameter(command, "@NUMERO_CIVICO", u.numero_civico);
+                mStrSQL += ",NUMERO_CIVICO = @NUMERO_CIVICO ";
+                mAddParameter(command, "@NUMERO_CIVICO", u.numero_civico);
             }
 
 
             if (!String.IsNullOrEmpty(u.cap))
             {
-                _strSQL += ",CAP = @CAP ";
-                _addParameter(command, "@CAP", u.cap);
+                mStrSQL += ",CAP = @CAP ";
+                mAddParameter(command, "@CAP", u.cap);
             }
 
 
             if (!String.IsNullOrEmpty(u.mobile))
             {
-                _strSQL += ",MOBILE = @MOBILE ";
-                _addParameter(command, "@MOBILE", u.mobile);
+                mStrSQL += ",MOBILE = @MOBILE ";
+                mAddParameter(command, "@MOBILE", u.mobile);
             }
 
             if (!String.IsNullOrEmpty(u.codiceFiscale))
             {
-                _strSQL += ",CODICE_FISCALE = @CODICEFISCALE ";
-                _addParameter(command, "@CODICEFISCALE", u.codiceFiscale);
+                mStrSQL += ",CODICE_FISCALE = @CODICEFISCALE ";
+                mAddParameter(command, "@CODICEFISCALE", u.codiceFiscale);
             }
 
             if (!String.IsNullOrEmpty(u.sesso))
             {
-                _strSQL += ",SESSO  = @SESSO ";
-                _addParameter(command, "@SESSO", u.sesso);
+                mStrSQL += ",SESSO  = @SESSO ";
+                mAddParameter(command, "@SESSO", u.sesso);
             }
 
             if (!String.IsNullOrEmpty(u.http))
             {
-                _strSQL += ",HTTP = @HTTP ";
-                _addParameter(command, "@HTTP", u.http);
+                mStrSQL += ",HTTP = @HTTP ";
+                mAddParameter(command, "@HTTP", u.http);
             }
 
             if (!String.IsNullOrEmpty(u.fax))
             {
-                _strSQL += ",FAX = @FAX ";
-                _addParameter(command, "@FAX", u.fax);
+                mStrSQL += ",FAX = @FAX ";
+                mAddParameter(command, "@FAX", u.fax);
             }
 
             if (!String.IsNullOrEmpty(u.regione))
             {
-                _strSQL += ",REGIONE = @REGIONE ";
-                _addParameter(command, "@REGIONE", u.regione);
+                mStrSQL += ",REGIONE = @REGIONE ";
+                mAddParameter(command, "@REGIONE", u.regione);
             }
 
             if (!String.IsNullOrEmpty(u.provincia))
             {
-                _strSQL += ",PROVINCIA = @PROVINCIA ";
-                _addParameter(command, "@PROVINCIA", u.provincia);
+                mStrSQL += ",PROVINCIA = @PROVINCIA ";
+                mAddParameter(command, "@PROVINCIA", u.provincia);
             }
 
             if (!String.IsNullOrEmpty(u.comune))
             {
-                _strSQL += ", COMUNE = @COMUNE ";
-                _addParameter(command, "@COMUNE", u.comune);
+                mStrSQL += ", COMUNE = @COMUNE ";
+                mAddParameter(command, "@COMUNE", u.comune);
             }
 
             if (u.regioneId != null && u.regioneId != -1)
             {
-                _strSQL += ",REGIONE_ID = @REGIONE_ID ";
-                _addParameter(command, "@REGIONE_ID", u.regioneId);
+                mStrSQL += ",REGIONE_ID = @REGIONE_ID ";
+                mAddParameter(command, "@REGIONE_ID", u.regioneId);
             }
 
             //' If _provinciaId <> -1 ){
             if (!String.IsNullOrEmpty(u.provinciaId))
             {
-                _strSQL += ",PROVINCIA_ID = @PROVINCIA_ID ";
-                _addParameter(command, "@PROVINCIA_ID", u.provinciaId);
+                mStrSQL += ",PROVINCIA_ID = @PROVINCIA_ID ";
+                mAddParameter(command, "@PROVINCIA_ID", u.provinciaId);
             }
 
             //'If _comuneId <> -1 ){
             if (!String.IsNullOrEmpty(u.comuneId))
             {
-                _strSQL += ", COMUNE_ID = @COMUNE_ID ";
-                _addParameter(command, "@COMUNE_ID", u.comuneId);
+                mStrSQL += ", COMUNE_ID = @COMUNE_ID ";
+                mAddParameter(command, "@COMUNE_ID", u.comuneId);
             }
 
 
             //if (!String.IsNullOrEmpty(u.profiloId))
             //{
-            //    _strSQL += ", PROFILO_ID = @PROFILO_ID ";
-            //    _addParameter(command, "@PROFILO_ID", u.profiloId);
+            //    mStrSQL += ", PROFILO_ID = @PROFILO_ID ";
+            //    mAddParameter(command, "@PROFILO_ID", u.profiloId);
             //}
             //else
             //{
-            //    _strSQL += ", PROFILO_ID = NULL ";
+            //    mStrSQL += ", PROFILO_ID = NULL ";
             //}
 
 
             if (u.dataDiNascita != null && u.dataDiNascita != DateTime.MinValue)
             {
-                _strSQL += ", date_of_birth = @date_of_birth ";
-                _addParameter(command, "@date_of_birth", u.dataDiNascita);
+                mStrSQL += ", date_of_birth = @date_of_birth ";
+                mAddParameter(command, "@date_of_birth", u.dataDiNascita);
             }
 
-            _strSQL += ", is_enabled = @IS_ENABLED ";
-            _addParameter(command, "@IS_ENABLED", u.isEnabled);
+            mStrSQL += ", is_enabled = @IS_ENABLED ";
+            mAddParameter(command, "@IS_ENABLED", u.isEnabled);
 
             if (u.customerId != null && u.customerId != -1)
             {
-                _strSQL += ", customer_id = " + u.customerId;
+                mStrSQL += ", customer_id = " + u.customerId;
             }
 
 
-            _strSQL += " WHERE USER_ID=" + u.userId;
+            mStrSQL += " WHERE USER_ID=" + u.userId;
 
-            command.CommandText = _strSQL;
+            command.CommandText = mStrSQL;
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
             return true;
         }
@@ -977,43 +975,43 @@ namespace MyUsers
         public long getUserIdFromLoginAndEmail(string login, string email)
         {
 
-            _strSQL = "select USER_ID from  UTENTE  where UPPER(MY_LOGIN)= @myLogin ";
+            mStrSQL = "select USER_ID from  UTENTE  where UPPER(MY_LOGIN)= @myLogin ";
 
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
-            _addParameter(command, "@myLogin", login.ToUpper().Trim());
+            mAddParameter(command, "@myLogin", login.ToUpper().Trim());
 
             if (!String.IsNullOrEmpty(email))
             {
-                _strSQL += " and UPPER(EMAIL)= @myEmail ";
-                _addParameter(command, "@myEmail", email.ToUpper().Trim());
+                mStrSQL += " and UPPER(EMAIL)= @myEmail ";
+                mAddParameter(command, "@myEmail", email.ToUpper().Trim());
             }
 
-            command.CommandText = _strSQL;
-            _dt = _fillDataTable(command);
+            command.CommandText = mStrSQL;
+            mDt = mFillDataTable(command);
 
-            if (_dt.Rows.Count > 1)
+            if (mDt.Rows.Count > 1)
             {
                 throw new MyManagerCSharp.MyException("Login duplicata");
             }
 
-            if (_dt.Rows.Count == 0)
+            if (mDt.Rows.Count == 0)
             {
                 //throw new MyManagerCSharp.MyException("La Login o l'e-mail inserite non sono corrette");
                 return -1;
             }
 
 
-            return long.Parse(_dt.Rows[0]["USER_ID"].ToString());
+            return long.Parse(mDt.Rows[0]["USER_ID"].ToString());
         }
 
 
         public string getLogin(long userId)
         {
-            _strSQL = "select MY_LOGIN  from  UTENTE  where USER_ID = " + userId;
-            return _executeScalar(_strSQL);
+            mStrSQL = "select MY_LOGIN  from  UTENTE  where USER_ID = " + userId;
+            return mExecuteScalar(mStrSQL);
         }
 
 
@@ -1029,12 +1027,12 @@ namespace MyUsers
             }
 
 
-            _strSQL = "UPDATE UTENTE SET MY_PASSWORD= @MY_Password , DATE_MODIFIED_PASSWORD = GetDate() WHERE USER_ID=" + userId;
+            mStrSQL = "UPDATE UTENTE SET MY_PASSWORD= @MY_Password , DATE_MODIFIED_PASSWORD = GetDate() WHERE USER_ID=" + userId;
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
+            command = mConnection.CreateCommand();
 
-            command.CommandText = _strSQL;
+            command.CommandText = mStrSQL;
             try
             {
 
@@ -1043,10 +1041,10 @@ namespace MyUsers
 
                 // Debug.WriteLine(String.Format("psd:{0} VB_MD5:{1} ", passwordGenerata, MyManager.SecurityManager.getMD5Hash(passwordGenerata)));
 
-                _addParameter(command, "@MY_Password", MyManagerCSharp.SecurityManager.getMD5Hash(passwordGenerata));
-                _executeNoQuery(command);
+                mAddParameter(command, "@MY_Password", MyManagerCSharp.SecurityManager.getMD5Hash(passwordGenerata));
+                mExecuteNoQuery(command);
 
-                //Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+                //Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
                 //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.ResetPassword)
             }
             catch (Exception ex)
@@ -1066,19 +1064,19 @@ namespace MyUsers
 
         public bool updatePassword(long userId, string newPassword)
         {
-            _strSQL = "UPDATE UTENTE SET MY_PASSWORD = @MY_PASSWORD " +
+            mStrSQL = "UPDATE UTENTE SET MY_PASSWORD = @MY_PASSWORD " +
                                                    ", DATE_MODIFIED = GetDate() " +
                                                     " WHERE USER_ID=" + userId;
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.CommandText = _strSQL;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
 
-            _addParameter(command, "@MY_PASSWORD", MyManagerCSharp.SecurityManager.getMD5Hash(newPassword.Trim()));
+            mAddParameter(command, "@MY_PASSWORD", MyManagerCSharp.SecurityManager.getMD5Hash(newPassword.Trim()));
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            // Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+            // Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
             //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.UpdatePassword)
             return true;
         }
@@ -1087,17 +1085,17 @@ namespace MyUsers
 
         public bool updateSID(long userId, System.Security.Principal.SecurityIdentifier sid)
         {
-            _strSQL = "UPDATE UTENTE SET SID = @SID , DATE_MODIFIED = GetDate() WHERE USER_ID=" + userId;
+            mStrSQL = "UPDATE UTENTE SET SID = @SID , DATE_MODIFIED = GetDate() WHERE USER_ID=" + userId;
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.CommandText = _strSQL;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
 
-            _addParameter(command, "@SID", sid.ToString());
+            mAddParameter(command, "@SID", sid.ToString());
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            // Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+            // Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
             //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.UpdatePassword)
             return true;
         }
@@ -1106,64 +1104,64 @@ namespace MyUsers
 
         public bool updateIsEnabled(long userId, bool isEnabled)
         {
-            _strSQL = "UPDATE UTENTE SET IS_ENABLED = @IS_ENABLED " +
+            mStrSQL = "UPDATE UTENTE SET IS_ENABLED = @IS_ENABLED " +
                                                    ", DATE_MODIFIED = GetDate() " +
                                                     " WHERE USER_ID=" + userId;
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.CommandText = _strSQL;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
 
-            _addParameter(command, "@IS_ENABLED", isEnabled);
+            mAddParameter(command, "@IS_ENABLED", isEnabled);
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            // Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+            // Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
             //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.UpdatePassword)
             return true;
         }
 
         public bool updateEmail(long userId, string email)
         {
-            _strSQL = "UPDATE UTENTE SET EMAIL = @EMAIL " +
+            mStrSQL = "UPDATE UTENTE SET EMAIL = @EMAIL " +
                                                    ", DATE_MODIFIED = GetDate() " +
                                                     " WHERE USER_ID=" + userId;
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.CommandText = _strSQL;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
 
             if (String.IsNullOrEmpty(email))
             {
-                _addParameter(command, "@EMAIL", DBNull.Value);
+                mAddParameter(command, "@EMAIL", DBNull.Value);
             }
             else
             {
-                _addParameter(command, "@EMAIL", email.Trim().ToLower());
+                mAddParameter(command, "@EMAIL", email.Trim().ToLower());
             }
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            // Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+            // Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
             //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.UpdatePassword)
             return true;
         }
 
         public bool updateEmail(System.Security.Principal.SecurityIdentifier sid, string email)
         {
-            _strSQL = "UPDATE UTENTE SET EMAIL = @EMAIL " +
+            mStrSQL = "UPDATE UTENTE SET EMAIL = @EMAIL " +
                                                    ", DATE_MODIFIED = GetDate() " +
                                                     " WHERE SID = '" + sid.Value + "'";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.CommandText = _strSQL;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
 
-            _addParameter(command, "@EMAIL", email.Trim().ToLower());
+            mAddParameter(command, "@EMAIL", email.Trim().ToLower());
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
 
-            // Dim managerLogUser As New MyManager.LogUserManager(Me._connection)
+            // Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
             //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.UpdatePassword)
             return true;
         }
@@ -1173,18 +1171,18 @@ namespace MyUsers
         {
             List<MyManagerCSharp.Models.MyItem> risultato = new List<MyManagerCSharp.Models.MyItem>();
 
-            _strSQL = "select top 7 user_id, my_login from utente where my_login like @VALORE order by my_login";
+            mStrSQL = "select top 7 user_id, my_login from utente where my_login like @VALORE order by my_login";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.CommandText = _strSQL;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
 
-            _addParameter(command, "@VALORE", "%" + valore + "%");
+            mAddParameter(command, "@VALORE", "%" + valore + "%");
 
-            _dt = _fillDataTable(command);
+            mDt = mFillDataTable(command);
 
             MyManagerCSharp.Models.MyItem item;
-            foreach (DataRow row in _dt.Rows)
+            foreach (DataRow row in mDt.Rows)
             {
                 item = new MyManagerCSharp.Models.MyItem(row["user_id"].ToString(), row["my_login"].ToString());
 

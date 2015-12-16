@@ -61,37 +61,37 @@ namespace My.MessageQueue
         {
             string strSQLParametri;
 
-            _strSQL = "INSERT INTO mmq.log ( DATE_ADDED  ";
+            mStrSQL = "INSERT INTO mmq.log ( DATE_ADDED  ";
             strSQLParametri = " VALUES ( GetDate()  ";
 
             System.Data.Common.DbCommand command;
-            command = _connection.CreateCommand();
-            command.Connection = _connection;
+            command = mConnection.CreateCommand();
+            command.Connection = mConnection;
 
 
             if (!String.IsNullOrEmpty(nota))
             {
-                _strSQL += ",my_note ";
+                mStrSQL += ",my_note ";
                 strSQLParametri += ", @nota ";
-                _addParameter(command, "@nota", nota);
+                mAddParameter(command, "@nota", nota);
             }
 
-            _strSQL += ",message_id ";
+            mStrSQL += ",message_id ";
             strSQLParametri += ", @messageID ";
-            _addParameter(command, "@messageID", messageId);
+            mAddParameter(command, "@messageID", messageId);
 
 
             if (level != LogManager.Level.Undefined)
             {
-                _strSQL += ",my_level ";
+                mStrSQL += ",my_level ";
                 strSQLParametri += ", @MY_LEVEL ";
-                _addParameter(command, "@MY_LEVEL", (int)level);
+                mAddParameter(command, "@MY_LEVEL", (int)level);
             }
 
-            command.CommandText = _strSQL + " ) " + strSQLParametri + " )";
+            command.CommandText = mStrSQL + " ) " + strSQLParametri + " )";
             command.CommandType = System.Data.CommandType.Text;
 
-            _executeNoQuery(command);
+            mExecuteNoQuery(command);
         }
 
 
@@ -102,11 +102,11 @@ namespace My.MessageQueue
             List<Models.Log> risultato;
             risultato = new List<Models.Log>();
 
-            _strSQL = "SELECT * FROM  mmq.log WHERE message_id = " + messageId + " order by id";
+            mStrSQL = "SELECT * FROM  mmq.log WHERE message_id = " + messageId + " order by id";
 
-            _dt = _fillDataTable(_strSQL);
+            mDt = mFillDataTable(mStrSQL);
 
-            foreach (System.Data.DataRow row in _dt.Rows)
+            foreach (System.Data.DataRow row in mDt.Rows)
             {
                 risultato.Add(new Models.Log(row));
             }
