@@ -1,5 +1,5 @@
 ﻿//Direttive di compilazione per le librerire esterne
-//#define Oracle
+#define Oracle
 
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 namespace My.Shared.db
 {
 
-
-
     public class OracleManager
     {
 
@@ -25,7 +23,7 @@ namespace My.Shared.db
 
         protected string mStrSQL;
 
-        protected DataTable mDt;
+        protected DataTable mDataTable;
 
         #region ***Connessione**
 
@@ -43,12 +41,12 @@ namespace My.Shared.db
             mConnection = connection;
         }
 
-        public Oracle.DataAccess.Client.OracleConnection GetConnection()
+        public Oracle.DataAccess.Client.OracleConnection getConnection()
         {
             return mConnection;
         }
 
-        public void OpenConnection()
+        public void openConnection()
         {
             if (mConnection == null)
             {
@@ -62,8 +60,7 @@ namespace My.Shared.db
             }
         }
 
-
-        public void CloseConnection()
+        public void closeConnection()
         {
             if (mConnection == null)
             {
@@ -81,7 +78,7 @@ namespace My.Shared.db
 
         #region ***Transazione**
 
-        public void TransactionBegin(ref Oracle.DataAccess.Client.OracleTransaction transaction)
+        public void transactionBegin(ref Oracle.DataAccess.Client.OracleTransaction transaction)
         {
             if (transaction == null)
             {
@@ -90,7 +87,7 @@ namespace My.Shared.db
             mTransaction = transaction;
         }
 
-        public void TransactionBegin()
+        public void transactionBegin()
         {
             if (mTransaction != null)
             {
@@ -99,7 +96,7 @@ namespace My.Shared.db
             mTransaction = mConnection.BeginTransaction();
         }
 
-        public void TransactionCommit()
+        public void transactionCommit()
         {
             if (mTransaction == null)
             {
@@ -110,7 +107,7 @@ namespace My.Shared.db
             mTransaction = null;
         }
 
-        public void TransactionRollback()
+        public void transactionRollback()
         {
             if (mTransaction == null)
             {
@@ -123,7 +120,7 @@ namespace My.Shared.db
         }
 
 
-        public Oracle.DataAccess.Client.OracleTransaction GetTransaction()
+        public Oracle.DataAccess.Client.OracleTransaction getTransaction()
         {
             //'26/01/2012 commento
             //' If _transaction Is Nothing Then
@@ -137,7 +134,7 @@ namespace My.Shared.db
 
 
 
-        protected long mGetSequence(string sequenceName)
+        protected long getSequence(string sequenceName)
         {
             string strSQL = "select " + sequenceName + ".nextval from dual";
             Oracle.DataAccess.Client.OracleCommand command = new Oracle.DataAccess.Client.OracleCommand(strSQL, mConnection);
