@@ -9,11 +9,11 @@ namespace MyManagerCSharp.Log.Models
     {
         public long id { get; set; }
         public DateTime dateAdded { get; set; }
-        public string referenceId { get; set; }
-        public string referenceType { get; set; }
+        public string sessionId { get; set; }
+        public string reference { get; set; }
         public Log.LogManager.Level level { get; set; }
         public string note { get; set; }
-        public string type { get; set; }
+        public string source { get; set; }
 
         public MyLog()
         {
@@ -23,8 +23,8 @@ namespace MyManagerCSharp.Log.Models
         {
             id = long.Parse(row["Id"].ToString());
             dateAdded = (row["date_added"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["date_added"].ToString());
-            referenceId = (row["reference_id"] is DBNull) ? "" : row["reference_id"].ToString();
-            referenceType = (row["reference_type"] is DBNull) ? "" : row["reference_type"].ToString();
+            sessionId = (row["session_id"] is DBNull) ? "" : row["session_id"].ToString();
+            reference = (row["reference"] is DBNull) ? "" : row["reference"].ToString();
 
 
             if (row["my_level"] is DBNull)
@@ -37,7 +37,7 @@ namespace MyManagerCSharp.Log.Models
             }
 
             note = (row["my_note"] is DBNull) ? "" : row["my_note"].ToString();
-            type = (row["my_type"] is DBNull) ? "" : row["my_type"].ToString();
+            source = (row["my_source"] is DBNull) ? "" : row["my_source"].ToString();
         }
 
     }

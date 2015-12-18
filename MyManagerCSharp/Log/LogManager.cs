@@ -19,8 +19,6 @@ namespace MyManagerCSharp.Log
         }
 
 
-
-
         public LogManager(string connectionName)
             : base(connectionName)
         {
@@ -36,13 +34,8 @@ namespace MyManagerCSharp.Log
 
         public int delete(LogManager.Days days)
         {
-            mStrSQL = "DELETE FROM MYLOG ";
-
-            string strWHERE = "";
-
-            strWHERE = getWhereConditionByDate("date_added", days);
-
-            mStrSQL = mStrSQL + strWHERE;
+            mStrSQL = "DELETE FROM MYLOG WHERE (1=1) ";
+            mStrSQL += getWhereConditionByDate("date_added", days);
 
             return mExecuteNoQuery(mStrSQL);
         }
@@ -53,9 +46,9 @@ namespace MyManagerCSharp.Log
             insert(tipo, nota, "", "", Level.Info);
         }
 
-        public void info(string nota, string referenceId, string referenceType, string tipo)
+        public void info(string nota, string sessionId, string referenceType, string tipo)
         {
-            insert(tipo, nota, referenceId, referenceType, Level.Info);
+            insert(tipo, nota, sessionId, referenceType, Level.Info);
         }
 
         public void warning(string nota, string tipo)
@@ -63,9 +56,9 @@ namespace MyManagerCSharp.Log
             insert(tipo, nota, "", "", Level.Warning);
         }
 
-        public void warning(string nota, string referenceId, string referenceType, string tipo)
+        public void warning(string nota, string sessionId, string referenceType, string tipo)
         {
-            insert(tipo, nota, referenceId, referenceType, Level.Warning);
+            insert(tipo, nota, sessionId, referenceType, Level.Warning);
         }
 
         public void error(string nota, string tipo)
@@ -73,12 +66,12 @@ namespace MyManagerCSharp.Log
             insert(tipo, nota, "", "", Level.Error);
         }
 
-        public void error(string nota, string referenceId, string referenceType, string tipo)
+        public void error(string nota, string sessionId, string referenceType, string tipo)
         {
-            insert(tipo, nota, referenceId, referenceType, Level.Error);
+            insert(tipo, nota, sessionId, referenceType, Level.Error);
         }
 
-        public void exception(Exception ex, string referenceId, string referenceType, string tipo)
+        public void exception(Exception ex, string sessionId, string referenceType, string tipo)
         {
             string nota = "";
             Exception e = ex;
@@ -89,14 +82,20 @@ namespace MyManagerCSharp.Log
                 e = e.InnerException;
             }
 
-            insert(tipo, nota, referenceId, referenceType, Level.Exception);
+            insert(tipo, nota, sessionId, referenceType, Level.Exception);
         }
 
 
         public void exception(string tipo, Exception ex)
         {
-            string nota;
-            nota = ex.Message;
+            string nota = "";
+            Exception e = ex;
+
+            while (e != null)
+            {
+                nota += e.Message + Environment.NewLine;
+                e = e.InnerException;
+            }
 
             insert(tipo, nota, "", "", Level.Exception);
         }
@@ -104,7 +103,7 @@ namespace MyManagerCSharp.Log
 
 
 
-        public void insert(string tipo, string nota, string referenceId, string referenceType, Level level)
+        public void insert(string source, string nota, string sessionId, string reference, Level level)
         {
             string strSQLParametri;
 
@@ -112,8 +111,8 @@ namespace MyManagerCSharp.Log
             strSQLParametri = " VALUES ( GetDate()  ";
 
             System.Data.Common.DbCommand command;
-            command =  mConnection.CreateCommand();
-            command.Connection =  mConnection;
+            command = mConnection.CreateCommand();
+            command.Connection = mConnection;
 
             if (!String.IsNullOrEmpty(nota))
             {
@@ -122,25 +121,25 @@ namespace MyManagerCSharp.Log
                 mAddParameter(command, "@nota", nota);
             }
 
-            if (!String.IsNullOrEmpty(tipo))
+            if (!String.IsNullOrEmpty(source))
             {
-                mStrSQL += ",my_type ";
-                strSQLParametri += ", @tipo ";
-                mAddParameter(command, "@tipo", tipo);
+                mStrSQL += ",my_source ";
+                strSQLParametri += ", @source ";
+                mAddParameter(command, "@source", source);
             }
 
-            if (!String.IsNullOrEmpty(referenceId))
+            if (!String.IsNullOrEmpty(sessionId))
             {
-                mStrSQL += ",reference_id ";
-                strSQLParametri += ", @referenceId ";
-                mAddParameter(command, "@referenceId", referenceId);
+                mStrSQL += ",session_id ";
+                strSQLParametri += ", @sessionId ";
+                mAddParameter(command, "@sessionId", sessionId);
             }
 
-            if (!String.IsNullOrEmpty(referenceType))
+            if (!String.IsNullOrEmpty(reference))
             {
-                mStrSQL += ",reference_type ";
-                strSQLParametri += ", @referenceType ";
-                mAddParameter(command, "@referenceType", referenceType);
+                mStrSQL += ",reference ";
+                strSQLParametri += ", @reference ";
+                mAddParameter(command, "@reference", reference);
             }
 
             if (level != LogManager.Level.Undefined)
@@ -158,9 +157,9 @@ namespace MyManagerCSharp.Log
         }
 
 
-        public string[] getMyType()
+        public string[] getMySource()
         {
-            mStrSQL = "select  distinct my_type from mylog order by 1";
+            mStrSQL = "select  distinct my_source from mylog order by 1";
 
             mDt = mFillDataTable(mStrSQL);
 
@@ -183,7 +182,7 @@ namespace MyManagerCSharp.Log
             mStrSQL = " FROM MyLog ";
 
             System.Data.Common.DbCommand command;
-            command =  mConnection.CreateCommand();
+            command = mConnection.CreateCommand();
 
             string strWHERE = " WHERE (1=1)";
             string temp;
@@ -203,12 +202,12 @@ namespace MyManagerCSharp.Log
                 strWHERE += " AND " + temp;
             }
 
-            if (model.myTypeSelected != null && model.myTypeSelected.Count() != 0)
+            if (model.mySourceSelected != null && model.mySourceSelected.Count() != 0)
             {
                 temp = "( ";
-                foreach (string l in model.myTypeSelected)
+                foreach (string l in model.mySourceSelected)
                 {
-                    temp += "  MY_TYPE = '" + l.ToString() + "' OR";
+                    temp += "  MY_SOURCE = '" + l.ToString() + "' OR";
                 }
 
                 temp = temp.Substring(0, temp.Length - 2);
@@ -251,17 +250,17 @@ namespace MyManagerCSharp.Log
         }
 
 
-        public List<MyManagerCSharp.Log.Models.MyLog> getReferenceDetail(string referenceId)
+        public List<MyManagerCSharp.Log.Models.MyLog> getSessionDetail(string sessionId)
         {
-            return getReferenceDetail(referenceId, new List<MyManagerCSharp.Log.LogManager.Level>());
+            return getSessionDetail(sessionId, new List<MyManagerCSharp.Log.LogManager.Level>());
         }
 
 
-        public List<MyManagerCSharp.Log.Models.MyLog> getReferenceDetail(string referenceId, List<MyManagerCSharp.Log.LogManager.Level> levels)
+        public List<MyManagerCSharp.Log.Models.MyLog> getSessionDetail(string sessionId, List<MyManagerCSharp.Log.LogManager.Level> levels)
         {
             List<MyManagerCSharp.Log.Models.MyLog> risultato = new List<MyManagerCSharp.Log.Models.MyLog>();
 
-            mStrSQL = " select * FROM MyLog  where reference_id = @REFERENCEID ";
+            mStrSQL = " select * FROM MyLog  where session_id = @sessionId ";
 
 
             if (levels.Count > 0)
@@ -283,8 +282,8 @@ namespace MyManagerCSharp.Log
             mStrSQL += " ORDER BY date_added asc";
 
             System.Data.Common.DbCommand command;
-            command =  mConnection.CreateCommand();
-            mAddParameter(command, "@REFERENCEID", referenceId);
+            command = mConnection.CreateCommand();
+            mAddParameter(command, "@sessionId", sessionId);
 
             command.CommandText = mStrSQL;
             mDt = mFillDataTable(command);
@@ -323,7 +322,7 @@ namespace MyManagerCSharp.Log
         public System.Data.DataTable getSummaryV2(MyManagerCSharp.Log.LogManager.Days days)
         {
 
-            mStrSQL = "select reference_id , my_type,MIN (date_added) as data_inizio, MAX(date_added) as data_fine " +
+            mStrSQL = "select session_id , my_source, MIN (date_added) as data_inizio, MAX(date_added) as data_fine " +
                 ",sum(case when my_level =  'Exception' then 1 else 0 end) as 'Exception'" +
                 ",sum(case when my_level =  'Error' then 1 else 0 end) as 'Error'" +
                 ",sum(case when my_level =  'Warning' then 1 else 0 end) as 'Warning'" +
@@ -332,7 +331,7 @@ namespace MyManagerCSharp.Log
 
             mStrSQL += " WHERE (1=1)" + getWhereConditionByDate("date_added", days);
 
-            mStrSQL += " group by reference_id,  my_type" +
+            mStrSQL += " group by session_id,  my_source" +
                 " order by MIN (date_added) desc";
             return mFillDataTable(mStrSQL);
         }

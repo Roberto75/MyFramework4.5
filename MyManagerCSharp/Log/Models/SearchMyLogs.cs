@@ -9,8 +9,8 @@ namespace MyManagerCSharp.Log.Models
     {
         public MyLog filter { get; set; }
         public List<LogManager.Level> levelSelected { get; set; }
-        public string[] myType { get; set; }
-        public List<string> myTypeSelected { get; set; }
+        public string[] mySource { get; set; }
+        public List<string> mySourceSelected { get; set; }
 
         public LogManager.Days Days { get; set; }
         
@@ -32,7 +32,7 @@ namespace MyManagerCSharp.Log.Models
             levelSelected.Add(LogManager.Level.Exception);
 
 
-            myTypeSelected = new List<string>();
+            mySourceSelected = new List<string>();
 
         }
 

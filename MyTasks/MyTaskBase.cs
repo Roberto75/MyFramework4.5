@@ -477,7 +477,7 @@ namespace My.Shared.Tasks
                     {
                         client.Disconnect();
                     }
-                    catch (Exception )
+                    catch (Exception)
                     {
                         //ignoro
                     }
@@ -665,7 +665,7 @@ namespace My.Shared.Tasks
                 {
                     option = (SearchOption)Enum.Parse(typeof(SearchOption), valore);
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     throw new Exception("[App.config] task.folder.attachments.SearchOption valore non riconosciuto: " + valore + " (AllDirectories || TopDirectoryOnly)");
                 }
@@ -812,8 +812,12 @@ namespace My.Shared.Tasks
                     }
                     else
                     {
-                        fi.MoveTo(folderArchive.FullName + fi.Name);
+                        if (System.IO.File.Exists(folderArchive.FullName + fi.Name))
+                        {
+                            System.IO.File.Delete(folderArchive.FullName + fi.Name);
+                        }
 
+                        fi.MoveTo(folderArchive.FullName + fi.Name);
                     }
                 }
             }
@@ -1031,7 +1035,7 @@ namespace My.Shared.Tasks
                     {
                         client.Disconnect();
                     }
-                    catch (Exception )
+                    catch (Exception)
                     {
                         //ignoro
                     }

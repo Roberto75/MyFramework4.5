@@ -10,7 +10,7 @@ namespace MyManagerCSharp.Log.Models
         public List<MyManagerCSharp.Log.Models.MyLog> Logs { get; set; }
         public List<LogManager.Level> LevelSelected { get; set; }
 
-        public string referenceId { get; set; }
+        public string sessionId { get; set; }
 
         public MyLogDetail()
         {
