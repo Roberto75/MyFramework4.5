@@ -216,6 +216,7 @@
     <Content Include="SQL\Create-Log.sql" />
     <Content Include="SQL\Create-LogUser.sql" />
     <Content Include="SQL\Create-Ticket.sql" />
+    <Content Include="SQL\Oracle\Create-Log.sql" />
     <Content Include="whatsnew.xml" />
   </ItemGroup>
   <ItemGroup>

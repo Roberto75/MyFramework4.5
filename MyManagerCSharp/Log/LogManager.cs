@@ -225,15 +225,22 @@ namespace MyManagerCSharp.Log
             temp = "SELECT COUNT(*) " + mStrSQL;
             command.CommandText = temp;
             model.TotalRows = int.Parse(mExecuteScalar(command));
-
-
-
+            
+            
             temp = "SELECT * " + mStrSQL + " ORDER BY " + model.Sort + " " + model.SortDir;
 
             if (model.PageSize > 0 && model.PageNumber >= 0)
             {
-
-                temp += " OFFSET " + ((model.PageNumber - 1) * model.PageSize) + " ROWS FETCH NEXT " + model.PageSize + " ROWS ONLY";
+                if (mConnection.GetType().Name == "OracleConnection")
+                {
+                    int n = ((model.PageNumber - 1) * model.PageSize) ;
+                    temp = "SELECT * FROM ( " + temp + " ) WHERE ROWNUM BETWEEN " + n + " AND " + (n + model.PageSize);
+                }
+                else
+                {
+                    temp += " OFFSET " + ((model.PageNumber - 1) * model.PageSize) + " ROWS FETCH NEXT " + model.PageSize + " ROWS ONLY";
+                }
+                
             }
 
 

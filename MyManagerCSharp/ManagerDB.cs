@@ -1,7 +1,7 @@
 ﻿//Direttive di compilazione per le librerire esterne
 
 //#define MySQL
-//#define Oracle
+#define Oracle
 //#Const SqlServerCe = False
 //#Const PostgreSQL = False
 //#Const Oracle = False
@@ -16,7 +16,7 @@ using System.Diagnostics;
 
 namespace MyManagerCSharp
 {
-  
+
     public class ManagerDB : Manager
     {
 
@@ -55,7 +55,7 @@ namespace MyManagerCSharp
         protected DataTable mDt;
 
         private string _provider;
-               
+
 
         public ManagerDB(string connectionName)
         {
@@ -73,14 +73,14 @@ namespace MyManagerCSharp
         public ManagerDB(System.Data.Common.DbConnection connection)
         {
             //In questo costruttore viene passata la connessione da utilizzare 
-             mConnection = connection;
+            mConnection = connection;
 
-            if ( mConnection == null)
+            if (mConnection == null)
             {
                 return;
             }
 
-            switch ( mConnection.GetType().Name)
+            switch (mConnection.GetType().Name)
             {
                 case "OdbcConnection":
                     _provider = "System.Data.Odbc";
@@ -101,7 +101,7 @@ namespace MyManagerCSharp
                     _provider = "Npgsql";
                     break;
                 default:
-                    throw new MyException("Il costruttore non gestisce  questo tipo di connessione: " +  mConnection.GetType().Name);
+                    throw new MyException("Il costruttore non gestisce  questo tipo di connessione: " + mConnection.GetType().Name);
             }
 
             mFactory = System.Data.Common.DbProviderFactories.GetFactory(_provider);
@@ -109,39 +109,39 @@ namespace MyManagerCSharp
 
         public System.Data.Common.DbConnection mGetConnection()
         {
-            return  mConnection;
+            return mConnection;
         }
 
         public void mChangeConnectionString(string connectionString)
         {
-             mConnection.ConnectionString = connectionString;
+            mConnection.ConnectionString = connectionString;
         }
 
         public void mOpenConnection()
         {
-            if (String.IsNullOrEmpty( mConnection.ConnectionString))
+            if (String.IsNullOrEmpty(mConnection.ConnectionString))
             {
                 Debug.WriteLine("ConnectionString IS NULL");
-                if (String.IsNullOrEmpty( mConnectionName))
+                if (String.IsNullOrEmpty(mConnectionName))
                 {
                     throw new ApplicationException("ConnectionString non inizializzata");
                 }
                 else
                 {
-                     mConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[ mConnectionName].ConnectionString;
+                    mConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[mConnectionName].ConnectionString;
                 }
             }
 
-            if ( mConnection.State != System.Data.ConnectionState.Open)
+            if (mConnection.State != System.Data.ConnectionState.Open)
             {
-                 mConnection.Open();
+                mConnection.Open();
             }
         }
 
         public void mCloseConnection()
         {
-             mConnection.Close();
-             mConnection.Dispose();
+            mConnection.Close();
+            mConnection.Dispose();
         }
 
         public DataTable mFillDataTable(System.Data.Common.DbCommand command)
@@ -200,19 +200,23 @@ namespace MyManagerCSharp
 
         protected void mFillDataSet(System.Data.Common.DbCommand command, DataSet ds, string tableName, int timeOut)
         {
-            if ( mTransaction != null)
+            if (mTransaction != null)
             {
-                command.Transaction =  mTransaction;
+                command.Transaction = mTransaction;
             }
 
-            if ( mConnection.GetType().Name == "OleDbConnection" ||  mConnection.GetType().Name == "OdbcConnection")
+            if (mConnection.GetType().Name == "OleDbConnection" || mConnection.GetType().Name == "OdbcConnection")
             {
                 //'Per ACCESS e PostgreSQL ...
                 command.CommandText = mParseSQLforAccessAndPostgreSQL(command.CommandText);
             }
-            else if ( mConnection.GetType().Name == "MySqlConnection")
+            else if (mConnection.GetType().Name == "MySqlConnection")
             {
                 command.CommandText = mParseSQLforMySQL(command.CommandText);
+            }
+            else if (mConnection.GetType().Name == "OracleConnection")
+            {
+                command.CommandText = mParseSQLforOracle(command.CommandText);
             }
 
             System.Data.Common.DataAdapter objAdap = null;
@@ -290,12 +294,12 @@ namespace MyManagerCSharp
                 }
             }
         }
-       
+
         private System.Data.Common.DataAdapter _getDataAdapter(System.Data.Common.DbCommand command)
         {
             System.Data.Common.DataAdapter objAdap = null;
 
-            switch ( mConnection.GetType().Name)
+            switch (mConnection.GetType().Name)
             {
 #if MySQL
                 case "MySqlConnection":
@@ -335,12 +339,12 @@ namespace MyManagerCSharp
                 DirectCast(objAdap, Npgsql.NpgsqlDataAdapter).SelectCommand = DirectCast(command, Npgsql.NpgsqlCommand)
 #endif
                 default:
-                    throw new MyException("Tipo di connessione non riconosciuta: " +  mConnection.GetType().Name);
+                    throw new MyException("Tipo di connessione non riconosciuta: " + mConnection.GetType().Name);
             }
 
             return objAdap;
         }
-        
+
         protected string mParseSQLforOracle(string strSQL)
         {
             strSQL = strSQL.Replace("GetDate()", "Sysdate");
@@ -391,10 +395,9 @@ namespace MyManagerCSharp
             strSQL = strSQL.Replace("'%", "'*");
             strSQL = strSQL.Replace("%'", "*'");
 
-
             return strSQL;
         }
-        
+
         public System.Data.Common.DbParameter mAddParameter(System.Data.Common.DbCommand command, string name, Object value)
         {
             System.Data.Common.DbParameter parameter = null;
@@ -470,10 +473,6 @@ namespace MyManagerCSharp
                     break;
 
 #endif
-
-
-
-
                 default:
                     throw new MyException("Tipo di comando non supportato: " + command.GetType().Name);
             }
@@ -512,7 +511,7 @@ namespace MyManagerCSharp
                     throw new MyException("Tipo di dato non supportato: " + value.GetType().Name);
             }
         }
-        
+
         protected System.Data.OleDb.OleDbType mGetOleDbType(Object value)
         {
             switch (value.GetType().Name)
@@ -713,7 +712,7 @@ namespace MyManagerCSharp
         protected long mGetIdentity()
         {
             System.Data.Common.DbCommand command;
-            command =  mConnection.CreateCommand();
+            command = mConnection.CreateCommand();
 
             switch (command.GetType().Name)
             {
@@ -729,11 +728,11 @@ namespace MyManagerCSharp
                     throw new MyException("GetIdentity(): tipo non supportato " + command.GetType().Name);
             }
 
-            command.Connection =  mConnection;
+            command.Connection = mConnection;
 
-            if ( mTransaction != null)
+            if (mTransaction != null)
             {
-                command.Transaction =  mTransaction;
+                command.Transaction = mTransaction;
             }
 
 
@@ -764,12 +763,12 @@ namespace MyManagerCSharp
             return long.Parse(obj.ToString());
         }
 
-        
+
         protected long mGetSequence(string sequenceName)
         {
             string strSQL = "select " + sequenceName + ".nextval from dual";
             System.Data.Common.DbCommand command;
-            command =  mConnection.CreateCommand();
+            command = mConnection.CreateCommand();
 
             command.CommandText = strSQL;
 
@@ -785,7 +784,7 @@ namespace MyManagerCSharp
             {
                 throw new MyException("Transazione NON inizializzata");
             }
-             mTransaction = transaction;
+            mTransaction = transaction;
         }
 
         public void mTransactionBegin()
@@ -841,19 +840,19 @@ namespace MyManagerCSharp
         public string mExecuteScalar(string sqlQuery, int timeOut)
         {
             System.Data.Common.DbCommand command;
-            command =  mConnection.CreateCommand();
+            command = mConnection.CreateCommand();
 
             command.CommandText = sqlQuery;
-            command.Connection =  mConnection;
+            command.Connection = mConnection;
 
             if (timeOut != -1)
             {
                 command.CommandTimeout = timeOut;
             }
 
-            if ( mTransaction != null)
+            if (mTransaction != null)
             {
-                command.Transaction =  mTransaction;
+                command.Transaction = mTransaction;
             }
 
             return mExecuteScalar(command);
@@ -862,13 +861,17 @@ namespace MyManagerCSharp
         public string mExecuteScalar(System.Data.Common.DbCommand command)
         {
 
-            if ( mConnection.GetType().Name == "OleDbConnection" ||  mConnection.GetType().Name == "OdbcConnection")
+            if (mConnection.GetType().Name == "OleDbConnection" || mConnection.GetType().Name == "OdbcConnection")
             {
                 command.CommandText = mParseSQLforAccessAndPostgreSQL(command.CommandText);
             }
-            else if ( mConnection.GetType().Name == "MySqlConnection")
+            else if (mConnection.GetType().Name == "MySqlConnection")
             {
                 command.CommandText = mParseSQLforMySQL(command.CommandText);
+            }
+            else if (mConnection.GetType().Name == "OracleConnection")
+            {
+                command.CommandText = mParseSQLforOracle(command.CommandText);
             }
 
 
@@ -877,9 +880,9 @@ namespace MyManagerCSharp
             try
             {
 
-                if ( mTransaction != null)
+                if (mTransaction != null)
                 {
-                    command.Transaction =  mTransaction;
+                    command.Transaction = mTransaction;
                 }
 
                 obj = command.ExecuteScalar();
@@ -903,14 +906,14 @@ namespace MyManagerCSharp
         protected int mExecuteNoQueryWithDuplicateKey(string sqlQuery)
         {
             System.Data.Common.DbCommand command;
-            command =  mConnection.CreateCommand();
+            command = mConnection.CreateCommand();
 
             command.CommandText = sqlQuery;
-            command.Connection =  mConnection;
+            command.Connection = mConnection;
 
-            if ( mTransaction != null)
+            if (mTransaction != null)
             {
-                command.Transaction =  mTransaction;
+                command.Transaction = mTransaction;
             }
 
             return mExecuteNoQueryWithDuplicateKey(command);
@@ -981,7 +984,7 @@ namespace MyManagerCSharp
             }
 
 
-            if ( mConnection.GetType().Name == "MySqlConnection")
+            if (mConnection.GetType().Name == "MySqlConnection")
             {
                 return String.Format(" AND ( CAST( {0} AS DATE)  BETWEEN CAST('{1}' AS DATE) AND CAST('{2}' AS DATE) ) ", queryField, dataIniziale.ToString("yyyy-MM-dd"), dataFinale.ToString("yyyy-MM-dd"));
             }
@@ -1010,40 +1013,67 @@ namespace MyManagerCSharp
             switch (days)
             {
                 case Days.Oggi:
-                    strWHERE += String.Format(" AND (DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3}) ", queryField, dataCorrente.Day, dataCorrente.Month, dataCorrente.Year);
+                    //EXTRACT(year FROM date_added)
+                    if (mConnection.GetType().Name == "OracleConnection")
+                    {
+                        strWHERE += String.Format(" AND ( EXTRACT(DAY FROM {0})={1} AND  EXTRACT(MONTH FROM {0})={2} AND  EXTRACT (YEAR FROM {0})={3}) ", queryField, dataCorrente.Day, dataCorrente.Month, dataCorrente.Year);
+                    }
+                    else
+                    {
+                        strWHERE += String.Format(" AND (DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3}) ", queryField, dataCorrente.Day, dataCorrente.Month, dataCorrente.Year);
+                    }
                     break;
                 case Days.Ieri:
                     DateTime ieri = dataCorrente.AddDays(-1);
-                    strWHERE += String.Format(" AND (DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3}) ", queryField, ieri.Day, ieri.Month, ieri.Year);
+                    if (mConnection.GetType().Name == "OracleConnection")
+                    {
+                        strWHERE += String.Format(" AND ( EXTRACT(DAY FROM {0})={1} AND  EXTRACT(MONTH FROM {0})={2} AND  EXTRACT (YEAR FROM {0})={3}) ", queryField, ieri.Day, ieri.Month, ieri.Year);
+                    }
+                    else
+                    {
+                        strWHERE += String.Format(" AND (DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3}) ", queryField, ieri.Day, ieri.Month, ieri.Year);
+                    }
                     break;
                 case Days.Ultimi_7_giorni:
-                    if ( mConnection.GetType().Name == "MySqlConnection")
+                    if (mConnection.GetType().Name == "MySqlConnection")
                     {
                         strWHERE += String.Format(" AND ( {0} Between  date_add(Curdate(), INTERVAL -7 DAY)   AND  Curdate() )", queryField);
+                    }
+                    else if (mConnection.GetType().Name == "OracleConnection")
+                    {
+                        strWHERE += String.Format(" AND (  TRUNC({0})  Between TRUNC(SYSDATE)-7  AND  TRUNC(SYSDATE)  )", queryField);
                     }
                     else
                     {
                         strWHERE += String.Format(" AND (  CONVERT(date, {0} )  Between CONVERT(date, GetDate() - 7)  AND  CONVERT(date, GetDate())  )", queryField);
                     }
                     break;
-                case Days.Ultimi_30_giorni:
-                    if ( mConnection.GetType().Name == "MySqlConnection")
-                    {
-                        strWHERE += String.Format(" AND ( {0} Between  date_add(Curdate(), INTERVAL -30 DAY)   AND  Curdate() )", queryField);
-                    }
-                    else
-                    {
-                        strWHERE += String.Format(" AND ( CONVERT(date, {0} )  Between CONVERT(date, GetDate() - 30)  AND  CONVERT(date, GetDate()) )", queryField);
-                    }
-                    break;
                 case Days.Ultimi_15_giorni:
-                    if ( mConnection.GetType().Name == "MySqlConnection")
+                    if (mConnection.GetType().Name == "MySqlConnection")
                     {
                         strWHERE += String.Format(" AND ( {0} Between  date_add(Curdate(), INTERVAL -15 DAY)   AND  Curdate() )", queryField);
+                    }
+                    else if (mConnection.GetType().Name == "OracleConnection")
+                    {
+                        strWHERE += String.Format(" AND (  TRUNC({0})  Between TRUNC(SYSDATE)-15  AND  TRUNC(SYSDATE)  )", queryField);
                     }
                     else
                     {
                         strWHERE += String.Format(" AND ( CONVERT(date, {0} ) Between  CONVERT(date, GetDate() - 15)  AND  CONVERT(date, GetDate()) )", queryField);
+                    }
+                    break;
+                case Days.Ultimi_30_giorni:
+                    if (mConnection.GetType().Name == "MySqlConnection")
+                    {
+                        strWHERE += String.Format(" AND ( {0} Between  date_add(Curdate(), INTERVAL -30 DAY)   AND  Curdate() )", queryField);
+                    }
+                    else if (mConnection.GetType().Name == "OracleConnection")
+                    {
+                        strWHERE += String.Format(" AND (  TRUNC({0})  Between TRUNC(SYSDATE)-30  AND  TRUNC(SYSDATE)  )", queryField);
+                    }
+                    else
+                    {
+                        strWHERE += String.Format(" AND ( CONVERT(date, {0} )  Between CONVERT(date, GetDate() - 30)  AND  CONVERT(date, GetDate()) )", queryField);
                     }
                     break;
                 case Days.Settimana_corrente:
