@@ -190,6 +190,8 @@
     <Compile Include="SettingsManager.cs" />
     <Compile Include="StringManager.cs" />
     <Compile Include="Ticket\TicketManager.cs" />
+    <Compile Include="Web\MyDataColumn.cs" />
+    <Compile Include="Web\MyDataGrid.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
