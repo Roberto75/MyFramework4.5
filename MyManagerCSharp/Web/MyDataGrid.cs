@@ -71,25 +71,50 @@ namespace My.Shared.Web
             {
                 sb.Append("<tr>");
 
-                //Type ty = row.GetType();
-                //PropertyInfo[] properties;
-                //properties = ty.GetProperties();
-                //foreach (PropertyInfo property in properties)
+                Type ty = row.GetType();
+                PropertyInfo[] properties;
+                properties = ty.GetProperties();
+                foreach (PropertyInfo property in properties)
+                {
+                    Debug.WriteLine(property.Name + " " + property.PropertyType);
+                }
+
+
+                //MemberInfo[] memberArray = ty.GetMembers();
+                //foreach (MemberInfo member in memberArray)
                 //{
-                //    Debug.WriteLine(property.Name + " " + property.PropertyType);
+                //    Debug.WriteLine(member.Name + " " + member.DeclaringType);
                 //}
+
 
 
                 foreach (MyDataColumn col in Columns)
                 {
-                    PropertyInfo property = row.GetType().GetProperty(col.PropertyName);
 
-                    if (property == null)
+                    object value = null;
+                    bool esito;
+                    if (col.PropertyName.IndexOf(".") == -1)
+                    {
+                        esito = TryGetMember(row, col.PropertyName, out value);
+                    }
+                    else
+                    {
+                        esito = TryGetComplexMember(row, col.PropertyName, out value);
+                    }
+
+
+                    //PropertyInfo property = row.GetType().GetProperty(col.PropertyName);
+
+                    //property.co
+
+                    if (esito == false)
                     {
                         throw new ApplicationException("ColummName non valido: " + col.PropertyName);
                     }
 
-                    var value = property.GetValue(row, null);
+                    Debug.WriteLine(col.PropertyName + ": " + value.ToString());
+
+                    //var value = property.GetValue(row, null);
 
 
 
@@ -104,13 +129,6 @@ namespace My.Shared.Web
             sb.Append("</tbody>");
 
 
-
-
-
-
-
-
-
             sb.Append("<tfoot class=\"ui-bar-b\" >");
             sb.Append("<tr>");
             sb.Append("<td colspan=\"" + Columns.Count() + "\">");
@@ -123,6 +141,37 @@ namespace My.Shared.Web
             sb.Append("</table>");
 
             return new HtmlString(sb.ToString());
+        }
+
+
+
+        private static bool TryGetComplexMember(object obj, string name, out object result)
+        {
+            result = null;
+
+            string[] names = name.Split('.');
+            for (int i = 0; i < names.Length; i++)
+            {
+                if ((obj == null) || !TryGetMember(obj, names[i], out result))
+                {
+                    result = null;
+                    return false;
+                }
+                obj = result;
+            }
+            return true;
+        }
+
+        private static bool TryGetMember(object obj, string name, out object result)
+        {
+            PropertyInfo property = obj.GetType().GetProperty(name);
+            if ((property != null) && (property.GetIndexParameters().Length == 0))
+            {
+                result = property.GetValue(obj, null);
+                return true;
+            }
+            result = null;
+            return false;
         }
 
     }
