@@ -19,18 +19,24 @@ namespace My.Shared.Web
 
         public MyDataGrid(object model)
         {
-
             page = (My.Shared.Models.Paged)model;
+        }
+
+        public void SetButtonDetails(string href)
+        {
+            //<a class="ui-btn-inline ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all" title="Detail" href="@Url.Action("Details", "Segnalazioni", new { id = item.id })">Info</a>
         }
 
         public HtmlString GetHtml()
         {
+            string header_footer = "ui-bar-b";
+
             StringBuilder sb = new StringBuilder();
 
             sb.Append("<table class=\"MyTable ui-responsive\" data-role=\"table\" data-mode=\"reflow\" >");
-
             sb.Append("<thead>");
-            sb.Append("<tr class=\"ui-bar-c\">");
+            sb.Append(String.Format("<tr class=\"{0}\">", header_footer));
+
             foreach (MyDataColumn col in Columns)
             {
                 sb.Append("<th>");
@@ -91,28 +97,49 @@ namespace My.Shared.Web
                 foreach (MyDataColumn col in Columns)
                 {
 
-                    object value = null;
-                    bool esito;
-                    if (col.PropertyName.IndexOf(".") == -1)
+                    if (col.Button == null)
                     {
-                        esito = TryGetMember(row, col.PropertyName, out value);
+                        object value = null;
+                        bool esito;
+                        if (col.PropertyName.IndexOf(".") == -1)
+                        {
+                            esito = TryGetMember(row, col.PropertyName, out value);
+                        }
+                        else
+                        {
+                            esito = TryGetComplexMember(row, col.PropertyName, out value);
+                        }
+
+                        //PropertyInfo property = row.GetType().GetProperty(col.PropertyName);
+
+                        //property.co
+
+                        if (esito == false)
+                        {
+                            throw new ApplicationException("ColummName non valido: " + col.PropertyName);
+                        }
+
+                        Debug.WriteLine(col.PropertyName + ": " + value.ToString());
+
+
+                        if (col.Format == null)
+                        {
+                            sb.Append("<td>" + value.ToString() + "</td>");
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Format: ");
+                            var result = col.Format(value);
+                            sb.Append("<td>" + result.ToString() + "</td>");
+                        }
+
                     }
                     else
                     {
-                        esito = TryGetComplexMember(row, col.PropertyName, out value);
+                        var url = col.Format(row);
+                        sb.Append(String.Format("<td><a class=\"ui-btn-inline ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all\" title=\"{0}\" href=\"{1}\">{0}</a></td>", col.Header, url.ToString()));
                     }
 
-
-                    //PropertyInfo property = row.GetType().GetProperty(col.PropertyName);
-
-                    //property.co
-
-                    if (esito == false)
-                    {
-                        throw new ApplicationException("ColummName non valido: " + col.PropertyName);
-                    }
-
-                    Debug.WriteLine(col.PropertyName + ": " + value.ToString());
 
                     //var value = property.GetValue(row, null);
 
@@ -121,7 +148,7 @@ namespace My.Shared.Web
                     //     var binder = Binder.GetMember(CSharpBinderFlags.None, "", typeof(ty), new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) });
 
 
-                    sb.Append("<td>" + value.ToString() + "</td>");
+
                 }
 
                 sb.Append("</tr>");
@@ -129,9 +156,9 @@ namespace My.Shared.Web
             sb.Append("</tbody>");
 
 
-            sb.Append("<tfoot class=\"ui-bar-b\" >");
+            sb.Append(String.Format("<tfoot class=\"{0}\" >", header_footer));
             sb.Append("<tr>");
-            sb.Append("<td colspan=\"" + Columns.Count() + "\">");
+            sb.Append("<td colspan=\"" + (Columns.Count() - 1) + "\">");
             sb.Append(String.Format("Page {0:N0} of {1:N0}", page.PageNumber, page.TotalPages));
             sb.Append("<td>");
             sb.Append("</tr>");
@@ -142,8 +169,6 @@ namespace My.Shared.Web
 
             return new HtmlString(sb.ToString());
         }
-
-
 
         private static bool TryGetComplexMember(object obj, string name, out object result)
         {
