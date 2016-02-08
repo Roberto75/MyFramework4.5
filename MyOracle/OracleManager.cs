@@ -142,8 +142,6 @@ namespace My.Shared.db
             return Convert.ToInt64(command.ExecuteScalar());
         }
 
-
-
         protected int mExecuteNonQuery(string strSQL)
         {
             Oracle.DataAccess.Client.OracleCommand command = new Oracle.DataAccess.Client.OracleCommand(strSQL, mConnection);
@@ -160,6 +158,98 @@ namespace My.Shared.db
 
             return command.ExecuteNonQuery();
         }
+
+
+
+        public DataTable mFillDataTable(string sql)
+        {
+            return mFillDataTable(sql, -1);
+        }
+
+        public DataTable mFillDataTable(string sql, int timeOut)
+        {
+            DataSet dataSet;
+            dataSet = new DataSet();
+
+            mFillDataSet(sql, dataSet, null, timeOut);
+
+            return dataSet.Tables[0];
+        }
+
+        protected DataSet mFillDataSet(string sqlQuery, string dataSetName, string tableName, int timeOut)
+        {
+            DataSet dataSet;
+
+            if (string.IsNullOrEmpty(dataSetName))
+            {
+                dataSet = new DataSet();
+            }
+            else
+            {
+                dataSet = new DataSet(dataSetName);
+            }
+
+            mFillDataSet(sqlQuery, dataSet, tableName, timeOut);
+
+            return dataSet;
+        }
+
+        protected void mFillDataSet(string sqlQuery, DataSet ds, string tableName, int timeOut)
+        {
+            Oracle.DataAccess.Client.OracleCommand command = new Oracle.DataAccess.Client.OracleCommand();
+            command.Connection = mConnection;
+            command.CommandText = sqlQuery;
+            mFillDataSet(command, ds, tableName, timeOut);
+        }
+
+
+
+        protected void mFillDataSet(Oracle.DataAccess.Client.OracleCommand command, DataSet ds, string tableName, int timeOut)
+        {
+            if (mTransaction != null)
+            {
+                command.Transaction = mTransaction;
+            }
+
+            Oracle.DataAccess.Client.OracleDataAdapter objAdap = null;
+            try
+            {
+                if (timeOut != -1)
+                {
+                    command.CommandTimeout = timeOut;
+                }
+
+                objAdap = new Oracle.DataAccess.Client.OracleDataAdapter();
+                objAdap.SelectCommand = command;
+
+
+                if (string.IsNullOrEmpty(tableName))
+                {
+                    objAdap.Fill(ds);
+                }
+                else
+                {
+                    objAdap.Fill(ds, tableName);
+                }
+
+            }
+            finally
+            {
+
+                if (objAdap != null)
+                {
+                    objAdap.Dispose();
+                    objAdap = null;
+                }
+
+                if (command != null)
+                {
+                    command.Dispose();
+                    command = null;
+                }
+            }
+        }
+
 
 #endif
 
