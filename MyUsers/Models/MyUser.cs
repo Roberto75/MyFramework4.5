@@ -110,9 +110,15 @@ namespace MyUsers.Models
             }
 
 
-
-
-            customerId = (row["customer_id"] is DBNull) ? -1 : long.Parse(row["customer_id"].ToString());
+            if (row["customer_id"] is DBNull)
+            {
+                customerId = null;
+            }
+            else
+            {
+                customerId = long.Parse(row["customer_id"].ToString());
+            }
+                                  
 
             if (row["is_enabled"] is DBNull)
             {

@@ -1,7 +1,7 @@
 ﻿//Direttive di compilazione per le librerire esterne
 
 //#define MySQL
-#define Oracle
+//#define Oracle
 //#Const SqlServerCe = False
 //#Const PostgreSQL = False
 //#Const Oracle = False
@@ -26,8 +26,8 @@ namespace MyManagerCSharp
             Oggi,
             Ieri,
             Settimana_corrente,
-            Mese_corrente,
             Settimana_precedente,
+            Mese_corrente,
             Mese_precedente,
             Ultimi_7_giorni,
             Ultimi_15_giorni,
@@ -998,7 +998,7 @@ namespace MyManagerCSharp
 
         public string getWhereConditionByDate(string queryField, Days? days)
         {
-            if (days == null)
+            if (days == null || days == Days.Tutti )
             {
                 return "";
             }

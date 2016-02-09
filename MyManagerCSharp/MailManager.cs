@@ -477,28 +477,42 @@ namespace MyManagerCSharp
 
             //*** BODY ***
             temp = "<html><body>";
+                       
 
-            if (!String.IsNullOrEmpty(ex.Message))
+            Exception t = ex;
+            while (t != null)
             {
-                temp += "<h2>Exception  </h2> " + ex.Message;
-            }
-
-            if (ex.InnerException != null)
-            {
-                temp += "<br /> <br /> <h2>Inner Exception</h2> " + ex.InnerException.Message;
-
-
-                if (ex.InnerException.StackTrace != null)
+                if (!String.IsNullOrEmpty(ex.Message))
                 {
-                    temp += "<br /> <br /> <h2>Inner Exception - Stack Trace</h2> " + ex.InnerException.StackTrace.ToString();
+                    temp += "<h2>Exception</h2> " + ex.Message + "<br />";
                 }
+                t = t.InnerException;
             }
+
+
+
+            //if (ex.InnerException != null)
+            //{
+            //    temp += "<br /> <br /> <h2>Inner Exception</h2> " + ex.InnerException.Message;
+
+
+            //    if (ex.InnerException.StackTrace != null)
+            //    {
+            //        temp += "<br /> <br /> <h2>Inner Exception - Stack Trace</h2> " + ex.InnerException.StackTrace.ToString();
+            //    }
+            //}
+
+
+
 
 
             if (ex.StackTrace != null)
             {
                 temp += "<br /> <br /><h2>Stack Trace</h2> " + ex.StackTrace.ToString();
             }
+
+
+
 
 
             if (!String.IsNullOrEmpty(messaggio))

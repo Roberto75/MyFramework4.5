@@ -9,6 +9,7 @@ namespace MyManagerCSharp
     public class MySessionData
     {
         public string Login { get; set; }
+        public long? CustomerId { get; set; }
 
         private System.Net.Mail.MailAddress _email;
         public string Email

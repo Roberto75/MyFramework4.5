@@ -124,5 +124,27 @@ namespace MyUsers
 
 
 
+        public List<Models.MyUser> getUsers(long customerId)
+        {
+            mStrSQL = UserManager._sqlElencoUtenti + " from utente as t1  WHERE t1.customer_id = " + customerId + " order by t1.my_login";
+            mDt = mFillDataTable(mStrSQL);
+
+
+            List<Models.MyUser> listaUtenti = new List<Models.MyUser>();
+            Models.MyUser u;
+
+            foreach (DataRow row in mDt.Rows)
+            {
+                u = new Models.MyUser(row, Models.MyUser.SelectFileds.Lista);
+                //u = new Models.MyUser(row);
+                listaUtenti.Add(u);
+            }
+
+            return listaUtenti;
+
+        }
+
+
+
     }
 }

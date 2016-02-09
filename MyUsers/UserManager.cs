@@ -445,6 +445,20 @@ namespace MyUsers
         }
 
 
+        public long? getCustomerId(long userId)
+        {
+            mStrSQL = "SELECT CUSTOMER_ID FROM UTENTE WHERE USER_ID = " + userId;
+            string temp = mExecuteScalar(mStrSQL);
+
+            if (String.IsNullOrEmpty(temp))
+            {
+                return null;
+            }
+
+            return long.Parse(temp);
+        }
+
+
         public long insertActiveDirectorySID(System.Security.Principal.SecurityIdentifier sid, string login)
         {
             Models.MyUser user = new Models.MyUser();
@@ -691,19 +705,48 @@ namespace MyUsers
 
         public bool delete(long userId)
         {
-            mStrSQL = "DELETE FROM UtenteGruppo WHERE user_id = " + userId;
-            mExecuteNoQuery(mStrSQL);
+            return delete(userId, false);
+        }
+
+        public bool delete(long userId, bool test_mode)
+        {
+
+            mTransactionBegin();
+            int esito = -1;
+            try
+            {
+                mStrSQL = "DELETE FROM UtenteGruppo WHERE user_id = " + userId;
+                mExecuteNoQuery(mStrSQL);
 
 
-            mStrSQL = "DELETE FROM UtenteProfilo WHERE user_id = " + userId;
-            mExecuteNoQuery(mStrSQL);
+                mStrSQL = "DELETE FROM UtenteProfilo WHERE user_id = " + userId;
+                mExecuteNoQuery(mStrSQL);
 
-            //Cancello l'integrità referenziale sull DB tra la tabella dei Logs e la tabella Utente in modo da poter conservare i log degli utenti eliminati
-            //mStrSQL = "DELETE FROM MyLogUser WHERE user_id = " + userId;
-            //mExecuteNoQuery(mStrSQL);
+                //Cancello l'integrità referenziale sull DB tra la tabella dei Logs e la tabella Utente in modo da poter conservare i log degli utenti eliminati
+                //mStrSQL = "DELETE FROM MyLogUser WHERE user_id = " + userId;
+                //mExecuteNoQuery(mStrSQL);
 
-            mStrSQL = "DELETE FROM UTENTE WHERE user_id = " + userId;
-            return mExecuteNoQuery(mStrSQL) == 1;
+                mStrSQL = "DELETE FROM UTENTE WHERE user_id = " + userId;
+
+                esito = mExecuteNoQuery(mStrSQL);
+
+                if (test_mode)
+                {
+                    mTransactionRollback();
+                }
+                else
+                {
+                    mTransactionCommit();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                mTransactionRollback();
+                throw ex;
+            }
+
+            return esito == 1;
         }
 
 
@@ -777,11 +820,18 @@ namespace MyUsers
         }
 
 
+
         //public bool setGroupsWithoutAdministrators(Models.MyUser u)
         //{
         //    GroupManager gManager = new GroupManager(this.mConnection);
         //    return gManager.setGroups(u, true);
         //}
+
+        public bool setCustomer(Models.MyUser u)
+        {
+            CustomerManager cManager = new CustomerManager(this.mConnection);
+            return cManager.set(u);
+        }
 
 
         public bool setGroups(Models.MyUser u)
@@ -1165,6 +1215,26 @@ namespace MyUsers
             //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.UpdatePassword)
             return true;
         }
+
+
+        public bool updateCustomerId(long userId, long? customerId)
+        {
+            if (customerId == null)
+            {
+                mStrSQL = "UPDATE UTENTE SET CUSTOMER_ID = NULL , DATE_MODIFIED = GetDate()  WHERE USER_ID=" + userId;
+            }
+            else
+            {
+                mStrSQL = "UPDATE UTENTE SET CUSTOMER_ID = " + customerId + ", DATE_MODIFIED = GetDate()  WHERE USER_ID=" + userId;
+            }
+
+            mExecuteNoQuery(mStrSQL);
+
+            // Dim managerLogUser As New MyManager.LogUserManager(Me.mConnection)
+            //managerLogUser.insert(userId, MyManager.LogUserManager.LogType.UpdatePassword)
+            return true;
+        }
+
 
 
         public List<MyManagerCSharp.Models.MyItem> getAutoCompleteLogin(string valore)
