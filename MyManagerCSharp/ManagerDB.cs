@@ -828,6 +828,17 @@ namespace MyManagerCSharp
             //'  End If
             return mTransaction;
         }
+
+
+        public void mSetTransaction(System.Data.Common.DbTransaction transaction)
+        {
+            //'26/01/2012 commento
+            //' If mTransaction Is Nothing Then
+            //' Throw New ManagerException("Transazione NON inizializzata")
+            //'xit Function
+            //'  End If
+            mTransaction = transaction;
+        }
         #endregion
 
 
