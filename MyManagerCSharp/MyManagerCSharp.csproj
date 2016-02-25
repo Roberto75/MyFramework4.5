@@ -144,6 +144,7 @@
     <Compile Include="FileManager.cs" />
     <Compile Include="GoogleChart\GoogleChartManager.cs" />
     <Compile Include="JavaManager.cs" />
+    <Compile Include="Log\LogEntity.cs" />
     <Compile Include="Log\LogManager.cs" />
     <Compile Include="Log\LogUserManager.cs" />
     <Compile Include="MailManager.cs" />
@@ -215,6 +216,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SQL\Create-Alert.sql" />
+    <Content Include="SQL\Create-LogEntity.sql" />
     <Content Include="SQL\Create-Log.sql" />
     <Content Include="SQL\Create-LogUser.sql" />
     <Content Include="SQL\Create-Ticket.sql" />
