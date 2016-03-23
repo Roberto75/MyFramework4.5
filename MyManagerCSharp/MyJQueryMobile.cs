@@ -135,13 +135,9 @@ namespace MyManagerCSharp
             string id = name.Replace(".", "_");
 
             StringBuilder unobtrusiveValidation = new StringBuilder();
-
-            StringBuilder temp = new StringBuilder();
-            if (!String.IsNullOrEmpty(displayName))
-            {
-                temp.Append(String.Format("<label for=\"{0}\">{1}</label>", id, displayName));
-                temp.Append(Environment.NewLine);
-            }
+            
+            StringBuilder sb = new StringBuilder();
+            m_label(sb, id, displayName, isRequired);
 
             string tempValue;
             if (value == null || value == DateTime.MinValue)
@@ -155,16 +151,18 @@ namespace MyManagerCSharp
 
 
             //temp.Append("<input type=\"text\" ");
-            temp.Append("<input type=\"date\" ");
+            sb.Append("<input type=\"date\" ");
             if (isRequired)
             {
-                m_isRequired(temp, unobtrusiveValidation, name, displayName);
+                m_isRequired(sb, unobtrusiveValidation, name, displayName);
             }
+
+  
            // temp.Append(String.Format("data-role=\"date\" id=\"{0}\" name=\"{1}\" value=\"{2}\"  data-inline=\"true\"  data-mini=\"{3}\" />", id, name, tempValue, DATA_MINI));
-            temp.Append(String.Format("id=\"{0}\" name=\"{1}\" value=\"{2}\"  data-inline=\"true\"  data-mini=\"{3}\"  data-clear-btn=\"true\" />", id, name, tempValue, DATA_MINI));
-            temp.Append(Environment.NewLine);
-            temp.Append(unobtrusiveValidation);
-            return new HtmlString(temp.ToString());
+            sb.Append(String.Format("id=\"{0}\" name=\"{1}\" value=\"{2}\"  data-inline=\"true\"  data-mini=\"{3}\"  data-clear-btn=\"true\" />", id, name, tempValue, DATA_MINI));
+            sb.Append(Environment.NewLine);
+            sb.Append(unobtrusiveValidation);
+            return new HtmlString(sb.ToString());
         }
 
         public static HtmlString MyInputType(string name, string displayName, decimal? value, bool isRequired)
@@ -173,16 +171,8 @@ namespace MyManagerCSharp
 
             StringBuilder unobtrusiveValidation = new StringBuilder();
 
-            StringBuilder temp = new StringBuilder();
-            if (!String.IsNullOrEmpty(displayName))
-            {
-                temp.Append(String.Format("<label for=\"{0}\">{1}</label>", id, displayName));
-                temp.Append(Environment.NewLine);
-            }
-            else
-            {
-                displayName = name;
-            }
+            StringBuilder sb = new StringBuilder();
+            m_label(sb, id, displayName, isRequired);
 
             string tempValue;
             if (value == null)
@@ -195,15 +185,15 @@ namespace MyManagerCSharp
             }
 
 
-            temp.Append("<input type=\"number\" ");
+            sb.Append("<input type=\"number\" ");
             if (isRequired)
             {
-                m_isRequired(temp, unobtrusiveValidation, name, displayName);
+                m_isRequired(sb, unobtrusiveValidation, name, displayName);
             }
-            temp.Append(String.Format("step=\"0.1\" min=\"0\" id=\"{0}\" name=\"{1}\" value=\"{2}\" data-mini=\"{3}\" />", id, name, tempValue, DATA_MINI));
-            temp.Append(Environment.NewLine);
-            temp.Append(unobtrusiveValidation);
-            return new HtmlString(temp.ToString());
+            sb.Append(String.Format("step=\"0.1\" min=\"0\" id=\"{0}\" name=\"{1}\" value=\"{2}\" data-mini=\"{3}\" data-clear-btn=\"true\" />", id, name, tempValue, DATA_MINI));
+            sb.Append(Environment.NewLine);
+            sb.Append(unobtrusiveValidation);
+            return new HtmlString(sb.ToString());
         }
 
         public static HtmlString MyInputType(string name, string displayName, float? value, bool isRequired)
@@ -212,12 +202,8 @@ namespace MyManagerCSharp
 
             StringBuilder unobtrusiveValidation = new StringBuilder();
 
-            StringBuilder temp = new StringBuilder();
-            if (!String.IsNullOrEmpty(displayName))
-            {
-                temp.Append(String.Format("<label for=\"{0}\">{1}</label>", id, displayName));
-                temp.Append(Environment.NewLine);
-            }
+            StringBuilder sb = new StringBuilder();
+            m_label(sb, id, displayName, isRequired);
 
 
             string tempValue;
@@ -230,16 +216,16 @@ namespace MyManagerCSharp
                 tempValue = String.Format("{0:N2}", value);
             }
 
-            temp.Append("<input type=\"number\" ");
+            sb.Append("<input type=\"number\" ");
             if (isRequired)
             {
-                m_isRequired(temp, unobtrusiveValidation, name, displayName);
+                m_isRequired(sb, unobtrusiveValidation, name, displayName);
             }
-            temp.Append(String.Format("step=\"0.1\" min=\"0\" id=\"{0}\" name=\"{1}\" value=\"{2}\" data-mini=\"{3}\" />", id, name, tempValue, DATA_MINI));
-            temp.Append(Environment.NewLine);
-            temp.Append(unobtrusiveValidation);
+            sb.Append(String.Format("step=\"0.1\" min=\"0\" id=\"{0}\" name=\"{1}\" value=\"{2}\" data-mini=\"{3}\" />", id, name, tempValue, DATA_MINI));
+            sb.Append(Environment.NewLine);
+            sb.Append(unobtrusiveValidation);
 
-            return new HtmlString(temp.ToString());
+            return new HtmlString(sb.ToString());
         }
 
         public static HtmlString MyInputType(string name, string displayName, int? value, bool isRequired)
@@ -248,13 +234,8 @@ namespace MyManagerCSharp
 
             StringBuilder unobtrusiveValidation = new StringBuilder();
 
-
-            StringBuilder temp = new StringBuilder();
-            if (!String.IsNullOrEmpty(displayName))
-            {
-                temp.Append(String.Format("<label for=\"{0}\">{1}</label>", id, displayName));
-                temp.Append(Environment.NewLine);
-            }
+            StringBuilder sb = new StringBuilder();
+            m_label(sb, id, displayName, isRequired);
 
             string tempValue;
             if (value == null)
@@ -267,16 +248,16 @@ namespace MyManagerCSharp
             }
 
 
-            temp.Append("<input type=\"number\" ");
+            sb.Append("<input type=\"number\" ");
             if (isRequired)
             {
-                m_isRequired(temp, unobtrusiveValidation, name, displayName);
+                m_isRequired(sb, unobtrusiveValidation, name, displayName);
             }
-            temp.Append(String.Format("step=\"1\" min=\"0\" id=\"{0}\" name=\"{1}\" value=\"{2}\" data-mini=\"{3}\" />", id, name, tempValue, DATA_MINI));
-            temp.Append(Environment.NewLine);
-            temp.Append(unobtrusiveValidation);
+            sb.Append(String.Format("step=\"1\" min=\"0\" id=\"{0}\" name=\"{1}\" value=\"{2}\" data-mini=\"{3}\" />", id, name, tempValue, DATA_MINI));
+            sb.Append(Environment.NewLine);
+            sb.Append(unobtrusiveValidation);
 
-            return new HtmlString(temp.ToString());
+            return new HtmlString(sb.ToString());
         }
 
         public static HtmlString MyInputType(string name, string displayName, string value, bool isRequired)
@@ -285,27 +266,20 @@ namespace MyManagerCSharp
 
             StringBuilder unobtrusiveValidation = new StringBuilder();
 
-            StringBuilder temp = new StringBuilder();
-            if (!String.IsNullOrEmpty(displayName))
-            {
-                temp.Append(String.Format("<label for=\"{0}\">{1}</label>", id, displayName));
-                temp.Append(Environment.NewLine);
-            }
-            else
-            {
-                displayName = name;
-            }
+            StringBuilder sb = new StringBuilder();
+            m_label(sb, id, displayName, isRequired);
 
-            temp.Append("<input type=\"text\" ");
+
+            sb.Append("<input type=\"text\" ");
             if (isRequired)
             {
-                m_isRequired(temp, unobtrusiveValidation, name, displayName);
+                m_isRequired(sb, unobtrusiveValidation, name, displayName);
             }
-            temp.Append(String.Format(" id=\"{0}\" name=\"{1}\" value=\"{2}\" data-clear-btn=\"true\" data-inline=\"true\" data-mini=\"{3}\" />", id, name, value, DATA_MINI));
-            temp.Append(Environment.NewLine);
-            temp.Append(unobtrusiveValidation);
+            sb.Append(String.Format(" id=\"{0}\" name=\"{1}\" value=\"{2}\" data-clear-btn=\"true\" data-inline=\"true\" data-mini=\"{3}\" />", id, name, value, DATA_MINI));
+            sb.Append(Environment.NewLine);
+            sb.Append(unobtrusiveValidation);
 
-            return new HtmlString(temp.ToString());
+            return new HtmlString(sb.ToString());
         }
 
 
@@ -313,8 +287,9 @@ namespace MyManagerCSharp
         {
             if (UNOBTRUSIVE_VALIDATION)
             {
-                input.Append(String.Format("data-val=\"true\" data-val-required=\"Il campo {0} è obbligatorio.\" ", displayName.Replace("*", "")));
-                validation.Append(String.Format("<span class=\"field-validation\"  data-valmsg-for=\"{0}\" data-valmsg-replace=\"true\"></span>", name));
+                //input.Append(String.Format("data-val=\"true\" data-val-required=\"Il campo {0} è obbligatorio.\" ", displayName.Replace("*", "")));
+                input.Append(String.Format("data-val=\"true\" data-val-required=\"Il campo è obbligatorio.\" "));
+                validation.Append(String.Format("<div class=\"field-validation\"  data-valmsg-for=\"{0}\" data-valmsg-replace=\"true\"></div>", name));
                 validation.Append(Environment.NewLine);
             }
             else
@@ -323,6 +298,25 @@ namespace MyManagerCSharp
             }
 
         }
+
+        private static void m_label(StringBuilder sb, string id, string displayName, bool isRequired)
+        {
+            if (!String.IsNullOrEmpty(displayName))
+            {
+
+                if (isRequired)
+                {
+                    sb.Append(String.Format("<label for=\"{0}\">{1} *</label>", id, displayName));
+                }
+                else
+                {
+                    sb.Append(String.Format("<label for=\"{0}\">{1}</label>", id, displayName));
+                }
+                
+                sb.Append(Environment.NewLine);
+            }
+        }
+
 
 
         #endregion
