@@ -154,12 +154,14 @@ namespace MyManagerCSharp
             }
 
 
-            temp.Append("<input type=\"text\" ");
+            //temp.Append("<input type=\"text\" ");
+            temp.Append("<input type=\"date\" ");
             if (isRequired)
             {
                 m_isRequired(temp, unobtrusiveValidation, name, displayName);
             }
-            temp.Append(String.Format("data-role=\"date\" id=\"{0}\" name=\"{1}\" value=\"{2}\"  data-inline=\"true\"  data-mini=\"{3}\" />", id, name, tempValue, DATA_MINI));
+           // temp.Append(String.Format("data-role=\"date\" id=\"{0}\" name=\"{1}\" value=\"{2}\"  data-inline=\"true\"  data-mini=\"{3}\" />", id, name, tempValue, DATA_MINI));
+            temp.Append(String.Format("id=\"{0}\" name=\"{1}\" value=\"{2}\"  data-inline=\"true\"  data-mini=\"{3}\"  data-clear-btn=\"true\" />", id, name, tempValue, DATA_MINI));
             temp.Append(Environment.NewLine);
             temp.Append(unobtrusiveValidation);
             return new HtmlString(temp.ToString());
@@ -312,7 +314,7 @@ namespace MyManagerCSharp
             if (UNOBTRUSIVE_VALIDATION)
             {
                 input.Append(String.Format("data-val=\"true\" data-val-required=\"Il campo {0} è obbligatorio.\" ", displayName.Replace("*", "")));
-                validation.Append(String.Format("<br /><span class=\"field-validation-valid\"  data-valmsg-for=\"{0}\" data-valmsg-replace=\"true\"></span>", name));
+                validation.Append(String.Format("<span class=\"field-validation\"  data-valmsg-for=\"{0}\" data-valmsg-replace=\"true\"></span>", name));
                 validation.Append(Environment.NewLine);
             }
             else
