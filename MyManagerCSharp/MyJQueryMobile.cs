@@ -146,7 +146,8 @@ namespace MyManagerCSharp
             }
             else
             {
-                tempValue = value.Value.ToShortDateString();
+                //tempValue = value.Value.ToShortDateString();
+                tempValue = value.Value.ToString("yyyy-MM-dd");
             }
 
 
