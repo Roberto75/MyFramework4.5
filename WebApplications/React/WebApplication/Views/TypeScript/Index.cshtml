@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+
+<h2>Index</h2>
+
+
+
+@section scripts{
+    <script type="text/javascript" src="@Url.Content("~/Content/Scripts/Greeter.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/Scripts/Clock.js")"></script>
+
+
+
+    <script type="text/javascript">
+        
+        $(window).load(function () {
+            console.log("window load!");
+        });
+
+        $(document).ready(function () {
+
+            console.log("document ready!");
+
+            var greeter = new Greeter("Hello, world!");
+            document.getElementById("content").innerHTML = greeter.getHTML();
+
+            var el = document.getElementById("orologio");
+            //var el = $("#clock");
+
+            if (el != null) {
+                var clock = new Clock(el);
+                clock.start();
+            } else {
+                console.log("el is null");
+            }
+
+
+
+        });
+
+
+    </script>
+
+}

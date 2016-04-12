@@ -26,5 +26,10 @@ namespace My.React.WebApplication.Controllers
         }
 
 
+        public ActionResult TypeScript()
+        {
+            return View();
+        }
+
     }
 }

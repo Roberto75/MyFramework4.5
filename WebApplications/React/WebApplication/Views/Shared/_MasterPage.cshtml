@@ -7,10 +7,17 @@
     <script src="https://fb.me/react-15.0.0.js"></script>
     <script src="https://fb.me/react-dom-15.0.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+
+    <script src="@Url.Content("~/Scripts/jquery-2.2.2.min.js")"></script>
 </head>
+
 <body>
-    <div>
+    <div id="orologio" style="float:right;"></div>
+    <div id="content">
         @RenderBody()
     </div>
+
+
+    @RenderSection("scripts", required: false)
 </body>
 </html>
