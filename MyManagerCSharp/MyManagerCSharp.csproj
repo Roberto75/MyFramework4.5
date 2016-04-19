@@ -191,6 +191,8 @@
     <Compile Include="SettingsManager.cs" />
     <Compile Include="StringManager.cs" />
     <Compile Include="Ticket\TicketManager.cs" />
+    <Compile Include="Web\Bootstrap\MyBootstrap.cs" />
+    <Compile Include="Web\Bootstrap\MyDataGrid.cs" />
     <Compile Include="Web\MyDataColumn.cs" />
     <Compile Include="Web\MyDataGrid.cs" />
   </ItemGroup>
