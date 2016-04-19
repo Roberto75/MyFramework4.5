@@ -314,7 +314,7 @@ namespace MyUsers
             //Debug.WriteLine(String.Format("psw:{0} MD5:{1} USER:{2} ", myPassword.Trim(), passwordMD5, mDt.Rows[0]["my_password"]));
 
 
-            if (!passwordMD5.Equals(mDt.Rows[0]["my_password"]))
+            if (!String.Equals(passwordMD5, mDt.Rows[0]["my_password"].ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 mStrSQL = "update UTENTE set login_failure=login_failure +1 where user_id=  " + userId;
                 mExecuteNoQuery(mStrSQL);
