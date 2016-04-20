@@ -2,15 +2,15 @@
     Inherits MyFormsLibrary.FormBaseDetail_3
 
     Private _manager As MyApplicationManager
-    Private _excel As MyManager.ExcelManager
+    'Private _excel As MyManager.ExcelManager
 
-	
-	Public Sub New()
+
+    Public Sub New()
 		Me.InitializeComponent()		
 	End Sub
 
     Public Overrides Function _OnTabClosing() As Boolean
-        _excel._closeExcel()
+        '    _excel._closeExcel()
         Return MyBase._OnTabClosing()
     End Function
 
@@ -21,17 +21,17 @@
         dt = _manager.mFillDataTable("Select * from employee")
 
 
-        If _excel Is Nothing Then
-            _excel = New MyManager.ExcelManager(CType(Me.Owner, FormMain).MyConnection)
-            _excel._setProgressBar(CType(Me.Owner, FormMain).MyProgressBar)
-            _excel._openExcel()
-        End If
+        'If _excel Is Nothing Then
+        '    _excel = New MyManager.ExcelManager(CType(Me.Owner, FormMain).MyConnection)
+        '    _excel._setProgressBar(CType(Me.Owner, FormMain).MyProgressBar)
+        '    _excel._openExcel()
+        'End If
 
-        If Me.chkExcel.Checked Then
-            If _excel._fill(dt) Then
-                _excel._showExcel()
-            End If
-        End If
+        'If Me.chkExcel.Checked Then
+        '    If _excel._fill(dt) Then
+        '        _excel._showExcel()
+        '    End If
+        'End If
 
         UcPreviewDataTable1._init(dt)
 

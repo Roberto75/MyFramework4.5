@@ -9,14 +9,14 @@ namespace My.Angular.WebApplication.Controllers
 {
     public class RestApiController : ApiController
     {
-        [AllowAnonymous]
-        public MyUsers.Models.MyUserSmall[] Get()
-        {
-           My
+        //[AllowAnonymous]
+        //public MyUsers.Models.MyUserSmall[] Get()
+        //{
+           
 
 
-            return cusDLL.GetAll();
-        }   
+        //   // return cusDLL.GetAll();
+        //}   
 
     }
 }

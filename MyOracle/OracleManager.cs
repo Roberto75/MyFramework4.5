@@ -1,5 +1,5 @@
 ﻿//Direttive di compilazione per le librerire esterne
-#define Oracle
+//#define Oracle
 
 using System;
 using System.Collections.Generic;

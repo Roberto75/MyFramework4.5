@@ -5,7 +5,7 @@ Public Class ExcelManager
     Inherits MyManager.Manager
 
 
-#Const lsActive = True
+#Const lsActive = False
 
 
 #If lsActive Then

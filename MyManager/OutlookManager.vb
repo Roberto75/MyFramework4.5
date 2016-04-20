@@ -1,7 +1,7 @@
 ﻿Public Class OutlookManager
     Inherits MyManager.Manager
 
-#Const isActive = True
+#Const isActive = False
 
 
 #If isActive Then

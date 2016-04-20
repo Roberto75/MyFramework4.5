@@ -14,6 +14,6 @@ var Clock = (function () {
         clearTimeout(this.timerToken);
     };
     return Clock;
-}());
+})();
 ;
 //# sourceMappingURL=Clock.js.map
