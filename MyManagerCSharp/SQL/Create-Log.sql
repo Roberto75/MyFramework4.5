@@ -13,3 +13,15 @@ CREATE TABLE [dbo].[MyLog](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
+
+ACCESS
+
+CREATE TABLE [MyLog](
+	[id] AUTOINCREMENT PRIMARY KEY,
+	[date_added] datetime NOT NULL,
+	[session_id] varchar(50)  NULL,
+	[reference] varchar(50)  NULL,
+	[my_level] varchar(50)  NULL,
+	[my_note] varchar(255) NULL,
+	[my_source] varchar(50) NULL
+	)

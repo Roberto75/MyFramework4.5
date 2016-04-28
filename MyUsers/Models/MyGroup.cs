@@ -9,7 +9,7 @@ using System.Globalization;
 namespace MyUsers.Models
 {
 
-   //[TypeConverter(typeof(MyGroupConverter))]
+    //[TypeConverter(typeof(MyGroupConverter))]
     //[NotMapped]
     public class MyGroup
     {
@@ -26,8 +26,8 @@ namespace MyUsers.Models
         //public virtual ICollection<MyTest> Tests { get; set; }
 
         //public virtual ICollection<MyUser> Utenti { get; set; }
-   
-        public virtual ICollection<MyRole > Ruoli { get; set; }
+
+        public virtual ICollection<MyRole> Ruoli { get; set; }
 
         public MyGroup()
         {
@@ -57,7 +57,7 @@ namespace MyUsers.Models
         // The ITypeDescriptorContext interface provides the context for the
         // conversion. Typically, this interface is used at design time to 
         // provide information about the design-time container.
-        public override bool CanConvertFrom(ITypeDescriptorContext context,       Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
 
             if (sourceType == typeof(string))
@@ -66,11 +66,11 @@ namespace MyUsers.Models
             }
 
             bool esito;
-            esito  = base.CanConvertFrom(context, sourceType);
+            esito = base.CanConvertFrom(context, sourceType);
             return esito;
         }
         // Overrides the ConvertFrom method of TypeConverter.
-        public override object ConvertFrom(ITypeDescriptorContext context,   CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (value is string)
             {
@@ -90,7 +90,7 @@ namespace MyUsers.Models
             return base.ConvertFrom(context, culture, value);
         }
         // Overrides the ConvertTo method of TypeConverter.
-        public override object ConvertTo(ITypeDescriptorContext context,  CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (destinationType == typeof(string))
             {

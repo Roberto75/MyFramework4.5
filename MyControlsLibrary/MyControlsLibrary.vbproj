@@ -163,9 +163,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CmbItem.vb" />
-    <Compile Include="DataGridViewAutoFilterColumnHeaderCell.vb">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="DataGridViewAutoFilterColumnHeaderCell.vb" />
     <Compile Include="DataGridViewAutoFilterTextBoxColumn.vb">
       <SubType>Code</SubType>
     </Compile>

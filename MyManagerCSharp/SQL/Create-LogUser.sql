@@ -4,6 +4,7 @@ CREATE TABLE [dbo].[MyLogUser](
 	[nota] [varchar](max) NULL,
 	[tipo] [varchar](50) NULL,
 	[user_id] [int] NOT NULL,
+	[login] [varchar](150) NULL,
 	[ip_address] [varchar](15) NULL,
  CONSTRAINT [PK_MyLogUser] PRIMARY KEY CLUSTERED 
 (
@@ -14,3 +15,16 @@ ALTER TABLE [dbo].[MyLogUser]  WITH CHECK ADD  CONSTRAINT [FK_MyLogUser_Utente] 
 GO
 ALTER TABLE [dbo].[MyLogUser] CHECK CONSTRAINT [FK_MyLogUser_Utente]
 GO
+
+
+ACCESS
+
+CREATE TABLE MyLogUser(
+	[id] AUTOINCREMENT PRIMARY KEY,
+	[date_added] datetime NOT NULL,
+	[nota] varchar(255) NULL,
+	[tipo] varchar(50) NULL,
+	[user_id] integer NOT NULL,
+	[ip_address] varchar(15) NULL
+	);
+ALTER TABLE MyLogUser ADD COLUMN [login] varchar(150)
