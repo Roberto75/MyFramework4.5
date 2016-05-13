@@ -17,7 +17,7 @@ ALTER TABLE [dbo].[MyLogUser] CHECK CONSTRAINT [FK_MyLogUser_Utente]
 GO
 
 
-ACCESS
+-- *** ACCESS ***
 
 CREATE TABLE MyLogUser(
 	[id] AUTOINCREMENT PRIMARY KEY,
@@ -25,6 +25,7 @@ CREATE TABLE MyLogUser(
 	[nota] varchar(255) NULL,
 	[tipo] varchar(50) NULL,
 	[user_id] integer NOT NULL,
+	[login] varchar(150) NULL, 
 	[ip_address] varchar(15) NULL
-	);
-ALTER TABLE MyLogUser ADD COLUMN [login] varchar(150)
+);
+
