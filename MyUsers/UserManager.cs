@@ -278,6 +278,7 @@ namespace MyUsers
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex);
                 throw new MyManagerCSharp.MyException("isAuthenticated", ex);
             }
 
@@ -331,10 +332,28 @@ namespace MyUsers
 
         public string getRoles(long userId)
         {
-            mStrSQL = "select t1.ruolo_id from ruolo as t1 " +
-                " join GruppoRuolo as t2 on t1.ruolo_id = t2.ruolo_id " +
-                " join UtenteGruppo as t3 on t2.gruppo_id = t3.gruppo_id " +
+         
+
+            //07/01/2017 Modifica per compatibilità con Access 2017
+            if (mConnection.GetType().Name == "OleDbConnection")
+            {
+                mStrSQL = "select t1.ruolo_id from ((ruolo as t1 " +
+                " inner join GruppoRuolo as t2 on t1.ruolo_id = t2.ruolo_id) " +
+                " inner join UtenteGruppo as t3 on t2.gruppo_id = t3.gruppo_id )" +
                 " where t3.user_id = " + userId;
+            }
+            else
+            {
+                mStrSQL = "select t1.ruolo_id from ruolo as t1 " +
+             " join GruppoRuolo as t2 on t1.ruolo_id = t2.ruolo_id " +
+             " join UtenteGruppo as t3 on t2.gruppo_id = t3.gruppo_id " +
+             " where t3.user_id = " + userId;
+            }
+
+
+
+
+            Debug.WriteLine(mStrSQL);
 
             mDt = mFillDataTable(mStrSQL);
 

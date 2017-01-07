@@ -20,7 +20,13 @@ namespace MyManagerCSharp.Models
         {
             gruppoId = long.Parse(row["gruppo_id"].ToString());
             nome = row["nome"].ToString();
-            tipo = (row["tipo_id"] is DBNull) ? "" : row["tipo_id"].ToString();
+
+            if (row.Table.Columns.Contains("tipo_id"))
+            {
+                tipo = (row["tipo_id"] is DBNull) ? "" : row["tipo_id"].ToString();
+            }
+
+            
         }
     }
 }
