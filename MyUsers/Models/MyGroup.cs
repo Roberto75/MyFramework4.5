@@ -46,7 +46,11 @@ namespace MyUsers.Models
             gruppoId = int.Parse(row["gruppo_id"].ToString());
             nome = row["nome"].ToString();
             dateAdded = (row["date_added"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["date_added"].ToString());
-            tipo = (row["tipo_id"] is DBNull) ? "" : row["tipo_id"].ToString();
+
+            if (row.Table.Columns.Contains("tipo_id"))
+            {
+                tipo = (row["tipo_id"] is DBNull) ? "" : row["tipo_id"].ToString();
+            }
         }
     }
 

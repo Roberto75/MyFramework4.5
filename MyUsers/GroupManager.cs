@@ -373,13 +373,13 @@ namespace MyUsers
         public bool setRoles(Models.MyUser u)
         {
             mStrSQL = "select t4.ruolo_id , t4.nome ,  t5.gruppo_id , t5.nome as gruppo  " +
-                " from Utente as t1 " +
-                " join UtenteGruppo as t2 on (t1.user_id = t2.user_id ) " +
-                " join GruppoRuolo as t3 on (t2.gruppo_id = t3.gruppo_id) " +
-                " join Ruolo as t4 on (t3.ruolo_id = t4.ruolo_id) " +
-                " join Gruppo as t5 on t3.gruppo_id = t5.gruppo_id " +
+                " from ((( Utente as t1 " +
+                " left join UtenteGruppo as t2 on (t1.user_id = t2.user_id )) " +
+                " left join GruppoRuolo as t3 on (t2.gruppo_id = t3.gruppo_id) )" +
+                " left join Ruolo as t4 on (t3.ruolo_id = t4.ruolo_id) )" +
+                " left join Gruppo as t5 on t3.gruppo_id = t5.gruppo_id " +
                 " where t1.user_id = " + u.userId;
-
+                        
 
             mDt = mFillDataTable(mStrSQL);
 

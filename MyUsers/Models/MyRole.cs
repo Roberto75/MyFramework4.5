@@ -28,7 +28,11 @@ namespace MyUsers.Models
 
             if (row.Table.Columns.Contains("gruppo"))
             {
-                gruppoId = long.Parse(row["gruppo_id"].ToString());
+                if (!(row["gruppo_id"] is DBNull))
+                {
+                    gruppoId = long.Parse(row["gruppo_id"].ToString());
+                }
+
                 gruppo = row["gruppo"].ToString();
             }
 

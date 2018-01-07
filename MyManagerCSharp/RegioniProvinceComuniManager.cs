@@ -40,13 +40,41 @@ namespace MyManagerCSharp
         }
 
 
+        public System.Data.DataTable getRegioni()
+        {
+            mStrSQL = "SELECT * FROM REGIONI ORDER BY VALORE ";
+            return mFillDataTable(mStrSQL);
+        }
+
+        public List<Models.MyItem> getComboRegioni()
+        {
+            mStrSQL = "SELECT * FROM REGIONI ORDER BY VALORE ";
+
+            mDt = mFillDataTable(mStrSQL);
+
+            List<Models.MyItem> risultato = new List<Models.MyItem>();
+
+            Models.MyItem item;
+            foreach (System.Data.DataRow row in mDt.Rows)
+            {
+                item = new Models.MyItem(row["id"].ToString(), row["valore"].ToString());
+
+                risultato.Add(item);
+            }
+
+            return risultato;
+
+        }
+
+
+
         public System.Data.DataTable getRegioneByLabel(string regione)
         {
             //'  mStrSQL = "SELECT * FROM REGIONI WHERE UCASE (VALORE)  = '" & regione.ToUpper & "'"
             mStrSQL = "SELECT * FROM REGIONI WHERE UCASE (VALORE)  = @REGIONE ";
 
             System.Data.Common.DbCommand command;
-            command =  mConnection.CreateCommand();
+            command = mConnection.CreateCommand();
 
 
 
@@ -63,7 +91,7 @@ namespace MyManagerCSharp
         {
             //'  mStrSQL = "SELECT * FROM REGIONI WHERE UCASE (VALORE)  = '" & regione.ToUpper & "'"
             mStrSQL = "SELECT valore FROM REGIONI WHERE  ID = " + regioneId;
-            return mExecuteScalar(mStrSQL );
+            return mExecuteScalar(mStrSQL);
         }
 
 
