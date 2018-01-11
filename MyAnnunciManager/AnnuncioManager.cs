@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -21,7 +22,14 @@ namespace Annunci
         }
 
 
-       public AnnuncioManager(string connectionName)
+        public enum TipoAnnuncio
+        {
+            Vendo = 1,
+            Compro = 2,
+            Scambio = 3
+        }
+
+        public AnnuncioManager(string connectionName)
             : base(connectionName)
         {
 
@@ -311,7 +319,7 @@ namespace Annunci
 
         public long countAnnunciByStato(StatoAnnuncio stato)
         {
-            return countAnnunciByStato(stato,-1);
+            return countAnnunciByStato(stato, -1);
         }
         public long countAnnunciByStato(StatoAnnuncio stato, long userId)
         {
@@ -321,7 +329,7 @@ namespace Annunci
             {
                 mStrSQL += " AND fk_user_id = " + userId;
             }
-            return long.Parse (mExecuteScalar(mStrSQL));
+            return long.Parse(mExecuteScalar(mStrSQL));
         }
 
         public System.Collections.Hashtable countAnnunciByStato()
@@ -335,10 +343,10 @@ namespace Annunci
 
             foreach (var value in Enum.GetValues(typeof(StatoAnnuncio)))
             {
-                risultato .Add ((StatoAnnuncio ) value , countAnnunciByStato((StatoAnnuncio ) value , userId));
+                risultato.Add((StatoAnnuncio)value, countAnnunciByStato((StatoAnnuncio)value, userId));
             }
 
-            return risultato ;
+            return risultato;
         }
 
 
@@ -352,20 +360,28 @@ namespace Annunci
 
         public long insertTrattativa(long annuncioId, long userId)
         {
-            mStrSQL = "INSERT INTO TRATTATIVA ( FK_USER_ID , FK_ANNUNCIO_ID, STATO )" + " VALUES ( @USER_ID , @ANNUNCIO_ID , @STATO )";
+            TrattativaManager tManager = new TrattativaManager(mConnection);
+            return tManager.insertTrattativa(annuncioId, userId);
+        }
 
-            System.Data.Common.DbCommand command;
-            command = mConnection.CreateCommand();
-            command.CommandText = mStrSQL;
+        public List<Models.Trattativa> getListTrattative(long userId, Models.Trattativa.TipoTrattativa tipo)
+        {
+            TrattativaManager tManager = new TrattativaManager(mConnection);
+            return tManager.getListTrattative(userId, tipo);
+        }
 
-            mAddParameter(command, "@USER_ID", userId);
-            mAddParameter(command, "@ANNUNCIO_ID", annuncioId);
-            mAddParameter(command, "@STATO", TrattativaManager.StatoTrattativa.Attiva.ToString());
+        public Models.Trattativa getTrattativa(long trattativaId)
+        {
+            TrattativaManager tManager = new Annunci.TrattativaManager(mConnection);
+            return tManager.getTrattativa(trattativaId);
+        }
 
-            mExecuteNoQuery(command);
-            return mGetIdentity();
+        public void setRisposteFromTrattativa(Models.Trattativa trattativa)
+        {
+            TrattativaManager tManager = new Annunci.TrattativaManager(mConnection);
+            tManager.setRisposteFromTrattativa(trattativa);
         }
 
     }
-}
+    }
 

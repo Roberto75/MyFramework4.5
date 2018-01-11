@@ -1009,7 +1009,7 @@ namespace MyManagerCSharp
 
         public string getWhereConditionByDate(string queryField, Days? days)
         {
-            if (days == null || days == Days.Tutti )
+            if (days == null || days == Days.Tutti)
             {
                 return "";
             }
@@ -1054,6 +1054,11 @@ namespace MyManagerCSharp
                     {
                         strWHERE += String.Format(" AND (  TRUNC({0})  Between TRUNC(SYSDATE)-7  AND  TRUNC(SYSDATE)  )", queryField);
                     }
+                    else if (mConnection.GetType().Name == "OleDbConnection")
+                    {
+                        //ACCESS con la funzione DateValue considero solo la data ed escludo ore e minuti
+                        strWHERE += String.Format(" AND (  DateValue({0})  Between DateValue(GetDate())-7  AND  DateValue(GetDate())  )", queryField);
+                    }
                     else
                     {
                         strWHERE += String.Format(" AND (  CONVERT(date, {0} )  Between CONVERT(date, GetDate() - 7)  AND  CONVERT(date, GetDate())  )", queryField);
@@ -1081,6 +1086,11 @@ namespace MyManagerCSharp
                     else if (mConnection.GetType().Name == "OracleConnection")
                     {
                         strWHERE += String.Format(" AND (  TRUNC({0})  Between TRUNC(SYSDATE)-30  AND  TRUNC(SYSDATE)  )", queryField);
+                    }
+                    else if (mConnection.GetType().Name == "OleDbConnection")
+                    {
+                        //ACCESS con la funzione DateValue considero solo la data ed escludo ore e minuti
+                        strWHERE += String.Format(" AND (  DateValue({0})  Between DateValue(GetDate())-30  AND  DateValue(GetDate())  )", queryField);
                     }
                     else
                     {

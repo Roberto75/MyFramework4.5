@@ -7,7 +7,11 @@ namespace Annunci.Models
 {
     public class Trattativa
     {
-
+        public enum TipoTrattativa
+        {
+            Libro = 1,
+            Immobile = 2,
+        }
 
         public enum StatoTrattativa
         {
@@ -34,20 +38,24 @@ namespace Annunci.Models
         public long annuncioId;
         public long userId;
         public string login;
+        public string titolo;
+        public string categoriaLibro;
 
         public DateTime dateDeleted;
         public DateTime dateDeletedOwner;
-
+        public TipoTrattativa tipo;
         public StatoTrattativa stato;
         public decimal prezzo { get; set; }
-        public Models.Immobile.TipoImmobile tipo;
-        public Models.Immobile.Categorie categoria;
+        public Immobile.TipoImmobile tipoImmobile;
+        public Immobile.Categorie categoriaImmobile;
+
+        public AnnuncioManager.TipoAnnuncio tipoAnnuncio;
 
         public IEnumerable<Risposta> risposte;
 
         public Trattativa() { }
 
-        public Trattativa(System.Data.DataRow row)
+        public Trattativa(System.Data.DataRow row, TipoTrattativa tipo )
         {
 
             userId = long.Parse(row["user_id"].ToString());
@@ -57,8 +65,17 @@ namespace Annunci.Models
             dateAdded = (row["date_added"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["date_added"].ToString());
             stato = (row["stato"] is DBNull) ? Models.Trattativa.StatoTrattativa.Undefined : (Models.Trattativa.StatoTrattativa)Enum.Parse(typeof(Models.Trattativa.StatoTrattativa), row["stato"].ToString());
             prezzo = (row["prezzo"] is DBNull) ? 0 : Decimal.Parse(row["prezzo"].ToString());
-            tipo = (Models.Immobile.TipoImmobile)Enum.Parse(typeof(Models.Immobile.TipoImmobile), row["tipo"].ToString());
-            categoria = (Models.Immobile.Categorie)int.Parse(row["categoria_id"].ToString());
+
+
+            if (tipo == TipoTrattativa.Immobile)
+            {
+                tipoImmobile = (Models.Immobile.TipoImmobile)Enum.Parse(typeof(Models.Immobile.TipoImmobile), row["tipo"].ToString());
+                categoriaImmobile = (Models.Immobile.Categorie)int.Parse(row["categoria_id"].ToString());
+            }else if ( tipo== TipoTrattativa.Libro) {
+                tipoAnnuncio = (AnnuncioManager.TipoAnnuncio)Enum.Parse(typeof(AnnuncioManager.TipoAnnuncio), row["tipo"].ToString());
+                titolo = row["nome"].ToString();
+                categoriaLibro = row["categoria"].ToString();
+            }
 
         }
 
