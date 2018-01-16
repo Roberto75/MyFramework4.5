@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CEE27564-2C50-49A8-B388-9963C6776F83}</ProjectGuid>
+    <ProjectGuid>{5C5C908F-04C5-49A5-B9F2-6CFC686981C6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Annunci</RootNamespace>
@@ -48,8 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnunciMailMessageManager.cs" />
     <Compile Include="AnnuncioManager.cs" />
     <Compile Include="ImmobiliareMailMessageManager.cs" />
+    <Compile Include="Libri\LibriMailMessageManager.cs" />
+    <Compile Include="Libri\LibriManager.cs" />
+    <Compile Include="Libri\Models\Libro.cs" />
+    <Compile Include="Libri\Models\PagedLibro.cs" />
+    <Compile Include="Libri\Models\SearchLibri.cs" />
     <Compile Include="Models\Immobile.cs" />
     <Compile Include="ImmobiliareManager.cs" />
     <Compile Include="Models\MyPhoto.cs" />
@@ -74,6 +80,9 @@
       <Project>{de537bc0-c7b3-4f38-9de2-5757d6d3999e}</Project>
       <Name>MyUsers</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Immobiliare\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

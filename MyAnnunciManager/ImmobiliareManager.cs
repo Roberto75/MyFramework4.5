@@ -297,15 +297,7 @@ namespace Annunci
 
 
 
-        public System.Data.DataTable getEmailUtentiInTrattativa(long annuncio_id)
-        {
-            //prelevo gli indizzi email di tutti gli utenti che stanno in trattativa su un annuncio
-            //per inviargli un'email
-            mStrSQL = "SELECT utenti.my_login, utenti.email " +
-                    " FROM utenti INNER JOIN trattativa ON utenti.user_id = trattativa.fk_user_id " +
-                    " WHERE trattativa.fk_annuncio_id = " + annuncio_id;
-            return mFillDataTable(mStrSQL);
-        }
+      
 
 
 
