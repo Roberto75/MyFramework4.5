@@ -238,6 +238,16 @@ namespace Annunci
         }
 
 
+        public long getNumeroRisposteOfTrattativa(long trattativaId, long userId)
+        {
+            //'nel conteggio delle risposte escludo le risposte scritte da se stesso
+            mStrSQL = "SELECT count(*) as NUMERO_RISPOSTE " +
+                        "FROM RISPOSTA  INNER JOIN  TRATTATIVA ON RISPOSTA.FK_TRATTATIVA_ID = TRATTATIVA.TRATTATIVA_ID" +
+                        " WHERE TRATTATIVA.TRATTATIVA_ID =" + trattativaId + " AND RISPOSTA.FK_USER_ID <> " + userId;
+            return long.Parse(mExecuteScalar(mStrSQL));
+        }
+
+
 
         public int updateAnnuncioDescrizione(long annuncioId, string descrizione, bool test_mode)
         {
@@ -391,6 +401,14 @@ namespace Annunci
                     " FROM utenti INNER JOIN trattativa ON utenti.user_id = trattativa.fk_user_id " +
                     " WHERE trattativa.fk_annuncio_id = " + annuncio_id;
             return mFillDataTable(mStrSQL);
+        }
+
+
+
+        public List<Annunci.Models.Trattativa> getTrattativeOnMyAnnuncio(long userId, long annuncioId)
+        {
+            TrattativaManager tManager = new TrattativaManager(mConnection);
+            return tManager.getTrattativeOnMyAnnuncio(userId, annuncioId, Models.Trattativa.TipoTrattativa.Libro);
         }
 
     }
