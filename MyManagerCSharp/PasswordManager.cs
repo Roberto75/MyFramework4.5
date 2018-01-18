@@ -33,8 +33,7 @@ namespace MyManagerCSharp
         /// </remarks>
         public static string Generate()
         {
-            return Generate(DEFAULT_MIN_PASSWORD_LENGTH,
-                            DEFAULT_MAX_PASSWORD_LENGTH);
+            return Generate(DEFAULT_MIN_PASSWORD_LENGTH,                            DEFAULT_MAX_PASSWORD_LENGTH);
         }
 
         /// <summary>

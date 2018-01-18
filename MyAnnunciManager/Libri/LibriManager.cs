@@ -40,7 +40,7 @@ namespace Annunci.Libri
             risultato = new List<Models.Libro>();
 
             mStrSQL = _sqlElencoLibri;
-       
+
             System.Data.Common.DbCommand command;
             command = mConnection.CreateCommand();
 
@@ -77,34 +77,18 @@ namespace Annunci.Libri
                     strWHERE += " AND ANNUNCIO.nome like  @TITOLO ";
                     mAddParameter(command, "@TITOLO", "%" + model.filter.titolo.Trim() + "%");
                 }
-                /*
-                if (parameters.filter.immobile != null && parameters.filter.immobile > 0)
+
+                if (!String.IsNullOrEmpty(model.filter.isbn))
                 {
-                    strWHERE += " AND tipo = '" + parameters.filter.immobile.ToString() + "'";
+                    strWHERE += " AND ANNUNCIO.isbn like  @ISBN ";
+                    mAddParameter(command, "@ISBN", "%" + model.filter.isbn.Trim() + "%");
                 }
 
-                if (parameters.filter.categoria != null && parameters.filter.categoria > 0)
+                if (!String.IsNullOrEmpty(model.filter.isbn))
                 {
-                    strWHERE += " AND categoria_id = " + ((int)parameters.filter.categoria);
+                    strWHERE += " AND ANNUNCIO.autore like  @AUTORE ";
+                    mAddParameter(command, "@AUTORE", "%" + model.filter.autore.Trim() + "%");
                 }
-
-
-                if (parameters.TipoAnnuncio != null && parameters.TipoAnnuncio.Count < 2)
-                {
-
-                    if (parameters.TipoAnnuncio.Contains(Models.SearchImmobili.EnumTipoAnnuncio.Agenzia))
-                    {
-                        strWHERE += " AND (UTENTI.customer_id IS NOT NULL ) ";
-                    }
-
-                    if (parameters.TipoAnnuncio.Contains(Models.SearchImmobili.EnumTipoAnnuncio.Privato))
-                    {
-                        strWHERE += " AND (UTENTI.customer_id IS NULL ) ";
-                    }
-
-                }
-
-    */
 
 
             }
@@ -116,9 +100,11 @@ namespace Annunci.Libri
                 mStrSQL += strWHERE;
             }
 
+            if (!String.IsNullOrEmpty(model.Sort))
+            {
 
-
-            mStrSQL += " ORDER BY " + model.Sort + " " + model.SortDir;
+                mStrSQL += " ORDER BY " + model.Sort + " " + model.SortDir;
+            }
 
 
             command.CommandText = mStrSQL;
@@ -315,11 +301,11 @@ namespace Annunci.Libri
                 mAddParameter(command, "@FK_USER_ID", userId);
             }
 
-            
+
             mStrSQL += ",TIPO ";
             strSQLParametri += ", @TIPO ";
             mAddParameter(command, "@TIPO", (int)libro.tipo);
-            
+
             if (!String.IsNullOrEmpty(libro.nota))
             {
                 mStrSQL += ",DESCRIZIONE ";
@@ -353,7 +339,7 @@ namespace Annunci.Libri
                 mAddParameter(command, "@PREZZO", libro.prezzo);
             }
 
-            
+
 
             if (!String.IsNullOrEmpty(libro.regione))
             {
@@ -421,11 +407,13 @@ namespace Annunci.Libri
 
 
 
-        public List<Models.Libro> getListAnnunci(long userId)
+        public void getMyListAnnunci(long userId, Models.SearchLibri model)
         {
             List<Models.Libro> risultato;
             risultato = new List<Models.Libro>();
 
+            System.Data.Common.DbCommand command;
+            command = mConnection.CreateCommand();
             //Debug
             //userId = 567809036;
 
@@ -434,25 +422,72 @@ namespace Annunci.Libri
             //" WHERE ANNUNCIO.date_deleted Is Null And ANNUNCIO.fk_user_id= " & CType(Session("SessionData"), MyManager.SessionData).getUserId
 
             mStrSQL = _sqlElencoLibri;
-            mStrSQL += " WHERE ANNUNCIO.date_deleted Is Null   And ANNUNCIO.fk_user_id= " + userId;
-            mStrSQL += " ORDER BY ANNUNCIO.date_added DESC";
-            mDt = mFillDataTable(mStrSQL);
 
-            Models.Libro libro;
+            string strWHERE = " WHERE ANNUNCIO.date_deleted Is Null And ANNUNCIO.fk_user_id= " + userId;
+            //mStrSQL += " WHERE ANNUNCIO.date_deleted Is Null  And ANNUNCIO.fk_user_id= " + userId;
+            //mStrSQL += " ORDER BY ANNUNCIO.date_added DESC";
 
-            foreach (DataRow row in mDt.Rows)
+            if (model.filter != null)
             {
-                libro = new Models.Libro(row, Models.Libro.SelectFileds.Lista);
-                risultato.Add(libro);
+                Debug.WriteLine("Days: " + model.days);
+                Debug.WriteLine("Titolo: " + model.filter.titolo);
+                Debug.WriteLine("Autore: " + model.filter.autore);
+                Debug.WriteLine("Isbn: " + model.filter.isbn);
+
+                if (!String.IsNullOrEmpty(model.filter.titolo))
+                {
+                    strWHERE += " AND ANNUNCIO.nome like  @TITOLO ";
+                    mAddParameter(command, "@TITOLO", "%" + model.filter.titolo.Trim() + "%");
+                }
+
+                if (!String.IsNullOrEmpty(model.filter.isbn))
+                {
+                    strWHERE += " AND ANNUNCIO.isbn like  @ISBN ";
+                    mAddParameter(command, "@ISBN", "%" + model.filter.isbn.Trim() + "%");
+                }
+
+                if (!String.IsNullOrEmpty(model.filter.isbn))
+                {
+                    strWHERE += " AND ANNUNCIO.autore like  @AUTORE ";
+                    mAddParameter(command, "@AUTORE", "%" + model.filter.autore.Trim() + "%");
+                }
+
             }
 
-            return risultato;
+
+            if (!String.IsNullOrEmpty(strWHERE))
+            {
+                mStrSQL += strWHERE;
+            }
+
+            if (!String.IsNullOrEmpty(model.Sort))
+            {
+                mStrSQL += " ORDER BY " + model.Sort + " " + model.SortDir;
+            }
+            command.CommandText = mStrSQL;
+
+
+            mDt = mFillDataTable(command);
+            model.TotalRows = mDt.Rows.Count;
+
+           if (model.PageSize > 0 && model.PageNumber >= 0)
+            {
+                // apply paging
+                IEnumerable<DataRow> rows = mDt.AsEnumerable().Skip((model.PageNumber - 1) * model.PageSize).Take(model.PageSize);
+                foreach (DataRow row in rows)
+                {
+                    risultato.Add(new Models.Libro(row, Models.Libro.SelectFileds.Lista));
+                }
+            }
+            else
+            {
+                foreach (DataRow row in mDt.Rows)
+                {
+                    risultato.Add(new Models.Libro(row, Models.Libro.SelectFileds.Lista));
+                }
+            }
+            model.Libri = risultato;
 
         }
-
-
-
-      
-
     }
 }
