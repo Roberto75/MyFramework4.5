@@ -66,6 +66,20 @@ namespace Annunci.Libri.Models
 
         public string categoria { get; set; }
         public int? categoriaId { get; set; }
+        //subCategoriaId NON è memorizzata sul DB!!!
+        public int? subCategoriaId { get; set; }
+
+        public int? getMyCategoriaId()
+        {
+            Debug.WriteLine("getMyCategoriaId");
+            if (subCategoriaId == null)
+            {
+                return categoriaId;
+            }
+            
+            return subCategoriaId;
+        }
+
 
         public DateTime dateLastClick { get; set; }
         public DateTime dateStartClickParziale { get; set; }

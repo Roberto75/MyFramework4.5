@@ -54,6 +54,23 @@ namespace Annunci.Libri
                 Debug.WriteLine("Autore: " + model.filter.autore);
                 Debug.WriteLine("Isbn: " + model.filter.isbn);
 
+                Debug.WriteLine("getMyCategoriaId: " + model.filter.getMyCategoriaId());
+
+
+
+                if (model.filter.tipo != null)
+                {
+                    strWHERE += " AND tipo = @TIPO ";
+                    mAddParameter(command, "@TIPO ", (int)model.filter.tipo);
+                }
+
+
+                if (model.filter.getMyCategoriaId() != null)
+                {
+                    strWHERE += " AND FK_CATEGORIA_ID = @FK_CATEGORIA_ID ";
+                    mAddParameter(command, "@FK_CATEGORIA_ID ", model.filter.getMyCategoriaId());
+                }
+
                 if (model.filter.regioneId != null && model.filter.regioneId != -1 && model.filter.regioneId != 0)
                 {
                     strWHERE += " AND regione_id = " + model.filter.regioneId;
@@ -71,7 +88,6 @@ namespace Annunci.Libri
                     mAddParameter(command, "@COMUNE_ID", model.filter.comuneId);
                 }
 
-
                 if (!String.IsNullOrEmpty(model.filter.titolo))
                 {
                     strWHERE += " AND ANNUNCIO.nome like  @TITOLO ";
@@ -84,12 +100,11 @@ namespace Annunci.Libri
                     mAddParameter(command, "@ISBN", "%" + model.filter.isbn.Trim() + "%");
                 }
 
-                if (!String.IsNullOrEmpty(model.filter.isbn))
+                if (!String.IsNullOrEmpty(model.filter.autore))
                 {
                     strWHERE += " AND ANNUNCIO.autore like  @AUTORE ";
                     mAddParameter(command, "@AUTORE", "%" + model.filter.autore.Trim() + "%");
                 }
-
 
             }
 
@@ -258,10 +273,29 @@ namespace Annunci.Libri
                 throw new MyManagerCSharp.MyException("La Categoria deve essere obbiligatoria");
             }
 
+            Debug.WriteLine("categoriaId: " + libro.categoriaId);
+            Debug.WriteLine("subCategoriaId: " + libro.subCategoriaId);
+            Debug.WriteLine("getMyCategoriaId: " + libro.getMyCategoriaId());
+
+            /*If valore > 1130000 AndAlso valore < 1140000 Then
+            'Testi scolastici
+            Me.DropDownList1.SelectedValue = 1130000
+            DropDownList1_SelectedIndexChanged(Nothing, Nothing)
+            Me.DropDownList2.SelectedValue = valore
+        ElseIf valore > 1140000 AndAlso valore < 1150000 Then
+            'Testi universitari
+            Me.DropDownList1.SelectedValue = 1140000
+            DropDownList1_SelectedIndexChanged(Nothing, Nothing)
+            Me.DropDownList2.SelectedValue = valore
+        Else
+            Me.DropDownList1.SelectedValue = valore
+
+    */
+
             string strSQLParametri;
 
             mStrSQL = "INSERT INTO ANNUNCIO ( FK_CATEGORIA_ID , MY_STATO";
-            strSQLParametri = " VALUES ( " + libro.categoriaId;
+            strSQLParametri = " VALUES ( " + libro.getMyCategoriaId();
 
             if (myStato == 0)
             {
@@ -470,7 +504,7 @@ namespace Annunci.Libri
             mDt = mFillDataTable(command);
             model.TotalRows = mDt.Rows.Count;
 
-           if (model.PageSize > 0 && model.PageNumber >= 0)
+            if (model.PageSize > 0 && model.PageNumber >= 0)
             {
                 // apply paging
                 IEnumerable<DataRow> rows = mDt.AsEnumerable().Skip((model.PageNumber - 1) * model.PageSize).Take(model.PageSize);

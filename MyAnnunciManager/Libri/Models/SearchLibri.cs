@@ -13,6 +13,12 @@ namespace Annunci.Libri.Models
 
         public MyManagerCSharp.ManagerDB.Days? days { get; set; }
 
+
+
+        public List<MyManagerCSharp.Models.MyItem> comboCategorie { get; set; }
+        public List<MyManagerCSharp.Models.MyItem> comboSubCategorie { get; set; }
+        public List<MyManagerCSharp.Models.MyItem> comboRegioni { get; set; }
+
         public SearchLibri()
         {
 
@@ -21,6 +27,8 @@ namespace Annunci.Libri.Models
             SortDir = "desc";
             days = MyManagerCSharp.ManagerDB.Days.Tutti;
             filter = new Models.Libro();
+
+            comboSubCategorie = new List<MyManagerCSharp.Models.MyItem>();
         }
     }
 }
