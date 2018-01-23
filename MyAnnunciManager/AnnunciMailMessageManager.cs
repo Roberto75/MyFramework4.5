@@ -6,39 +6,21 @@ using System.Threading.Tasks;
 
 namespace Annunci
 {
-    public class AnnunciMailMessageManager : MyManagerCSharp.MailManager
+    public class AnnunciMailMessageManager : MyManagerCSharp.MailMessageManager
     {
-        public enum Lingua
-        {
-            IT = 0,
-            EN = 1
-        }
+        /* public enum Lingua
+         {
+             IT = 0,
+             EN = 1
+         }
 
-        protected string _http;
-        protected string _applicationName;
-
+         protected string _http;
+         protected string _applicationName;
+ */
 
         public AnnunciMailMessageManager(string applicationName, string http)
+             : base(applicationName, http)
         {
-            _applicationName = applicationName;
-            _http = http;
-        }
-
-
-        public string getFirma(Lingua lingua)
-        {
-            string risulato = "";
-
-            switch (lingua)
-            {
-                case Lingua.IT:
-                    risulato = "<br />Cordiali saluti dallo staff di " + _applicationName + "." + Environment.NewLine +
-                      "<br><br><br> " + _applicationName + Environment.NewLine +
-                      "<br><a href=\"" + _http + "\">" + _http + "</a>" + Environment.NewLine;
-                    break;
-            }
-
-            return risulato;
 
         }
 
@@ -103,5 +85,26 @@ namespace Annunci
 
             return temp;
         }
+
+
+        public string getBodyNuovoMessaggioReply(long trattativaId, long annuncioId, string titoloAnnuncio)
+        {
+            //una volta inserita una risposta invio un'email a chi ha inserito l'annucio
+
+            string temp;
+            temp = "<h1>Nuovo messaggio</h1>" +
+            " <p>Gentile utente,  " +
+            "<br /> hai ricevuto un nuovo messaggio per l'annuncio: {1} " +
+            "<br />" +
+            "<br /> Clicca <a href=\"" + System.Configuration.ConfigurationManager.AppSettings["application.url"] + "Libri/trattativa.aspx?trattativaId={0}&annuncioId={2}\" > qui </a> per visualizzare la risposta.<br /><br />";
+
+            temp = String.Format(temp, trattativaId, titoloAnnuncio, annuncioId);
+
+            temp += getFirma(Lingua.IT);
+
+            return temp;
+        }
+
+
     }
 }

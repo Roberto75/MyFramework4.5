@@ -332,8 +332,6 @@ namespace MyUsers
 
         public string getRoles(long userId)
         {
-         
-
             //07/01/2017 Modifica per compatibilità con Access 2017
             if (mConnection.GetType().Name == "OleDbConnection")
             {

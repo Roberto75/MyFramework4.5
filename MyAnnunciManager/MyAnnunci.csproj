@@ -48,8 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnunciAdminManager.cs" />
     <Compile Include="AnnunciMailMessageManager.cs" />
-    <Compile Include="AnnuncioManager.cs" />
+    <Compile Include="AnnunciManager.cs" />
     <Compile Include="ImmobiliareMailMessageManager.cs" />
     <Compile Include="Libri\LibriMailMessageManager.cs" />
     <Compile Include="Libri\LibriManager.cs" />

@@ -62,7 +62,7 @@ namespace Annunci.Libri.Models
 
 
         // le imposto a null altrimeti mi diventa un filtro obbligatorio nella RICERCA
-        public Annunci.AnnuncioManager.TipoAnnuncio? tipo { get; set; }
+        public Annunci.AnnunciManager.TipoAnnuncio? tipo { get; set; }
 
         public string categoria { get; set; }
         public int? categoriaId { get; set; }
@@ -117,7 +117,7 @@ namespace Annunci.Libri.Models
 
             if (!(row["tipo"] is DBNull))
             {
-                tipo = (Annunci.AnnuncioManager.TipoAnnuncio)int.Parse(row["tipo"].ToString());
+                tipo = (Annunci.AnnunciManager.TipoAnnuncio)int.Parse(row["tipo"].ToString());
             }
             else
             {

@@ -13,8 +13,8 @@ namespace MyManagerCSharp
             EN = 1
         }
 
-        private string _http;
-        private string _applicationName;
+        protected string _http;
+        protected string _applicationName;
 
 
         public MailMessageManager(string applicationName, string http)
@@ -195,6 +195,31 @@ namespace MyManagerCSharp
                     "<p> Per questione di sicurezza le consigliamo di modificare periodicamnte la tua password tramite la funzione \"Modifica password\" del menu Utente. </p>" + Environment.NewLine +
                     "<p> Ti rammentiamo che come utente registrato puoi accedere gratuitamente a tutti servizi on line individuali del Portale. </p>" + Environment.NewLine +
                     "<p> Conserva o stampa questa mail come promemoria. In caso di smarrimento della password potrai, comunque, utilizzare la funzione \"Genera password\" presente nel menu \"Utente\". </p>" + Environment.NewLine;
+                    break;
+            }
+            temp += getFirma(lingua);
+
+            return temp;
+        }
+
+
+        public virtual string getBodyUpdatePassword(string nome, string cognome, Lingua lingua)
+        {
+            string temp = "";
+
+            switch (lingua)
+            {
+                case Lingua.IT:
+                case Lingua.EN:
+                    temp = "<h1>Modifica della password</h1>" + Environment.NewLine +
+                    "Gentile " + nome + " " + cognome + "," + Environment.NewLine +
+                    "<br /> Ti comunichiamo che la password per del tuo account di " + _applicationName + " è stata modificata." + Environment.NewLine +
+                    "<br /> Se sei stato tu a modificare la password non devi fare nulla." + Environment.NewLine +
+                    "<br />" + Environment.NewLine +
+                    "<br /> Se invece non sei stato tu a modificare la password utilizza la funzione di \"Reset password\" per creare una nuova password." + Environment.NewLine;
+
+                    //temp += "<p>Clicca sul link per accedere al <a href=\"" + System.Configuration.ConfigurationManager.AppSettings["application.url"] + "admin/\" >Pannello di amministrazione<a></p>" + Environment.NewLine;
+
                     break;
             }
             temp += getFirma(lingua);

@@ -7,7 +7,7 @@ using System.Text;
 namespace Annunci
 {
 
-    public class AnnuncioManager : MyManagerCSharp.ManagerDB
+    public class AnnunciManager : MyManagerCSharp.ManagerDB
     {
 
         public enum StatoAnnuncio
@@ -29,13 +29,13 @@ namespace Annunci
             Scambio = 3
         }
 
-        public AnnuncioManager(string connectionName)
+        public AnnunciManager(string connectionName)
             : base(connectionName)
         {
 
         }
 
-        public AnnuncioManager(System.Data.Common.DbConnection connection)
+        public AnnunciManager(System.Data.Common.DbConnection connection)
             : base(connection)
         {
 
@@ -380,6 +380,15 @@ namespace Annunci
             return tManager.getListTrattative(userId, tipo);
         }
 
+
+        public List<Models.Trattativa> getListMessaggi(long userId, Models.Trattativa.TipoTrattativa tipo)
+        {
+            TrattativaManager tManager = new TrattativaManager(mConnection);
+            return tManager.getListMessaggi(userId, tipo);
+        }
+
+
+        
         public Models.Trattativa getTrattativa(long trattativaId)
         {
             TrattativaManager tManager = new Annunci.TrattativaManager(mConnection);
@@ -410,6 +419,171 @@ namespace Annunci
             TrattativaManager tManager = new TrattativaManager(mConnection);
             return tManager.getTrattativeOnMyAnnuncio(userId, annuncioId, Models.Trattativa.TipoTrattativa.Libro);
         }
+
+
+        public long countPhoto(long annuncioId)
+        {
+            mStrSQL = "SELECT count(*) FROM PHOTO WHERE  FK_EXTERNAL_ID= " + annuncioId;
+            return long.Parse(mExecuteScalar(mStrSQL));
+        }
+
+        public System.Xml.XmlDocument getCategorie_XML()
+        {
+
+            System.Xml.XmlDocument document = null;
+            document = getCategorieRootLevel_XML();
+
+
+            System.Xml.XmlNodeList nodeList;
+            string temp;
+            System.Xml.XmlNode nodeImported;
+            nodeList = document.SelectNodes("/Categorie/Categoria[childnodecount > 0]");
+
+
+            foreach (System.Xml.XmlNode node in nodeList)
+            {
+                temp = node.SelectSingleNode("categoria_id").InnerText;
+                nodeImported = getCategorie_XML(long.Parse(temp));
+
+                if (nodeImported != null)
+                {
+                    nodeImported = document.ImportNode(nodeImported.SelectSingleNode("/Categorie"), true);
+                    node.AppendChild(nodeImported);
+                }
+            }
+
+            return document;
+        }
+
+
+        public System.Xml.XmlDocument getCategorieRootLevel_XML()
+        {
+            System.Xml.XmlDocument document = new System.Xml.XmlDocument();
+            System.Data.DataSet dataSet = new DataSet();
+
+            mStrSQL = "select A.*,  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  " +
+                    ", (select count (*) from  ANNUNCIO where FK_CATEGORIA_ID = a.CATEGORIA_ID AND DATE_DELETED IS NULL  ) as COUNT_ANNUNCI " +
+                    " from CATEGORIE A WHERE FK_PADRE_ID is NULL and HIDE = false" +
+                    " ORDER by nome";
+
+            dataSet = mFillDataSet(mStrSQL, "Categorie", "Categoria", -1);
+            document.LoadXml(dataSet.GetXml());
+            return document;
+        }
+
+
+        public System.Xml.XmlDocument getCategorie_XML(long categoria_id)
+        {
+            System.Xml.XmlDocument document = new System.Xml.XmlDocument();
+            System.Data.DataSet dataSet = new DataSet();
+            string sqlQuery;
+            sqlQuery = "select A.* " +
+         ",  (select count (*) from  CATEGORIE where FK_PADRE_ID = a.CATEGORIA_ID  ) as childnodecount  ";
+
+            sqlQuery = sqlQuery + ", (select count (*) from  ANNUNCIO where FK_CATEGORIA_ID = a.CATEGORIA_ID AND DATE_DELETED IS NULL  ) as COUNT_ANNUNCI ";
+
+            sqlQuery = sqlQuery + " from CATEGORIE A WHERE FK_PADRE_ID =" + categoria_id + " ORDER BY nome";
+            dataSet = mFillDataSet(sqlQuery, "Categorie", "Categoria", -1);
+            document.LoadXml(dataSet.GetXml());
+
+
+            System.Xml.XmlNodeList nodeList;
+            string temp;
+            System.Xml.XmlNode nodeImported;
+            nodeList = document.SelectNodes("/Categorie/Categoria[childnodecount > 0]");
+
+
+            foreach (System.Xml.XmlNode node in nodeList)
+            {
+                temp = node.SelectSingleNode("categoria_id").InnerText;
+                nodeImported = getCategorie_XML(long.Parse(temp));
+
+                if (nodeImported != null)
+                {
+                    nodeImported = document.ImportNode(nodeImported.SelectSingleNode("/Categorie"), true);
+                    node.AppendChild(nodeImported);
+                }
+            }
+
+
+
+            return document;
+        }
+
+
+
+        public bool authorizeShowTrattativa(long userId, long trattativaId)
+        {
+            //verifico che user_id possa vedere la trattiva
+            mStrSQL = "SELECT count(*) FROM TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id " +
+                " WHERE ANNUNCIO.FK_USER_ID = " + userId + " OR TRATTATIVA.FK_USER_ID = " + userId +
+                " AND TRATTATIVA.TRATTATIVA_ID =" + trattativaId;
+
+            return int.Parse(mExecuteScalar(mStrSQL)) > 0;
+        }
+
+
+        public long getAnnucioIdFromTrattativa(long trattativaId)
+        {
+            mStrSQL = "SELECT FK_ANNUNCIO_ID  FROM TRATTATIVA WHERE  TRATTATIVA_ID = " + trattativaId;
+
+            return long.Parse(mExecuteScalar(mStrSQL));
+
+        }
+
+        public bool isOwner(long annuncioId, long userId)
+        {
+            mStrSQL = "SELECT COUNT(*) as TOT " +
+                    " FROM ANNUNCIO " +
+                    " WHERE ANNUNCIO.ANNUNCIO_ID = " + annuncioId +
+                    " AND ANNUNCIO.FK_USER_ID = " + userId;
+            return int.Parse(mExecuteScalar(mStrSQL)) == 1;
+        }
+
+
+        public bool updateNotificaLetturaRispostaOwner(long trattativaId)
+        {
+            //notifico la lettura di tutte le risposte che non sono state create da me ....
+            mStrSQL = "UPDATE TRATTATIVA SET NOTIFICA_OWNER = 0  WHERE TRATTATIVA_ID = " + trattativaId;
+            mExecuteNoQuery(mStrSQL);
+            return true;
+        }
+
+        public bool updateNotificaLetturaRispostaUser(long trattativaId)
+        {
+            //notifico la lettura di tutte le risposte che non sono state create da me ....
+            mStrSQL = "UPDATE TRATTATIVA SET NOTIFICA_USER = 0 WHERE TRATTATIVA_ID = " + trattativaId;
+            mExecuteNoQuery(mStrSQL);
+            return true;
+        }
+
+        public DataTable getEmailReplyAnnnuncio(long trattativaId)
+        {
+            //in teoria per ogni trattaviva sono in 2: owner + user
+            mStrSQL = "SELECT utenti.my_login, utenti.email, utenti.user_id, trattativa.trattativa_id, utenti_1.my_login as login_owner , utenti_1.email as email_owner , utenti_1.user_id as user_id_owner " +
+                    " FROM utenti AS utenti_1 INNER JOIN (utenti INNER JOIN (annuncio INNER JOIN trattativa ON annuncio.annuncio_id = trattativa.fk_annuncio_id) ON utenti.user_id = trattativa.fk_user_id) ON utenti_1.user_id = annuncio.fk_user_id " +
+                       "  WHERE trattativa.trattativa_id = " + trattativaId;
+
+            return mFillDataTable(mStrSQL);
+        }
+
+
+
+        public bool notificaOwner(long trattativaId, long userId)
+        {
+            mStrSQL = "UPDATE TRATTATIVA SET NOTIFICA_OWNER = " + userId + " WHERE trattativa_id = " + trattativaId;
+            mExecuteNoQuery(mStrSQL);
+            return true;
+        }
+
+        public bool notificaUser(long trattativaId, long userId)
+        {
+            mStrSQL = "UPDATE TRATTATIVA SET NOTIFICA_USER = " + userId + " WHERE trattativa_id = " + trattativaId;
+            mExecuteNoQuery(mStrSQL);
+            return true;
+        }
+
+
 
     }
 }

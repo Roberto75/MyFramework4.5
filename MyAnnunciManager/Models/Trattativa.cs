@@ -49,7 +49,7 @@ namespace Annunci.Models
         public Immobile.TipoImmobile tipoImmobile;
         public Immobile.Categorie categoriaImmobile;
 
-        public AnnuncioManager.TipoAnnuncio tipoAnnuncio;
+        public AnnunciManager.TipoAnnuncio tipoAnnuncio;
 
         public IEnumerable<Risposta> risposte;
 
@@ -72,7 +72,7 @@ namespace Annunci.Models
                 tipoImmobile = (Models.Immobile.TipoImmobile)Enum.Parse(typeof(Models.Immobile.TipoImmobile), row["tipo"].ToString());
                 categoriaImmobile = (Models.Immobile.Categorie)int.Parse(row["categoria_id"].ToString());
             }else if ( tipo== TipoTrattativa.Libro) {
-                tipoAnnuncio = (AnnuncioManager.TipoAnnuncio)Enum.Parse(typeof(AnnuncioManager.TipoAnnuncio), row["tipo"].ToString());
+                tipoAnnuncio = (AnnunciManager.TipoAnnuncio)Enum.Parse(typeof(AnnunciManager.TipoAnnuncio), row["tipo"].ToString());
                 titolo = row["nome"].ToString();
                 categoriaLibro = row["categoria"].ToString();
             }

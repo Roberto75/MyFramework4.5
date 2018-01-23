@@ -282,6 +282,75 @@ namespace Annunci
             return risultato;
         }
 
+
+
+
+
+        public List<Models.Trattativa> getListMessaggi(long userId, Models.Trattativa.TipoTrattativa tipo)
+        {
+            List<Models.Trattativa> risultato;
+            risultato = new List<Models.Trattativa>();
+
+            //Debug
+            //userId = 567809036;
+
+
+            if (tipo == Models.Trattativa.TipoTrattativa.Immobile)
+            {
+                //manca il campo Annuncio.nome
+                //mStrSQL = "SELECT DISTINCT TRATTATIVA.trattativa_id, TRATTATIVA.stato, UTENTI.my_login, UTENTI.user_id, ANNUNCIO.annuncio_id,    ANNUNCIO.date_added, ANNUNCIO.tipo, ANNUNCIO.prezzo, categorie.nome AS categoria, categorie.categoria_id " +
+                  //              " FROM ((TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id) LEFT JOIN CATEGORIE ON categorie.categoria_id=ANNUNCIO.fk_categoria_id) LEFT JOIN UTENTI ON ANNUNCIO.fk_user_id=UTENTI.user_id " +
+                    //            " WHERE TRATTATIVA.fk_user_id= " + userId + "  AND  TRATTATIVA.DATE_DELETED IS NULL ";
+            }
+            else if (tipo == Models.Trattativa.TipoTrattativa.Libro)
+            {
+                mStrSQL = "SELECT  '01/01/1900' AS date_added,  TRATTATIVA.trattativa_id, UTENTI.my_login, TRATTATIVA.stato, UTENTI.user_id, ANNUNCIO.tipo, ANNUNCIO.nome AS nome, ANNUNCIO.prezzo, categorie.nome AS categoria, Switch(tipo=1,'Vendo',tipo=2,'Compro',tipo=3,'Scambio') AS tipo_desc, categorie.categoria_id, ANNUNCIO.annuncio_id " +
+            " FROM ((TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id) LEFT JOIN CATEGORIE ON categorie.categoria_id=ANNUNCIO.fk_categoria_id) LEFT JOIN UTENTI ON ANNUNCIO.fk_user_id=UTENTI.user_id " +
+            " WHERE TRATTATIVA.DATE_DELETED IS NULL AND TRATTATIVA.notifica_user =" + userId;
+
+                mStrSQL += " UNION ";
+
+                mStrSQL += "SELECT '01/01/1900' AS date_added, TRATTATIVA.trattativa_id, UTENTI.my_login , TRATTATIVA.stato, UTENTI.user_id, ANNUNCIO.tipo, ANNUNCIO.nome AS nome, ANNUNCIO.prezzo, categorie.nome AS categoria, Switch(tipo=1,'Vendo',tipo=2,'Compro',tipo=3,'Scambio') AS tipo_desc, categorie.categoria_id, ANNUNCIO.annuncio_id " +
+            " FROM ((TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id) LEFT JOIN CATEGORIE ON categorie.categoria_id=ANNUNCIO.fk_categoria_id) LEFT JOIN UTENTI ON TRATTATIVA.fk_user_id=UTENTI.user_id " +
+            " WHERE TRATTATIVA.DATE_DELETED IS NULL AND TRATTATIVA.notifica_owner =" + userId;
+
+
+                mStrSQL += " ORDER BY nome DESC";
+            }
+
+
+            mDt = mFillDataTable(mStrSQL);
+
+            Models.Trattativa trattativa;
+
+            foreach (System.Data.DataRow row in mDt.Rows)
+            {
+
+                trattativa = new Models.Trattativa(row, tipo);
+
+                //trattativa.userId = userId;
+                //trattativa.login = row["my_login"].ToString();
+                //trattativa.trattativaId = long.Parse(row["trattativa_id"].ToString());
+                //trattativa.annuncioId = long.Parse(row["annuncio_id"].ToString());
+                //trattativa.dateAdded = (row["date_added"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["date_added"].ToString());
+                //trattativa.stato = (row["stato"] is DBNull) ? Models.Trattativa.Stato.Undefined : (Models.Trattativa.Stato)Enum.Parse(typeof(Models.Trattativa.Stato), row["stato"].ToString());
+                //trattativa.prezzo = (row["prezzo"] is DBNull) ? 0 : Decimal.Parse(row["prezzo"].ToString());
+                //trattativa.tipo = (Immobiliare.Models.Immobile.TipoImmobile)Enum.Parse(typeof(Immobiliare.Models.Immobile.TipoImmobile), row["tipo"].ToString());
+                //trattativa.categoria = (Immobiliare.Models.Immobile.Categorie)int.Parse(row["categoria_id"].ToString());
+                risultato.Add(trattativa);
+            }
+
+            return risultato;
+        }
+
+
+
+
+
+
+
+
+
     }
 
 }

@@ -7,7 +7,7 @@ using MyUsers;
 
 namespace Annunci
 {
-    public class ImmobiliareManager : Annunci.AnnuncioManager
+    public class ImmobiliareManager : Annunci.AnnunciManager
     {
 
 
@@ -264,26 +264,26 @@ namespace Annunci
 
         public void annuncioAddClick(long annuncioId)
         {
-            AnnuncioManager m = new AnnuncioManager(mConnection);
+            AnnunciManager m = new AnnunciManager(mConnection);
             m.annuncioAddClick(annuncioId);
         }
 
         public void resetContatoreParziale(long annuncioId)
         {
-            AnnuncioManager m = new AnnuncioManager(mConnection);
+            AnnunciManager m = new AnnunciManager(mConnection);
             m.resetContatoreParziale(annuncioId);
         }
 
 
         public int updateAnnuncioDescrizione(long annuncioId, string descrizione, bool test_mode)
         {
-            AnnuncioManager m = new AnnuncioManager(mConnection);
+            AnnunciManager m = new AnnunciManager(mConnection);
             return m.updateAnnuncioDescrizione(annuncioId, descrizione, test_mode);
         }
 
         public int updateAnnuncioPrezzo(long annuncioId, decimal prezzo, bool test_mode)
         {
-            AnnuncioManager m = new AnnuncioManager(mConnection);
+            AnnunciManager m = new AnnunciManager(mConnection);
             return m.updateAnnuncioPrezzo(annuncioId, prezzo, test_mode);
         }
 
@@ -308,13 +308,13 @@ namespace Annunci
         }
         public System.Collections.Hashtable countAnnunciByStato()
         {
-            AnnuncioManager m = new AnnuncioManager (mConnection);
+            AnnunciManager m = new AnnunciManager (mConnection);
             return m.countAnnunciByStato();
         }
 
         public System.Collections.Hashtable countAnnunciByStato(long userId)
         {
-            AnnuncioManager m = new AnnuncioManager(mConnection);
+            AnnunciManager m = new AnnunciManager(mConnection);
             return m.countAnnunciByStato(userId);
         }
 
@@ -395,7 +395,7 @@ namespace Annunci
         }
 
 
-        public long insertAnnuncio(Models.Immobile immobile, long userId, bool test_mode, AnnuncioManager.StatoAnnuncio myStato, DateTime dateAdded)
+        public long insertAnnuncio(Models.Immobile immobile, long userId, bool test_mode, AnnunciManager.StatoAnnuncio myStato, DateTime dateAdded)
         {
 
             if (immobile.categoria == null || immobile.categoria == 0)
@@ -410,7 +410,7 @@ namespace Annunci
 
             if (myStato == 0)
             {
-                strSQLParametri += ", '" + AnnuncioManager.StatoAnnuncio.Pubblicato.ToString() + "' ";
+                strSQLParametri += ", '" + AnnunciManager.StatoAnnuncio.Pubblicato.ToString() + "' ";
             }
             else
             {
@@ -812,7 +812,7 @@ namespace Annunci
 
         public bool deleteUser(long userId, string absoluteServerPath)
         {
-            AnnuncioManager ma = new AnnuncioManager(this.mConnection);
+            AnnunciManager ma = new AnnunciManager(this.mConnection);
 
             return ma.deleteUser(userId, absoluteServerPath);
         }

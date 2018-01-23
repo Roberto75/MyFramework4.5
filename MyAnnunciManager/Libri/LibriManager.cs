@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Annunci.Libri
 {
-    public class LibriManager : AnnuncioManager
+    public class LibriManager : AnnunciManager
     {
 
 
@@ -265,7 +265,7 @@ namespace Annunci.Libri
             return insertAnnuncio(libro, userId, true, 0, DateTime.MinValue);
         }
 
-        public long insertAnnuncio(Models.Libro libro, long userId, bool test_mode, AnnuncioManager.StatoAnnuncio myStato, DateTime dateAdded)
+        public long insertAnnuncio(Models.Libro libro, long userId, bool test_mode, AnnunciManager.StatoAnnuncio myStato, DateTime dateAdded)
         {
 
             if (libro.categoriaId == null || libro.categoriaId == 0)
@@ -299,7 +299,7 @@ namespace Annunci.Libri
 
             if (myStato == 0)
             {
-                strSQLParametri += ", '" + AnnuncioManager.StatoAnnuncio.Pubblicato.ToString() + "' ";
+                strSQLParametri += ", '" + AnnunciManager.StatoAnnuncio.Pubblicato.ToString() + "' ";
             }
             else
             {
@@ -440,6 +440,11 @@ namespace Annunci.Libri
 
 
 
+        public List<Annunci.Models.Trattativa> getListMessaggi(long userId)
+        {
+            return getListMessaggi(userId, Annunci.Models.Trattativa.TipoTrattativa.Libro);
+        }
+
 
         public void getMyListAnnunci(long userId, Models.SearchLibri model)
         {
@@ -523,5 +528,7 @@ namespace Annunci.Libri
             model.Libri = risultato;
 
         }
+
+
     }
 }
