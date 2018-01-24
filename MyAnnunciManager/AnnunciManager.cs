@@ -327,38 +327,7 @@ namespace Annunci
 
 
 
-        public long countAnnunciByStato(StatoAnnuncio stato)
-        {
-            return countAnnunciByStato(stato, -1);
-        }
-        public long countAnnunciByStato(StatoAnnuncio stato, long userId)
-        {
-            mStrSQL = "SELECT COUNT(*) FROM ANNUNCIO WHERE MY_STATO = '" + stato.ToString() + "'";
-
-            if (userId != -1)
-            {
-                mStrSQL += " AND fk_user_id = " + userId;
-            }
-            return long.Parse(mExecuteScalar(mStrSQL));
-        }
-
-        public System.Collections.Hashtable countAnnunciByStato()
-        {
-            return countAnnunciByStato(-1);
-        }
-
-        public System.Collections.Hashtable countAnnunciByStato(long userId)
-        {
-            System.Collections.Hashtable risultato = new System.Collections.Hashtable();
-
-            foreach (var value in Enum.GetValues(typeof(StatoAnnuncio)))
-            {
-                risultato.Add((StatoAnnuncio)value, countAnnunciByStato((StatoAnnuncio)value, userId));
-            }
-
-            return risultato;
-        }
-
+       
 
         public Models.Risposta getRisposta(long rispostaId)
         {

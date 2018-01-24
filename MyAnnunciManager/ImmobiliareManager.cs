@@ -306,7 +306,7 @@ namespace Annunci
             mStrSQL = "SELECT count(*) from  ANNUNCIO where  ANNUNCIO.fk_user_id = " + userId;
             return int.Parse(mExecuteScalar(mStrSQL));
         }
-        public System.Collections.Hashtable countAnnunciByStato()
+    /*    public System.Collections.Hashtable countAnnunciByStato()
         {
             AnnunciManager m = new AnnunciManager (mConnection);
             return m.countAnnunciByStato();
@@ -317,19 +317,8 @@ namespace Annunci
             AnnunciManager m = new AnnunciManager(mConnection);
             return m.countAnnunciByStato(userId);
         }
+        */
 
-
-        public System.Collections.Hashtable countTrattativeByStato()
-        {
-            TrattativaManager m = new TrattativaManager(mConnection);
-            return m.countTrattativeByStato();
-        }
-
-        public System.Collections.Hashtable countTrattativeByStato(long userId)
-        {
-            TrattativaManager m = new TrattativaManager(mConnection);
-            return m.countTrattativeByStato(userId);
-        }
 
 
         public List<Models.Immobile> getListAnnunci(long userId)

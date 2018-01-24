@@ -57,6 +57,7 @@
     <Compile Include="Libri\Models\Libro.cs" />
     <Compile Include="Libri\Models\PagedLibro.cs" />
     <Compile Include="Libri\Models\SearchLibri.cs" />
+    <Compile Include="Models\Annuncio.cs" />
     <Compile Include="Models\Immobile.cs" />
     <Compile Include="ImmobiliareManager.cs" />
     <Compile Include="Models\MyPhoto.cs" />
