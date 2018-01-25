@@ -552,7 +552,35 @@ namespace Annunci
             return true;
         }
 
+        public long insertUser(long userId, string nome, string cognome, string email, string mylogin, long customerId)
+        {
+            //'in questo caso la userId non è un contatore in quanto il valore viene gestito da UserManager
+            mStrSQL = "INSERT INTO UTENTI ( USER_ID,  NOME, COGNOME, MY_LOGIN, EMAIL , CUSTOMER_ID )" +
+                " VALUES ( @USER_ID , @NOME , @COGNOME , @LOGIN , @EMAIL , @CUSTOMER_ID )";
 
+            System.Data.Common.DbCommand command;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
+
+            mAddParameter(command, "@USER_ID", userId);
+            mAddParameter(command, "@NOME", nome.Trim());
+            mAddParameter(command, "@COGNOME", cognome.Trim());
+            mAddParameter(command, "@LOGIN", mylogin.Trim());
+            mAddParameter(command, "@EMAIL", email.Trim());
+
+            if (customerId == -1)
+            {
+                mAddParameter(command, "@CUSTOMER_ID", DBNull.Value);
+            }
+            else
+            {
+                mAddParameter(command, "@CUSTOMER_ID", customerId);
+            }
+
+            mExecuteNoQuery(command);
+
+            return mGetIdentity();
+        }
 
     }
 }

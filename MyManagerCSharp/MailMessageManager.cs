@@ -115,7 +115,7 @@ namespace MyManagerCSharp
 
 
                     temp += "<p>Ti rammentiamo che come utente registrato puoi accedere gratuitamente a tutti servizi on line individuali del Portale.</p>" + Environment.NewLine +
-                    "<p>Conserva o stampa questa mail come promemoria. In caso di smarrimento della password potrai, comunque, utilizzare la funzione \"Genera password\" presente nel menu \"Utente\".</p>" + Environment.NewLine;
+                    "<p>Conserva o stampa questa mail come promemoria. In caso di smarrimento della password potrai, comunque, utilizzare la funzione \"Reset password\" presente nel menu \"Utente\".</p>" + Environment.NewLine;
                     break;
             }
 
@@ -123,6 +123,10 @@ namespace MyManagerCSharp
             temp += getFirma(lingua);
             return temp;
         }
+
+
+
+
 
 
         public string getBodyRegistrazioneUtente(string nome, string cognome, string login, string email, string telefono, string indirizzo, string numeroCivico, string cap, string provincia, string comune, Lingua lingua)
