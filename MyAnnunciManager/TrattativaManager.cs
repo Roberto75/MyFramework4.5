@@ -218,6 +218,11 @@ namespace Annunci
 
             mDt = mFillDataTable(mStrSQL);
 
+            if (mDt.Rows.Count == 0)
+            {
+                return null;
+            }
+
 
             Models.Trattativa trattativa;
 

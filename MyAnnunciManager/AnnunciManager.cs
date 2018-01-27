@@ -327,7 +327,7 @@ namespace Annunci
 
 
 
-       
+
 
         public Models.Risposta getRisposta(long rispostaId)
         {
@@ -357,7 +357,7 @@ namespace Annunci
         }
 
 
-        
+
         public Models.Trattativa getTrattativa(long trattativaId)
         {
             TrattativaManager tManager = new Annunci.TrattativaManager(mConnection);
@@ -488,7 +488,10 @@ namespace Annunci
                 " WHERE ANNUNCIO.FK_USER_ID = " + userId + " OR TRATTATIVA.FK_USER_ID = " + userId +
                 " AND TRATTATIVA.TRATTATIVA_ID =" + trattativaId;
 
-            return int.Parse(mExecuteScalar(mStrSQL)) > 0;
+            string temp;
+            temp = mExecuteScalar(mStrSQL);
+
+            return int.Parse(temp) > 0;
         }
 
 
@@ -581,6 +584,21 @@ namespace Annunci
 
             return mGetIdentity();
         }
+
+
+
+        public long rispondi(long trattativaId, long userId, string testo)
+        {
+            TrattativaManager tManager = new TrattativaManager(mConnection);
+            return tManager.rispondi(trattativaId, userId, testo);
+        }
+
+        public long rispondi(long trattativaId, long userId, string testo, long risposta_id)
+        {
+            TrattativaManager tManager = new TrattativaManager(mConnection);
+            return tManager.rispondi(trattativaId, userId, testo, risposta_id);
+        }
+
 
     }
 }
