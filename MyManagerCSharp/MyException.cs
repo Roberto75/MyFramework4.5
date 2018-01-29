@@ -22,7 +22,7 @@ namespace MyManagerCSharp
             Email_duplicata = 10,
             UtenteLoggato = 12,
             Passwor_expired = 13,
-            ParametroNull ,
+            ParametroNull,
             Parametro_non_valido,
             Codice_id_non_valido,
             Errore_connessione_verso_il_database
@@ -31,6 +31,11 @@ namespace MyManagerCSharp
 
         public ErrorNumber ErrorCode;
 
+
+        public MyException() : base()
+        {
+
+        }
 
         public MyException(string message)
             : base(message)
@@ -48,7 +53,7 @@ namespace MyManagerCSharp
         public MyException(ErrorNumber errorNumber)
             : base("")
         {
-            ErrorCode = errorNumber ;
+            ErrorCode = errorNumber;
         }
 
 
@@ -64,7 +69,7 @@ namespace MyManagerCSharp
             get
             {
                 string messaggio;
-                
+
                 switch (ErrorCode)
                 {
                     case ErrorNumber.NotDefined:
@@ -76,17 +81,20 @@ namespace MyManagerCSharp
                     case ErrorNumber.UtenteDisabilitato:
                         messaggio = "Utente disabilitato. Inviare una mail all'amministatore del sistema.";
                         break;
-                    case ErrorNumber.ParametroNull  :
+                    case ErrorNumber.ParametroNull:
                         messaggio = "Parametro non valorizzato = NULL";
                         break;
                     case ErrorNumber.Parametro_non_valido:
                         messaggio = "Parametro non valido";
                         break;
+                    case ErrorNumber.UtenteNonAutorizzato:
+                        messaggio = "Utente non autorizzato";
+                        break;
                     //case ErrorNumber.Constraint_violation:
                     //    messaggio = "Il database ha individuato una violazione del vincolo di integrità referenziale";
                     //    break;
                     default:
-                        throw new ApplicationException("Eccezione non gestita: " + ErrorCode.ToString() );
+                        throw new ApplicationException("Eccezione non gestita: " + ErrorCode.ToString());
                 }
 
 
@@ -108,7 +116,7 @@ namespace MyManagerCSharp
                     messaggio += Environment.NewLine + base.InnerException.Message;
                 }
 
-                return messaggio ;
+                return messaggio;
             }
         }
 

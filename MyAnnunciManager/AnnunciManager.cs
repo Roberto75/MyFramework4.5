@@ -474,8 +474,6 @@ namespace Annunci
                 }
             }
 
-
-
             return document;
         }
 
@@ -484,9 +482,14 @@ namespace Annunci
         public bool authorizeShowTrattativa(long userId, long trattativaId)
         {
             //verifico che user_id possa vedere la trattiva
-            mStrSQL = "SELECT count(*) FROM TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id " +
-                " WHERE ANNUNCIO.FK_USER_ID = " + userId + " OR TRATTATIVA.FK_USER_ID = " + userId +
-                " AND TRATTATIVA.TRATTATIVA_ID =" + trattativaId;
+            //mStrSQL = "SELECT count(*) FROM TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id " +
+              //  " WHERE ANNUNCIO.FK_USER_ID = " + userId + " OR TRATTATIVA.FK_USER_ID = " + userId +
+//                " AND TRATTATIVA.TRATTATIVA_ID =" + trattativaId;
+
+
+            mStrSQL = "SELECT count(*) FROM TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id  " +
+                " WHERE TRATTATIVA.TRATTATIVA_ID = " + trattativaId +
+                " AND (ANNUNCIO.FK_USER_ID = " + userId + " OR TRATTATIVA.FK_USER_ID = " + userId + ")";
 
             string temp;
             temp = mExecuteScalar(mStrSQL);
