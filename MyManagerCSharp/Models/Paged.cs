@@ -32,7 +32,18 @@ namespace My.Shared.Models
 
         public string Sort { get; set; }
         public string SortDir { get; set; }
-
+/*
+        public string SortDirReverse
+        {
+            get {
+                if (Sort.ToUpper() == "ASC")
+                {
+                    return "DESC";
+                }
+                return "ASC";
+            }
+        }
+        */
         public Paged()
         {
             this.PageNumber = 1;

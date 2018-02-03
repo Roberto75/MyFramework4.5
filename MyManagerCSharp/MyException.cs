@@ -90,6 +90,9 @@ namespace MyManagerCSharp
                     case ErrorNumber.UtenteNonAutorizzato:
                         messaggio = "Utente non autorizzato";
                         break;
+                    case ErrorNumber.Codice_id_non_valido:
+                        messaggio = "Codice id non valido o inesistente";
+                        break;
                     //case ErrorNumber.Constraint_violation:
                     //    messaggio = "Il database ha individuato una violazione del vincolo di integrità referenziale";
                     //    break;

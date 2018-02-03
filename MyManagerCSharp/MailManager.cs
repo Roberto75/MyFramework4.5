@@ -386,20 +386,17 @@ namespace MyManagerCSharp
 
             //*** BODY ***
             temp = "<html><body>";
-            if (!String.IsNullOrEmpty(ex.Message))
+
+            if (!String.IsNullOrEmpty(messaggio))
             {
-                temp += "<h2>Exception  </h2> " + ex.Message;
+                temp += "<br />  <h2>Messaggio </h2> " + messaggio;
             }
 
-            if (ex.InnerException != null)
+
+            temp += "<br />  <h2>" + ex.GetType().Name + "</h2> ";
+            if (!String.IsNullOrEmpty(ex.Message))
             {
-                temp += "<br /> <br /> <h2>Inner Exception</h2> " + ex.InnerException.Message;
-
-
-                if (ex.InnerException.StackTrace != null)
-                {
-                    temp += "<br /> <br /> <h2>Inner Exception - Stack Trace</h2> " + ex.InnerException.StackTrace.ToString();
-                }
+                temp += "<p>" + ex.Message + "</p>";
             }
 
 
@@ -409,11 +406,20 @@ namespace MyManagerCSharp
             }
 
 
-            if (!String.IsNullOrEmpty(messaggio))
+            if (ex.InnerException != null)
             {
-                temp += "<br /> <br />  <h2>Messaggio </h2> " + messaggio;
+                temp += "<br /> <br /> <h2>Inner Exception: " + ex.InnerException.GetType().Name + "</h2>";
+                temp += "<p>" + ex.InnerException.Message + "</p>";
+
+                if (ex.InnerException.StackTrace != null)
+                {
+                    temp += "<br /> <br /> <h2>Inner Exception - Stack Trace</h2> " + ex.InnerException.StackTrace.ToString();
+                }
             }
 
+
+
+            
 
             temp += "</body></html>";
 
@@ -477,7 +483,7 @@ namespace MyManagerCSharp
 
             //*** BODY ***
             temp = "<html><body>";
-                       
+
 
             Exception t = ex;
             while (t != null)

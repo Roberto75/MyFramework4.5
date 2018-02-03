@@ -115,10 +115,33 @@ namespace Annunci.Libri
                 mStrSQL += strWHERE;
             }
 
+           
             if (!String.IsNullOrEmpty(model.Sort))
             {
+                string sortField = "";
 
-                mStrSQL += " ORDER BY " + model.Sort + " " + model.SortDir;
+                switch (model.Sort)
+                {
+                    case "categoria":
+                        sortField = "categorie.nome";
+                        break;
+                    case "dataInserimento":
+                        sortField = "ANNUNCIO.DATE_ADDED";
+                        break;
+                    case "titolo":
+                        sortField = "ANNUNCIO.NOME";
+                        break;
+                    case "login":
+                        sortField = "UTENTI.MY_LOGIN";
+                        break;
+                    default:
+                        sortField = model.Sort;
+                        break;
+                }
+
+                Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
+
+                mStrSQL += " ORDER BY " + sortField + " " + model.SortDir;
             }
 
 

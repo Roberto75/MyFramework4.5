@@ -32,8 +32,7 @@ namespace MyManagerCSharp
             {
                 case Lingua.IT:
                     risulato = "<br />Cordiali saluti dallo staff di " + _applicationName + "." + Environment.NewLine +
-                      "<br><br><br> " + _applicationName + Environment.NewLine +
-                      "<br><a href=\"" + _http + "\">" + _http + "</a>" + Environment.NewLine;
+                                   "<br /><a href=\"" + _http + "\">" + _http + "</a>" + Environment.NewLine;
                     break;
             }
 
@@ -111,7 +110,7 @@ namespace MyManagerCSharp
                                  "<br /> " + Environment.NewLine;
                     }
 
-                    temp += "<p>In un secondo momento, dopo esserti loggato nel sistema, potrai sempre accedere al menu \"Utente\" per <b>modificare e aggiornare i tuoi dati anagrafici.</p>" + Environment.NewLine;
+                    temp += "<p>In un secondo momento, dopo esserti loggato nel sistema, potrai sempre accedere al menu \"Utente\" per <b>modificare e aggiornare i tuoi dati anagrafici</b>.</p>" + Environment.NewLine;
 
 
                     temp += "<p>Ti rammentiamo che come utente registrato puoi accedere gratuitamente a tutti servizi on line individuali del Portale.</p>" + Environment.NewLine +

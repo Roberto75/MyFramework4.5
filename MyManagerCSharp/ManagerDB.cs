@@ -278,6 +278,10 @@ namespace MyManagerCSharp
                 }
 
             }
+            catch (Exception ex)
+            {
+                throw new MyException(command.CommandText, ex);
+            }
             finally
             {
 
