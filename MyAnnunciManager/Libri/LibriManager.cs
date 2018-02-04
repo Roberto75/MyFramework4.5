@@ -118,28 +118,10 @@ namespace Annunci.Libri
            
             if (!String.IsNullOrEmpty(model.Sort))
             {
-                string sortField = "";
+                string sortField = getSortField(model.Sort);
 
-                switch (model.Sort)
-                {
-                    case "categoria":
-                        sortField = "categorie.nome";
-                        break;
-                    case "dataInserimento":
-                        sortField = "ANNUNCIO.DATE_ADDED";
-                        break;
-                    case "titolo":
-                        sortField = "ANNUNCIO.NOME";
-                        break;
-                    case "login":
-                        sortField = "UTENTI.MY_LOGIN";
-                        break;
-                    default:
-                        sortField = model.Sort;
-                        break;
-                }
-
-                Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
+             
+               Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
 
                 mStrSQL += " ORDER BY " + sortField + " " + model.SortDir;
             }
@@ -171,6 +153,32 @@ namespace Annunci.Libri
             model.Libri = risultato;
         }
 
+
+        private string getSortField(string modelSort)
+        {
+            string sortField = "";
+
+            switch (modelSort)
+            {
+                case "categoria":
+                    sortField = "categorie.nome";
+                    break;
+                case "dataInserimento":
+                    sortField = "ANNUNCIO.DATE_ADDED";
+                    break;
+                case "titolo":
+                    sortField = "ANNUNCIO.NOME";
+                    break;
+                case "login":
+                    sortField = "UTENTI.MY_LOGIN";
+                    break;
+                default:
+                    sortField = modelSort;
+                    break;
+            }
+
+            return sortField;
+        }
 
 
         public Models.Libro getLibro(long id)
@@ -521,11 +529,16 @@ namespace Annunci.Libri
             {
                 mStrSQL += strWHERE;
             }
+            
 
             if (!String.IsNullOrEmpty(model.Sort))
             {
-                mStrSQL += " ORDER BY " + model.Sort + " " + model.SortDir;
+                string sortField = getSortField(model.Sort);
+                Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
+
+                mStrSQL += " ORDER BY " + sortField + " " + model.SortDir;
             }
+
             command.CommandText = mStrSQL;
 
 
