@@ -13,6 +13,11 @@ namespace Annunci.Libri.Models
         public int countFilter() {
             int conta = 0;
 
+            if (days != MyManagerCSharp.ManagerDB.Days.Tutti)
+            {
+                conta++;
+            }
+
             if (!String.IsNullOrEmpty(filter.titolo))
             {
                 conta++;

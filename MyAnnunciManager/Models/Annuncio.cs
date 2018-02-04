@@ -115,6 +115,9 @@ namespace Annunci.Models
                     if (row["MY_STATO"].ToString() == "OggettoNonPiuDisponibile")
                     {
                         stato = AnnunciManager.StatoAnnuncio.Oggetto_non_piu_disponibile;
+                    }else if (row["MY_STATO"].ToString() == "ConclusoConSuccesso")
+                    {
+                        stato = AnnunciManager.StatoAnnuncio.Concluso_con_successo;
                     }
                     else
                     {
