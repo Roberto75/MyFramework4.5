@@ -150,6 +150,25 @@ namespace Annunci.Libri
                     risultato.Add(new Models.Libro(row, Models.Libro.SelectFileds.Lista));
                 }
             }
+
+            if (model.filter.getMyCategoriaId() != null && model.TotalRows != 0)
+            {
+                //vuol dire che c'è almeno un risultato
+
+                if (model.filter.categoriaId >= 1130000 && model.filter.categoriaId < 1140000)
+                {
+                    model.filter.categoria = "Testi scolastici " + risultato[0].categoria;
+                }else if (model.filter.categoriaId >= 1140000 && model.filter.categoriaId < 1150000)
+                {
+                    model.filter.categoria = "Testi universitari " + risultato[0].categoria;
+                }else                {
+                    model.filter.categoria = risultato[0].categoria;
+                }
+
+                
+            }
+
+
             model.Libri = risultato;
         }
 
