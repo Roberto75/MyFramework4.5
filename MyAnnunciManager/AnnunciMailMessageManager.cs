@@ -97,9 +97,9 @@ namespace Annunci
             "<br />ti segnaliamo la cancellazione dell'annuncio per: {0} " +
             "<br />" +
             "<p>Di conseguenza la compravendita è stata interrotta. </p> " +
-            "<br /> Clicca <a href=\"" + System.Configuration.ConfigurationManager.AppSettings["application.url"] + "{1}\">qui</a> per eliminare la compravendita  dalle tue trattative.<br /><br />";
+            "<br /> Clicca <a href=\"" + System.Configuration.ConfigurationManager.AppSettings["application.url"] + "{1}\">qui</a> per eliminare la compravendita dalle tue trattative.<br /><br />";
 
-            temp = String.Format(temp, titoloAnnuncio);
+            temp = String.Format(temp, titoloAnnuncio, url);
 
             temp += getFirma(Lingua.IT);
 
