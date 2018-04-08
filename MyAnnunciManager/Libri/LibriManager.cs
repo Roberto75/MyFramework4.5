@@ -121,6 +121,10 @@ namespace Annunci.Libri
                 string sortField = getSortField(model.Sort);
 
              
+                if (model.SortDir.ToUpper().Trim()!= "ASC" && model.SortDir.ToUpper().Trim() != "DESC")
+                {
+                    model.SortDir = "ASC";
+                }
                Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
 
                 mStrSQL += " ORDER BY " + sortField + " " + model.SortDir;
