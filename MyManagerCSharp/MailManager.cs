@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -298,11 +299,16 @@ namespace MyManagerCSharp
                 port = int.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.port"]);
             }
 
+
+
+
             System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(MailServer, port);
 
             if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"]))
             {
                 smtp.EnableSsl = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"]);
+                // smtp.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+
             }
 
             if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"]))
@@ -330,6 +336,8 @@ namespace MyManagerCSharp
                     password = System.Configuration.ConfigurationManager.AppSettings["mail.server.password"];
                 }
                 smtp.Credentials = new System.Net.NetworkCredential(username, password);
+               
+                smtp.UseDefaultCredentials = false;
             }
 
             else
@@ -341,6 +349,12 @@ namespace MyManagerCSharp
             string esito = "";
             try
             {
+                //"The operation has timed out."
+
+                //100000
+                //smtp.Timeout = 500000;
+                Debug.WriteLine("smtp.Timeout = " + smtp.Timeout);
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 smtp.Send(MyMail);
             }
             catch (System.Net.WebException ex)
@@ -419,7 +433,7 @@ namespace MyManagerCSharp
 
 
 
-            
+
 
             temp += "</body></html>";
 
