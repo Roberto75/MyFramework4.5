@@ -212,13 +212,20 @@ namespace MyManagerCSharp
 
 
 
-        public string Subject;
+        public string Subject { get; set; }
 
-        public string Body;
+        public string Body { get; set; }
 
-        public string MailServer;
+        public string MailServer { get; set; }
 
-        public List<System.Net.Mail.Attachment> Attachments;
+        public List<System.Net.Mail.Attachment> Attachments { get; set; }
+
+        public int? port { get; set; }
+
+        public bool? enableSsl { get; set; }
+
+        public bool? enableTls { get; set; }
+
 
 
         public string send()
@@ -293,28 +300,51 @@ namespace MyManagerCSharp
             }
 
 
-            int port = 25;
-            if (System.Configuration.ConfigurationManager.AppSettings["mail.server.port"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.port"]))
+
+            if (port == null)
             {
-                port = int.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.port"]);
+                if (System.Configuration.ConfigurationManager.AppSettings["mail.server.port"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.port"]))
+                {
+                    port = int.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.port"]);
+                }
+                else
+                {
+                    port = 25; //valore di default
+                }
             }
 
+            System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(MailServer, (int)port);
 
 
-
-            System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(MailServer, port);
-
-            if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"]))
+            if (enableSsl == null)
             {
-                smtp.EnableSsl = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"]);
-                // smtp.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+                if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"]))
+                {
+                    enableSsl = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"]);
+                }
+                else
+                {
+                    enableSsl = false; //valore di default
+                }
+            }
+            smtp.EnableSsl = (bool)enableSsl;
 
+
+
+            if (enableTls == null)
+            {
+                if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"]))
+                {
+                    enableTls = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"]);
+                }
             }
 
-            if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"]))
+            if (enableTls == true)
             {
                 System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
             }
+
+
 
 
             if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.userName"]))
@@ -336,7 +366,7 @@ namespace MyManagerCSharp
                     password = System.Configuration.ConfigurationManager.AppSettings["mail.server.password"];
                 }
                 smtp.Credentials = new System.Net.NetworkCredential(username, password);
-               
+
                 smtp.UseDefaultCredentials = false;
             }
 
