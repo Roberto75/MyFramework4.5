@@ -226,7 +226,9 @@ namespace MyManagerCSharp
 
         public bool? enableTls { get; set; }
 
+        public string username { get; set; }
 
+        public string password { get; set; }
 
         public string send()
         {
@@ -237,7 +239,7 @@ namespace MyManagerCSharp
             }
 
             System.Net.Mail.MailMessage MyMail = new System.Net.Mail.MailMessage();
-
+     
 
             if (_from == null)
             {
@@ -312,10 +314,11 @@ namespace MyManagerCSharp
                     port = 25; //valore di default
                 }
             }
-
             System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(MailServer, (int)port);
 
 
+
+            //*** SSL ***
             if (enableSsl == null)
             {
                 if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableSsl"]))
@@ -328,9 +331,9 @@ namespace MyManagerCSharp
                 }
             }
             smtp.EnableSsl = (bool)enableSsl;
+           
 
-
-
+            //*** TLS  ***
             if (enableTls == null)
             {
                 if (System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"] != null && !String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"]))
@@ -338,7 +341,6 @@ namespace MyManagerCSharp
                     enableTls = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.server.enableTls"]);
                 }
             }
-
             if (enableTls == true)
             {
                 System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
@@ -346,35 +348,46 @@ namespace MyManagerCSharp
 
 
 
-
-            if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.userName"]))
+            //*** Autenticazione 
+          
+            if (this.username == null)
             {
-                //'invio email tramite autenticazione
-
-                string username;
-                string password;
-
-                if (System.Configuration.ConfigurationManager.AppSettings["mail.credentials.encrypted"] != null && bool.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.credentials.encrypted"]))
+                if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.userName"]))
                 {
-                    username = decript(System.Configuration.ConfigurationManager.AppSettings["mail.server.username"]);
-                    password = decript(System.Configuration.ConfigurationManager.AppSettings["mail.server.password"]);
+                    //'invio email tramite autenticazione
 
-                }
-                else
-                {
-                    username = System.Configuration.ConfigurationManager.AppSettings["mail.server.username"];
-                    password = System.Configuration.ConfigurationManager.AppSettings["mail.server.password"];
-                }
-                smtp.Credentials = new System.Net.NetworkCredential(username, password);
+                    //string username;
+                    //string password;
 
-                smtp.UseDefaultCredentials = false;
+                    if (System.Configuration.ConfigurationManager.AppSettings["mail.credentials.encrypted"] != null && bool.Parse(System.Configuration.ConfigurationManager.AppSettings["mail.credentials.encrypted"]))
+                    {
+                        username = decript(System.Configuration.ConfigurationManager.AppSettings["mail.server.username"]);
+                        password = decript(System.Configuration.ConfigurationManager.AppSettings["mail.server.password"]);
+
+                    }
+                    else
+                    {
+                        username = System.Configuration.ConfigurationManager.AppSettings["mail.server.username"];
+                        password = System.Configuration.ConfigurationManager.AppSettings["mail.server.password"];
+                    }
+                }
             }
 
-            else
-            {
+
+            smtp.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+
+            if (String.IsNullOrEmpty(username)) {
                 smtp.UseDefaultCredentials = true;
             }
+            else
+            {
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new System.Net.NetworkCredential(username, password);
+                MyMail.Sender= new System.Net.Mail.MailAddress(username);
+            }
 
+
+          
 
             string esito = "";
             try
@@ -382,9 +395,22 @@ namespace MyManagerCSharp
                 //"The operation has timed out."
 
                 //100000
-                //smtp.Timeout = 500000;
+                //smtp.Timeout = 30000;
+                Debug.WriteLine("smtp.Host = " + smtp.Host);
+                Debug.WriteLine("smtp.Port = " + smtp.Port);
+                Debug.WriteLine("smtp.DeliveryMethod = " + smtp.DeliveryMethod);
+                Debug.WriteLine("smtp.DeliveryFormat = " + smtp.DeliveryFormat);
                 Debug.WriteLine("smtp.Timeout = " + smtp.Timeout);
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                Debug.WriteLine("smtp.EnableSsl = " + smtp.EnableSsl);
+                Debug.WriteLine("smtp.UseDefaultCredentials = " + smtp.UseDefaultCredentials);
+
+                Debug.WriteLine("From = " + MyMail.From);
+                Debug.WriteLine("Sender = " + MyMail.Sender);
+
+                //smtp.TargetName =  "STARTTLS/smtp.office365.com";
+                //smtp.TargetName = "STARTTLS/smtp.gmail.com";
+
+                //System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 smtp.Send(MyMail);
             }
             catch (System.Net.WebException ex)
