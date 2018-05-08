@@ -99,6 +99,9 @@ namespace MyUsers
                 mStrSQL += " WHERE (1=1) " + strWHERE;
             }
 
+
+
+
             string temp;
             int totalRecords;
 
@@ -112,9 +115,22 @@ namespace MyUsers
                 model.TotalRows = totalRecords;
             }
 
+            string orderBy = "";
+            if (!String.IsNullOrEmpty(model.Sort))
+            {
+                string sortField = getSortField(model.Sort);
+
+                if (model.SortDir.ToUpper().Trim() != "ASC" && model.SortDir.ToUpper().Trim() != "DESC")
+                {
+                    model.SortDir = "ASC";
+                }
+                Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
+
+                orderBy = " ORDER BY " + sortField + " " + model.SortDir;
+            }
 
 
-            temp = _sqlElencoUtenti + mStrSQL + " ORDER BY " + model.Sort + " " + model.SortDir;
+            temp = _sqlElencoUtenti + mStrSQL + orderBy;
 
 
             if (model.PageSize > 0 && (mConnection is System.Data.SqlClient.SqlConnection))
@@ -150,6 +166,29 @@ namespace MyUsers
         }
 
 
+        private string getSortField(string modelSort)
+        {
+            string sortField = "";
+
+            switch (modelSort)
+            {
+                case "Login":
+                    sortField = "my_login";
+                    break;
+                case "DateAdded":
+                    sortField = "DATE_ADDED";
+                    break;
+                case "DateLastLogin":
+                    sortField = "date_last_login";
+                    break;
+                default:
+                    sortField = modelSort;
+                    break;
+            }
+
+            Debug.WriteLine("modelSort: " + modelSort + " => " + sortField);
+            return sortField;
+        }
 
         public Models.MyUser getUser(long id)
         {
