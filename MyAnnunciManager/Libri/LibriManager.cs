@@ -49,14 +49,13 @@ namespace Annunci.Libri
 
             if (model.filter != null)
             {
+                /*
                 Debug.WriteLine("Days: " + model.days);
                 Debug.WriteLine("Titolo: " + model.filter.titolo);
                 Debug.WriteLine("Autore: " + model.filter.autore);
                 Debug.WriteLine("Isbn: " + model.filter.isbn);
-
                 Debug.WriteLine("getMyCategoriaId: " + model.filter.getMyCategoriaId());
-
-
+                */
 
                 if (model.filter.tipo != null)
                 {
@@ -125,7 +124,7 @@ namespace Annunci.Libri
                 {
                     model.SortDir = "ASC";
                 }
-               Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
+               //Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
 
                 mStrSQL += " ORDER BY " + sortField + " " + model.SortDir;
             }
