@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using MyUsers;
+using System.Diagnostics;
 
 namespace Annunci
 {
@@ -42,7 +43,7 @@ namespace Annunci
         }
 
 
-
+/*
         public List<Models.Immobile> getList()
         {
             List<Models.Immobile> risultato;
@@ -60,37 +61,27 @@ namespace Annunci
 
             return risultato;
         }
+        */
 
 
-        public List<Models.Immobile> getList(out int totalRecords, int pageSize = -1,
-                                      int pageIndex = -1, string sort = "ANNUNCIO.date_added",
-                                      string sortOrder = "DESC")
-        {
-            return getList(null, out totalRecords, pageSize, pageIndex, sort, sortOrder);
-        }
-
-
-        public List<Models.Immobile> getList(Models.SearchImmobili parameters, out int totalRecords, int pageSize = -1,
-                                         int pageIndex = -1, string sort = "ANNUNCIO.date_added",
-                                         string sortOrder = "DESC")
+        public void getList(Models.SearchImmobili model)
         {
 
             List<Models.Immobile> risultato;
             risultato = new List<Models.Immobile>();
 
             mStrSQL = _sqlElencoImmobili;
-            mStrSQL += " WHERE ANNUNCIO.date_deleted Is Null ";
-
+          
             System.Data.Common.DbCommand command;
             command = mConnection.CreateCommand();
 
 
-            string strWHERE = "";
+            string strWHERE = " WHERE ANNUNCIO.date_deleted Is Null";
 
-            if (parameters != null)
+            if (model.filter != null)
             {
 
-                switch (parameters.Tempo)
+                switch (model.Tempo)
                 {
                     case Models.SearchImmobili.EnumTempo.Oggi:
                         //strWHERE += "AND FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'";
@@ -105,69 +96,66 @@ namespace Annunci
                 }
 
 
-                if (parameters.filter.regioneId != -1 && parameters.filter.regioneId != 0)
+                if (model.filter.regioneId != null && model.filter.regioneId != -1 && model.filter.regioneId != 0)
                 {
-                    strWHERE += " AND regione_id = " + parameters.filter.regioneId;
+                    strWHERE += " AND regione_id = " + model.filter.regioneId;
                 }
 
-                if (!String.IsNullOrEmpty(parameters.filter.provinciaId) && parameters.filter.provinciaId != "-1" && parameters.filter.provinciaId != "---")
+                if (!String.IsNullOrEmpty(model.filter.provinciaId) && model.filter.provinciaId != "-1" && model.filter.provinciaId != "---")
                 {
                     strWHERE += " AND provincia_id = @PROVINCIA_ID ";
-                    mAddParameter(command, "@PROVINCIA_ID", parameters.filter.provinciaId);
+                    mAddParameter(command, "@PROVINCIA_ID", model.filter.provinciaId);
                 }
 
-                if (!String.IsNullOrEmpty(parameters.filter.comuneId) && parameters.filter.comuneId != "-1" && parameters.filter.comuneId != "---")
+                if (!String.IsNullOrEmpty(model.filter.comuneId) && model.filter.comuneId != "-1" && model.filter.comuneId != "---")
                 {
                     strWHERE += " AND comune_id =  @COMUNE_ID ";
-                    mAddParameter(command, "@COMUNE_ID", parameters.filter.comuneId);
+                    mAddParameter(command, "@COMUNE_ID", model.filter.comuneId);
                 }
 
 
-                if (parameters.filter.immobile != null && parameters.filter.immobile > 0)
+                if (model.filter.immobile != null && model.filter.immobile > 0)
                 {
-                    strWHERE += " AND tipo = '" + parameters.filter.immobile.ToString() + "'";
+                    strWHERE += " AND tipo = '" + model.filter.immobile.ToString() + "'";
                 }
 
-                if (parameters.filter.categoria != null && parameters.filter.categoria > 0)
+                if (model.filter.categoria != null && model.filter.categoria > 0)
                 {
-                    strWHERE += " AND categoria_id = " + ((int)parameters.filter.categoria);
+                    strWHERE += " AND categoria_id = " + ((int)model.filter.categoria);
                 }
 
 
-                if (parameters.TipoAnnuncio != null && parameters.TipoAnnuncio.Count < 2)
+                if (model.TipoAnnuncio != null && model.TipoAnnuncio.Count < 2)
                 {
 
-                    if (parameters.TipoAnnuncio.Contains(Models.SearchImmobili.EnumTipoAnnuncio.Agenzia))
+                    if (model.TipoAnnuncio.Contains(Models.SearchImmobili.EnumTipoAnnuncio.Agenzia))
                     {
                         strWHERE += " AND (UTENTI.customer_id IS NOT NULL ) ";
                     }
 
-                    if (parameters.TipoAnnuncio.Contains(Models.SearchImmobili.EnumTipoAnnuncio.Privato))
+                    if (model.TipoAnnuncio.Contains(Models.SearchImmobili.EnumTipoAnnuncio.Privato))
                     {
                         strWHERE += " AND (UTENTI.customer_id IS NULL ) ";
                     }
 
                 }
 
-
-
-
-
-                if (parameters.filter.ascensore != null && parameters.filter.ascensore != -1)
+                
+                if (model.filter.ascensore != null && model.filter.ascensore != -1)
                 {
-                    strWHERE += " AND ascensore = " + parameters.filter.ascensore;
+                    strWHERE += " AND ascensore = " + model.filter.ascensore;
                 }
 
                 //16/01/2014
-                if (parameters.prezzoMax != null && parameters.prezzoMax != 0)
+                if (model.prezzoMax != null && model.prezzoMax != 0)
                 {
-                    strWHERE += " AND prezzo <= " + parameters.prezzoMax;
+                    strWHERE += " AND prezzo <= " + model.prezzoMax;
                 }
 
                 //16/01/2014
-                if (parameters.mqMin != null && parameters.mqMin != 0)
+                if (model.mqMin != null && model.mqMin != 0)
                 {
-                    strWHERE += " AND mq >= " + parameters.mqMin;
+                    strWHERE += " AND mq >= " + model.mqMin;
                 }
 
 
@@ -180,20 +168,36 @@ namespace Annunci
 
 
 
-            mStrSQL += " ORDER BY " + sort + " " + sortOrder;
+
+            if (!String.IsNullOrEmpty(model.Sort))
+            {
+                string sortField = getSortField(model.Sort);
+
+
+                if (model.SortDir.ToUpper().Trim() != "ASC" && model.SortDir.ToUpper().Trim() != "DESC")
+                {
+                    model.SortDir = "ASC";
+                }
+                Debug.WriteLine("ORDER BY " + sortField + " " + model.SortDir);
+
+                mStrSQL += " ORDER BY " + sortField + " " + model.SortDir;
+            }
+
+
+        
 
 
             command.CommandText = mStrSQL;
 
             mDt = mFillDataTable(command);
 
-            totalRecords = mDt.Rows.Count;
+            model.TotalRows = mDt.Rows.Count;
 
 
-            if (pageSize > 0 && pageIndex >= 0)
+            if (model.PageSize > 0 && model.PageNumber >= 0)
             {
                 // apply paging
-                IEnumerable<DataRow> rows = mDt.AsEnumerable().Skip((pageIndex - 1) * pageSize).Take(pageSize);
+                IEnumerable<DataRow> rows = mDt.AsEnumerable().Skip((model.PageNumber - 1) * model.PageSize).Take(model.PageSize);
                 foreach (DataRow row in rows)
                 {
                     risultato.Add(new Models.Immobile(row, Models.Immobile.SelectFileds.Lista));
@@ -206,10 +210,28 @@ namespace Annunci
                     risultato.Add(new Models.Immobile(row, Models.Immobile.SelectFileds.Lista));
                 }
             }
-            return risultato;
+            model.Immobili= risultato;
         }
 
 
+        private string getSortField(string modelSort)
+        {
+            string sortField = "";
+
+            switch (modelSort)
+            {
+                
+                case "dataInserimento":
+                    sortField = "ANNUNCIO.DATE_ADDED";
+                    break;
+                
+                default:
+                    sortField = modelSort;
+                    break;
+            }
+
+            return sortField;
+        }
 
         public Models.Immobile getImmobile(long id)
         {

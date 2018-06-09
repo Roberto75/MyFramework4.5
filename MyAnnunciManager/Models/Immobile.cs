@@ -179,7 +179,7 @@ namespace Annunci.Models
         public string regione { get; set; }
         public string provincia { get; set; }
         public string comune { get; set; }
-        public int regioneId { get; set; }
+        public int? regioneId { get; set; }
         public string provinciaId { get; set; }
         public string comuneId { get; set; }
 
