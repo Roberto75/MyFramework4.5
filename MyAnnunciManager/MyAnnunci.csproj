@@ -52,6 +52,7 @@
     <Compile Include="AnnunciMailMessageManager.cs" />
     <Compile Include="AnnunciManager.cs" />
     <Compile Include="ImmobiliareMailMessageManager.cs" />
+    <Compile Include="Immobiliare\ImmobiliareSecurityManager.cs" />
     <Compile Include="Libri\LibriMailMessageManager.cs" />
     <Compile Include="Libri\LibriManager.cs" />
     <Compile Include="Libri\Models\Libro.cs" />
@@ -83,9 +84,7 @@
       <Name>MyUsers</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Immobiliare\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

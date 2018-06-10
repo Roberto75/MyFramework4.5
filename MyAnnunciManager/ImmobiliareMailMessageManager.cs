@@ -11,7 +11,8 @@ namespace Annunci
         public ImmobiliareMailMessageManager(string applicationName, string http)
               : base(applicationName, http)
         {
-
+            mIV = Immobiliare.ImmobiliareSecurityManager.IV;
+            mKey = Immobiliare.ImmobiliareSecurityManager.Key;
         }
 
         /*

@@ -239,7 +239,7 @@ namespace MyManagerCSharp
             }
 
             System.Net.Mail.MailMessage MyMail = new System.Net.Mail.MailMessage();
-     
+
 
             if (_from == null)
             {
@@ -331,7 +331,7 @@ namespace MyManagerCSharp
                 }
             }
             smtp.EnableSsl = (bool)enableSsl;
-           
+
 
             //*** TLS  ***
             if (enableTls == null)
@@ -349,7 +349,7 @@ namespace MyManagerCSharp
 
 
             //*** Autenticazione 
-          
+
             if (this.username == null)
             {
                 if (!String.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["mail.server.userName"]))
@@ -376,18 +376,19 @@ namespace MyManagerCSharp
 
             smtp.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
 
-            if (String.IsNullOrEmpty(username)) {
+            if (String.IsNullOrEmpty(username))
+            {
                 smtp.UseDefaultCredentials = true;
             }
             else
             {
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new System.Net.NetworkCredential(username, password);
-                MyMail.Sender= new System.Net.Mail.MailAddress(username);
+                MyMail.Sender = new System.Net.Mail.MailAddress(username);
             }
 
 
-          
+
 
             string esito = "";
             try
