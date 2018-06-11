@@ -10,7 +10,9 @@ namespace Annunci.Libri
         public LibriMailMessageManager(string applicationName, string http) 
             :base(applicationName, http)
         {
-                       
+
+            mIV = LibriSecurityManager.IV;
+            mKey = LibriSecurityManager.Key;
         }
 
 
