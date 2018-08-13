@@ -140,6 +140,8 @@ namespace Annunci.Libri.Models
 
                 nota = (row["DESCRIZIONE"] is DBNull) ? "" : row["DESCRIZIONE"].ToString();
 
+                isbn = (row["isbn"] is DBNull) ? "" : row["isbn"].ToString();
+                casaEditrice = (row["casa_editrice"] is DBNull) ? "" : row["casa_editrice"].ToString();
 
                 dateLastClick = (row["DATE_LAST_CLICK"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["DATE_LAST_CLICK"].ToString());
                 dateStartClickParziale = (row["date_start_click_parziale"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["date_start_click_parziale"].ToString());

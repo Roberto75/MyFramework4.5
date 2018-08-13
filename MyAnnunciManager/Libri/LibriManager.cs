@@ -415,8 +415,19 @@ namespace Annunci.Libri
                 mAddParameter(command, "@AUTORE", libro.autore);
             }
 
+            if (!String.IsNullOrEmpty(libro.isbn))
+            {
+                mStrSQL += ",isbn ";
+                strSQLParametri += ", @ISBN ";
+                mAddParameter(command, "@ISBN", libro.isbn);
+            }
 
-
+            if (!String.IsNullOrEmpty(libro.casaEditrice))
+            {
+                mStrSQL += ",casa_editrice ";
+                strSQLParametri += ", @CASAEDITRICE ";
+                mAddParameter(command, "@CASAEDITRICE", libro.casaEditrice);
+            }
 
 
             if (libro.prezzo > 0)
