@@ -326,6 +326,12 @@ namespace Annunci.Libri
                 throw new MyManagerCSharp.MyException("La Categoria deve essere obbiligatoria");
             }
 
+
+            if (libro.isbn != null && libro.isbn.Length > 50)
+            {
+                throw new MyManagerCSharp.MyException("ISBN deve essere minore di 50 caratteri");
+            }
+
             Debug.WriteLine("categoriaId: " + libro.categoriaId);
             Debug.WriteLine("subCategoriaId: " + libro.subCategoriaId);
             Debug.WriteLine("getMyCategoriaId: " + libro.getMyCategoriaId());
