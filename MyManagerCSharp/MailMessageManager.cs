@@ -264,6 +264,35 @@ namespace MyManagerCSharp
             return temp;
         }
 
+
+
+
+
+
+        public virtual string getBodyUpdateEmail(string nome, string cognome, string codiceAttivazione, Lingua lingua)
+        {
+            string temp = "";
+
+            switch (lingua)
+            {
+                case Lingua.IT:
+                case Lingua.EN:
+                    temp = "<h1>Conferma indirizzo email</h1>" + Environment.NewLine +
+                    "Gentile " + nome + " " + cognome + "," + Environment.NewLine +
+                    "<br />Confermando il tuo indirizzo email, tutte le notifiche future saranno mandate a questo indirizzo email.";
+
+                     temp += String.Format("<p>Clicca sul link per confermare l'indirizzo email <a href=\"" + System.Configuration.ConfigurationManager.AppSettings["application.url"] + "account/ConfirmEmail/{0}\" >Conferma<a></p>" + Environment.NewLine, codiceAttivazione);
+
+
+                   
+                    break;
+            }
+            temp += getFirma(lingua);
+
+            return temp;
+        }
+
+
         #endregion
 
         #region "Ticket"

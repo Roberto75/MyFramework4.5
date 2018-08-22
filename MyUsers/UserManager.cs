@@ -1319,6 +1319,53 @@ namespace MyUsers
         }
 
 
+
+
+
+
+        public String updateEmailChanging(long userId, String email)
+        {
+            string codiceAttivazioneEmail;
+            //codiceAttivazioneEmail = GeneraCodiceRandom()
+            codiceAttivazioneEmail = Guid.NewGuid().ToString();
+
+            mStrSQL = "UPDATE UTENTE SET EMAIL_CHANGING = @EMAIL " +
+                                                 ", EMAIL_ACTIVATION_CODE = @codiceAttivazioneEmail " +
+                                                 " WHERE USER_ID=" + userId;
+
+            System.Data.Common.DbCommand command;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
+
+            mAddParameter(command, "@EMAIL", email.Trim().ToLower());
+            mAddParameter(command, "@codiceAttivazioneEmail", codiceAttivazioneEmail);
+            mExecuteNoQuery(command);
+
+            return codiceAttivazioneEmail;
+        }
+
+        public void updateEmailChanged(long userId, String email)
+        {
+            mStrSQL = "UPDATE UTENTE SET EMAIL = @EMAIL " +
+                                                ", EMAIL_ACTIVATION_CODE = null " +
+                                                ", EMAIL_CHANGING = null " +
+                                                " WHERE USER_ID=" + userId;
+            System.Data.Common.DbCommand command;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
+
+            mAddParameter(command, "@EMAIL", email.Trim().ToLower());
+
+            mExecuteNoQuery(command);
+        }
+
+
+        public String getNewEmailChanging(String activationCodeEmail, long userId)
+        {
+            mStrSQL = "SELECT EMAIL_CHANGING FROM UTENTI WHERE  (DATE_DELETED IS NULL)  AND  USER_ID = " + userId + " and EMAIL_ACTIVATION_CODE = '" + activationCodeEmail.Replace("'", "''") + "'";
+            return (mExecuteScalar(mStrSQL)).ToString();
+        }
+
     }
 
 }
