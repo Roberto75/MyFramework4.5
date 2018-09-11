@@ -415,5 +415,49 @@ namespace Annunci
 
         }
 
+
+
+        public Models.Immobile getLastImmobilePublisched(long userId)
+        {
+            //restoituisce l'ultimo annuncio pubblicato dall'utente
+            //mi serve per capire da quanto tempo lavora....
+
+
+
+            mStrSQL = "SELECT TOP 1 ANNUNCIO.*,  " + userId + " as user_id , 'dummy' as my_login "  +
+                " , 'dummy' as categoria " +
+                " ,ANNUNCIO.fk_categoria_id as categoria_id " +
+                " , -1 as customer_id " +
+                " from ANNUNCIO ";
+
+
+            //mStrSQL = "select ANNUNCIO.* , 'dummy' as categoria , ANNUNCIO.fk_categoria_id as categoria_id , UTENTI.my_login AS my_login, UTENTI.user_id AS user_id from ANNUNCIO " +
+            //" LEFT JOIN UTENTI ON ANNUNCIO.fk_user_id = UTENTI.user_id " +
+            //" WHERE ANNUNCIO.fk_user_id = " + userId;
+            //+ " AND ANNUNCIO.date_added is NULL" +
+            //" ORDER BY ANNUNCIO.date_added desc " ;
+
+
+            //  mStrSQL = _sqlElencoAnnunci.Replace("SELECT ", "SELECT TOP 1 ");
+            //mStrSQL = _sqlElencoAnnunci;
+            string strWHERE = " WHERE ANNUNCIO.fk_user_id = " + userId + " AND ANNUNCIO.date_deleted is NULL";
+            mStrSQL = mStrSQL + strWHERE + " ORDER BY ANNUNCIO.date_added desc";
+            mDt = mFillDataTable(mStrSQL);
+
+            Models.Immobile lastAnnuncio;
+
+            if (mDt.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            lastAnnuncio = new Models.Immobile(mDt.Rows[0], Models.Immobile.SelectFileds.Full);
+
+            return lastAnnuncio;
+
+
+        }
+
+
     }
 }
