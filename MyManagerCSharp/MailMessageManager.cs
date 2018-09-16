@@ -281,10 +281,15 @@ namespace MyManagerCSharp
                     "Gentile " + nome + " " + cognome + "," + Environment.NewLine +
                     "<br />Confermando il tuo indirizzo email, tutte le notifiche future saranno mandate a questo indirizzo email.";
 
-                     temp += String.Format("<p>Clicca sul link per confermare l'indirizzo email <a href=\"" + System.Configuration.ConfigurationManager.AppSettings["application.url"] + "account/ConfirmEmail/{0}\" >Conferma<a></p>" + Environment.NewLine, codiceAttivazione);
+                    String link = String.Format("{0}Account/ConfirmEmail/{1}", System.Configuration.ConfigurationManager.AppSettings["application.url"], codiceAttivazione);
+
+                    temp += String.Format("<p>Clicca sul bottone per confermare l'indirizzo email <a href=\"{0}\" >Conferma<a></p>" + Environment.NewLine , link );
+
+                    temp += "<p>Copia e incolla l'indirizzo nella barra di navigazione del tuo browser se non riesci ad accedere direttamente.<p>";
+                    temp += "<p>" + link + "</p>";
 
 
-                   
+
                     break;
             }
             temp += getFirma(lingua);

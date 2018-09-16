@@ -1362,7 +1362,7 @@ namespace MyUsers
 
         public String getNewEmailChanging(String activationCodeEmail, long userId)
         {
-            mStrSQL = "SELECT EMAIL_CHANGING FROM UTENTI WHERE  (DATE_DELETED IS NULL)  AND  USER_ID = " + userId + " and EMAIL_ACTIVATION_CODE = '" + activationCodeEmail.Replace("'", "''") + "'";
+            mStrSQL = "SELECT EMAIL_CHANGING FROM UTENTE WHERE  (DATE_DELETED IS NULL)  AND  USER_ID = " + userId + " and EMAIL_ACTIVATION_CODE = '" + activationCodeEmail.Replace("'", "''") + "'";
             return (mExecuteScalar(mStrSQL)).ToString();
         }
 
