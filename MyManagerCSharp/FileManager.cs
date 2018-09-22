@@ -90,5 +90,19 @@ namespace MyManagerCSharp
             byte[] utf8Bytes = Encoding.Convert(encoding, Encoding.UTF8, encBytes);
             return Encoding.UTF8.GetString(utf8Bytes);
         }
+
+
+
+        public static String readTextFile(FileInfo fileName)
+        {
+            return System.IO.File.ReadAllText(fileName.FullName, Encoding.UTF8);
+        }
+
+
+        public static void writeTextFile(FileInfo fileName, string content)
+        {
+            System.IO.File.WriteAllText(fileName.FullName, content, Encoding.UTF8);
+        }
+
     }
 }
