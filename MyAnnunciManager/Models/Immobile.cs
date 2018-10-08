@@ -273,12 +273,30 @@ namespace Annunci.Models
                 statoImmobile = (row["stato"] is DBNull) ? TipoStatoImmobile.Undefined : (Models.Immobile.TipoStatoImmobile)Enum.Parse(typeof(Models.Immobile.TipoStatoImmobile), row["stato"].ToString());
                 occupazione = (row["occupazione"] is DBNull) ? TipoOccupazione.Undefined : (Models.Immobile.TipoOccupazione)Enum.Parse(typeof(Models.Immobile.TipoOccupazione), row["occupazione"].ToString());
                 classeEnergetica = (row["classe_energetica"] is DBNull) ? TipoClasseEnergetica.Undefined : (Models.Immobile.TipoClasseEnergetica)Enum.Parse(typeof(Models.Immobile.TipoClasseEnergetica), row["classe_energetica"].ToString());
+                if (row["spese_condominiali"] is DBNull)
+                {
+                    speseCondominiali = null;
+                }
+                else
+                {
+                    speseCondominiali = Decimal.Parse(row["spese_condominiali"].ToString());
+                }
 
                 cucina = (row["cucina"] is DBNull) ? TipoCucina.Undefined : (Models.Immobile.TipoCucina)Enum.Parse(typeof(Models.Immobile.TipoCucina), row["cucina"].ToString());
                 postoAuto = (row["posto_auto"] is DBNull) ? TipoPostoAuto.Undefined : (Models.Immobile.TipoPostoAuto)Enum.Parse(typeof(Models.Immobile.TipoPostoAuto), row["posto_auto"].ToString());
                 box = (row["box"] is DBNull) ? TipoBoxAuto.Undefined : (Models.Immobile.TipoBoxAuto)Enum.Parse(typeof(Models.Immobile.TipoBoxAuto), row["box"].ToString());
                 riscaldamento = (row["riscaldamento"] is DBNull) ? TipoRiscaldamento.Undefined : (Models.Immobile.TipoRiscaldamento)Enum.Parse(typeof(Models.Immobile.TipoRiscaldamento), row["riscaldamento"].ToString());
+
+
+                if (row["climatizzato"] is DBNull)
+                {
+                    climatizzato = null;
+                }else
+                {
+                    climatizzato =  int.Parse(row["climatizzato"].ToString());
+                }
                 
+               
                 anno = (row["anno"] is DBNull) ? 0 : int.Parse(row["anno"].ToString());
                 piano = (row["piano"] is DBNull) ? 0 : int.Parse(row["piano"].ToString());
                 pianiTotali = (row["piani_totali"] is DBNull) ? 0 : int.Parse(row["piani_totali"].ToString());
