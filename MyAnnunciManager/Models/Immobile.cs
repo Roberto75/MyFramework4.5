@@ -318,6 +318,90 @@ namespace Annunci.Models
                 dateStartClickParziale = (row["date_start_click_parziale"] is DBNull) ? DateTime.MinValue : DateTime.Parse(row["date_start_click_parziale"].ToString());
                 countClick = long.Parse(row["COUNT_CLICK"].ToString());
                 countClickParziale = long.Parse(row["COUNT_CLICK_PARZIALE"].ToString());
+
+
+                if (row["CAMERE_DA_LETTO"] is DBNull)
+                {
+                    camereDaLetto = null;
+                }
+                else
+                {
+                    camereDaLetto = int.Parse(row["CAMERE_DA_LETTO"].ToString());
+                }
+
+
+                if (row["CAMERETTE"] is DBNull)
+                {
+                    camerette = null;
+                }
+                else
+                {
+                    camerette = int.Parse(row["CAMERETTE"].ToString());
+                }
+
+                if (row["BAGNI"] is DBNull)
+                {
+                    bagni = null;
+                }
+                else
+                {
+                    bagni = int.Parse(row["BAGNI"].ToString());
+                }
+
+                if (row["BALCONI"] is DBNull)
+                {
+                    balconi = null;
+                }
+                else
+                {
+                    balconi = int.Parse(row["BALCONI"].ToString());
+                }
+
+                if (row["TERRAZZI"] is DBNull)
+                {
+                    terrazzi = null;
+                }
+                else
+                {
+                    terrazzi = int.Parse(row["TERRAZZI"].ToString());
+                }
+
+                if (row["GIARDINO_MQ"] is DBNull)
+                {
+                    giardinoMq = null;
+                }
+                else
+                {
+                    giardinoMq = int.Parse(row["GIARDINO_MQ"].ToString());
+                }
+
+                if (row["CANTINA"] is DBNull)
+                {
+                    cantina = null;
+                }
+                else
+                {
+                    cantina = int.Parse(row["CANTINA"].ToString());
+                }
+
+                if (row["SOFFITTA"] is DBNull)
+                {
+                    soffitta = null;
+                }
+                else
+                {
+                    soffitta = int.Parse(row["SOFFITTA"].ToString());
+                }
+
+
+                if (row["PORTIERE"] is DBNull)
+                {
+                    portiere = null;
+                }
+                else
+                {
+                    portiere = int.Parse(row["PORTIERE"].ToString());
+                }
             }
 
         }
