@@ -429,7 +429,7 @@ Public Class MercatinoManager
 
     Public Function deleteTrattativaLogic(ByVal trattativaId As Long, ByVal userId As Long) As Boolean
         'se la trattativa è già stata cancellata da un utente devo semplicemente
-        'aggiornatre lòa data per non farla vedere
+        'aggiornatre la data per non farla vedere
         Dim userTrattativa As Long
         mStrSQL = "SELECT FK_USER_ID FROM TRATTATIVA WHERE TRATTATIVA_ID =" & trattativaId
         userTrattativa = Me.mExecuteScalar(mStrSQL)
@@ -841,9 +841,11 @@ Public Class MercatinoManager
     Public Function getEmailUtentiInTrattativa(ByVal annuncio_id As Long) As Data.DataTable
         'prelevo gli indizzi email di tutti gli utenti che stanno in trattativa su un annuncio
         'per inviargli un'email
-        mStrSQL = "SELECT utenti.my_login, utenti.email " & _
-                " FROM utenti INNER JOIN trattativa ON utenti.user_id = trattativa.fk_user_id " & _
-                " WHERE trattativa.fk_annuncio_id = " & annuncio_id
+
+        'Rutigliano 27/10/2018 aggiungo user_id, trattativa_id e date_added
+        mStrSQL = "SELECT utenti.user_id, utenti.my_login, utenti.email , trattativa.trattativa_id,  trattativa.date_added " &
+                " FROM utenti INNER JOIN trattativa ON utenti.user_id = trattativa.fk_user_id " &
+                " WHERE trattativa.date_deleted is null AND trattativa.fk_annuncio_id = " & annuncio_id
         Return Me.mFillDataTable(mStrSQL)
     End Function
 
