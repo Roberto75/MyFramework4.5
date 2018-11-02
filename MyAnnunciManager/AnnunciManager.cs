@@ -46,7 +46,7 @@ namespace Annunci
         {
             deleteAnnunciByUserId(userId, absoluteServerPath);
 
-            //potrebbe aver scritto delle treatta senza aver creato annunci!
+            //potrebbe aver scritto delle trattative senza aver creato annunci!
             deleteTrattativeByUserId(userId);
 
 
@@ -68,6 +68,51 @@ namespace Annunci
             }
 
 
+            return true;
+        }
+
+
+
+
+
+        public bool deleteTrattativaLogic(long trattativaId, long userId)
+        {
+            //se la trattativa è già stata cancellata da un utente devo semplicemente
+            //aggiornatre la data per non farla vedere
+            long userAnnuncio;
+            //mStrSQL = "SELECT FK_USER_ID FROM TRATTATIVA WHERE TRATTATIVA_ID =" + trattativaId;
+            mStrSQL = "SELECT ANNUNCIO.fk_user_id  FROM TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id =TRATTATIVA.fk_annuncio_id " +
+                "WHERE TRATTATIVA_ID = " + trattativaId;
+
+            userAnnuncio = long.Parse(mExecuteScalar(mStrSQL));
+            if (userAnnuncio == userId)
+            {
+                //si tratta del propriatario dell'annuncio che decide di eliminare la trattaitva
+                mStrSQL = "UPDATE TRATTATIVA SET DATE_DELETED_OWNER = NOW() " +
+                       " WHERE TRATTATIVA_ID = " + trattativaId;
+            }
+            else
+            {
+                mStrSQL = "UPDATE TRATTATIVA SET DATE_DELETED = NOW() " +
+                   " WHERE TRATTATIVA_ID = " + trattativaId;
+            }
+            mExecuteNoQuery(mStrSQL);
+            return true;
+        }
+
+
+        public bool deleteTrattativaLogic(long trattativaId, long userId, TrattativaManager.StatoTrattativa causale)
+        {
+            deleteTrattativaLogic(trattativaId, userId);
+            updateStatoTrattativa(trattativaId, causale);
+            return true;
+        }
+
+        public bool updateStatoTrattativa(long trattativaId, TrattativaManager.StatoTrattativa causale)
+        {
+            mStrSQL = "UPDATE TRATTATIVA SET STATO = '" + causale.ToString() + "' " +
+            " WHERE TRATTATIVA_ID = " + trattativaId;
+            mExecuteNoQuery(mStrSQL);
             return true;
         }
 
@@ -122,9 +167,7 @@ namespace Annunci
                 mExecuteNoQuery(mStrSQL);
 
             }
-
-
-
+            
             mStrSQL = "DELETE * FROM TRATTATIVA WHERE FK_ANNUNCIO_ID=" + annuncioId;
             mExecuteNoQuery(mStrSQL);
 
@@ -375,9 +418,16 @@ namespace Annunci
         {
             //prelevo gli indizzi email di tutti gli utenti che stanno in trattativa su un annuncio
             //per inviargli un'email
-            mStrSQL = "SELECT utenti.my_login, utenti.email " +
-                    " FROM utenti INNER JOIN trattativa ON utenti.user_id = trattativa.fk_user_id " +
-                    " WHERE trattativa.fk_annuncio_id = " + annuncio_id;
+            //Rutigliano 27/10/2018 aggiungo user_id, trattativa_id e date_added
+
+            //mStrSQL = "SELECT utenti.user_id, utenti.my_login, utenti.email , trattativa.trattativa_id,  trattativa.date_added " +
+            //   " FROM utenti INNER JOIN trattativa ON utenti.user_id = trattativa.fk_user_id " +
+            // " WHERE trattativa.date_deleted is null AND trattativa.fk_annuncio_id = " + annuncio_id;
+
+            mStrSQL = "SELECT utenti.user_id, utenti.my_login, utenti.email , trattativa.trattativa_id,  trattativa.date_added " +
+               " FROM utenti INNER JOIN trattativa ON utenti.user_id = trattativa.fk_user_id " +
+             " WHERE trattativa.date_deleted is null AND trattativa.fk_annuncio_id = " + annuncio_id;
+
             return mFillDataTable(mStrSQL);
         }
 
@@ -483,8 +533,8 @@ namespace Annunci
         {
             //verifico che user_id possa vedere la trattiva
             //mStrSQL = "SELECT count(*) FROM TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id " +
-              //  " WHERE ANNUNCIO.FK_USER_ID = " + userId + " OR TRATTATIVA.FK_USER_ID = " + userId +
-//                " AND TRATTATIVA.TRATTATIVA_ID =" + trattativaId;
+            //  " WHERE ANNUNCIO.FK_USER_ID = " + userId + " OR TRATTATIVA.FK_USER_ID = " + userId +
+            //                " AND TRATTATIVA.TRATTATIVA_ID =" + trattativaId;
 
 
             mStrSQL = "SELECT count(*) FROM TRATTATIVA INNER JOIN ANNUNCIO ON ANNUNCIO.annuncio_id=TRATTATIVA.fk_annuncio_id  " +
@@ -602,6 +652,53 @@ namespace Annunci
             return tManager.rispondi(trattativaId, userId, testo, risposta_id);
         }
 
+
+
+        /*
+                public long updateStatoAnnunciBySourceIdAndStatoIniziale(Models.Immobile.TipoSourceId sourceId , MercatinoManager.StatoAnnuncio statoSource  , MercatinoManager.StatoAnnuncio statoNew)
+                mStrSQL = "UPDATE ANNUNCIO SET MY_STATO = '" & statoNew.ToString & "'"
+                mStrSQL &= " WHERE EXTERNAL_ID is not null AND SOURCE_ID = " & sourceId & " AND MY_STATO = '" & statoSource.ToString & "' "
+                Return mExecuteNoQuery(mStrSQL)
+            End Function
+            */
+
+        public int updateStatoAnnunciBySourceId(Models.Immobile.TipoSourceId sourceId, Annunci.AnnunciManager.StatoAnnuncio stato)
+        {
+            mStrSQL = "UPDATE ANNUNCIO SET MY_STATO = '" + stato.ToString() + "'";
+            mStrSQL += " WHERE EXTERNAL_ID is not null AND SOURCE_ID = " + (int) sourceId;
+            return mExecuteNoQuery(mStrSQL);
+        }
+        /*
+        Public Function updateStatoAnnuncio(ByVal annuncioId As Long, stato As MercatinoManager.StatoAnnuncio) As Integer
+            mStrSQL = "UPDATE ANNUNCIO SET MY_STATO = '" & stato.ToString & "'"
+            mStrSQL &= " WHERE ANNUNCIO_ID=" & annuncioId
+            Return mExecuteNoQuery(mStrSQL)
+        End Function*/
+
+
+        public DataTable getUtenteByExternalId(string externalId, Models.Immobile.TipoSourceId sourceId)
+        {
+            mStrSQL = "SELECT *" +
+                   " FROM UTENTI " +
+                   " WHERE EXTERNAL_ID = '" + externalId + "' AND SOURCE_ID = " + sourceId;
+
+            return mFillDataTable(mStrSQL);
+        }
+
+
+        public DataTable getAnnuncioByExternalId(string externalId)
+        {
+            mStrSQL = "SELECT ANNUNCIO.*  " +
+                " FROM ANNUNCIO " +
+                " WHERE ( ANNUNCIO.date_deleted Is Null) And ANNUNCIO.EXTERNAL_ID = @EXTERNAL_ID ";
+            System.Data.Common.DbCommand command;
+            command = mConnection.CreateCommand();
+            command.CommandText = mStrSQL;
+
+            mAddParameter(command, "@EXTERNAL_ID", externalId);
+
+            return mFillDataTable(command);
+        }
 
     }
 }

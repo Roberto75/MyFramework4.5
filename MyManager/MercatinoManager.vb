@@ -1,3 +1,5 @@
+Imports Annunci
+
 Public Class MercatinoManager
     Inherits Manager
 
@@ -13,14 +15,14 @@ Public Class MercatinoManager
         MyBase.New(connection)
     End Sub
 
-    Public Enum StatoAnnuncio
-        Pubblicato = 1
-        OggettoNonPiuDisponibile
-        ConclusoConSuccesso
-        Altro
-        OffLine
-        DaCancellare
-    End Enum
+    'Public Enum StatoAnnuncio
+    '    Pubblicato = 1
+    '    Oggetto_non_piu_disponibile
+    '    Concluso_con_successo
+    '    Altro
+    '    OffLine
+    '    Da_cancellare
+    'End Enum
 
     Public Enum StatoTrattativa
         Attiva = 1
@@ -51,7 +53,7 @@ Public Class MercatinoManager
     End Enum
 
 
-    Public _tipoAnnuncio As tipoAnnuncio
+    Public _tipoAnnuncio As TipoAnnuncio
     Public _titolo As String 'nome/titolo
     Public _nota As String 'nota/descizione
     Public _categoriaId As Long
@@ -241,7 +243,7 @@ Public Class MercatinoManager
         Dim strSQLParametri As String
 
         strSQL = "INSERT INTO ANNUNCIO ( FK_CATEGORIA_ID , MY_STATO"
-        strSQLParametri = " VALUES ( " & _categoriaId & ", '" & MercatinoManager.StatoAnnuncio.Pubblicato.ToString() & "' "
+        strSQLParametri = " VALUES ( " & _categoriaId & ", '" & AnnunciManager.StatoAnnuncio.Pubblicato.ToString() & "' "
 
         Dim command As System.Data.Common.DbCommand
         command = mConnection.CreateCommand()
@@ -427,33 +429,46 @@ Public Class MercatinoManager
         Return True
     End Function
 
-    Public Function deleteTrattativaLogic(ByVal trattativaId As Long, ByVal userId As Long) As Boolean
-        'se la trattativa è già stata cancellata da un utente devo semplicemente
-        'aggiornatre la data per non farla vedere
-        Dim userTrattativa As Long
-        mStrSQL = "SELECT FK_USER_ID FROM TRATTATIVA WHERE TRATTATIVA_ID =" & trattativaId
-        userTrattativa = Me.mExecuteScalar(mStrSQL)
+    'Public Function deleteTrattativaLogic(ByVal trattativaId As Long, ByVal userId As Long) As Boolean
+    '    'se la trattativa è già stata cancellata da un utente devo semplicemente
+    '    'aggiornatre la data per non farla vedere
+    '    Dim userTrattativa As Long
+    '    mStrSQL = "SELECT FK_USER_ID FROM TRATTATIVA WHERE TRATTATIVA_ID =" & trattativaId
+    '    userTrattativa = Me.mExecuteScalar(mStrSQL)
 
-        If userTrattativa = userId Then
-            mStrSQL = "UPDATE TRATTATIVA SET DATE_DELETED = NOW() " & _
-                    " WHERE TRATTATIVA_ID = " & trattativaId
-        Else
-            'si tratta del propriatario dell'annuncio che decide di eliminare la trattaritva
-            mStrSQL = "UPDATE TRATTATIVA SET DATE_DELETED_OWNER = NOW() " & _
-                  " WHERE TRATTATIVA_ID = " & trattativaId
-        End If
+    '    If userTrattativa = userId Then
+    '        mStrSQL = "UPDATE TRATTATIVA SET DATE_DELETED = NOW() " & _
+    '                " WHERE TRATTATIVA_ID = " & trattativaId
+    '    Else
+    '        'si tratta del propriatario dell'annuncio che decide di eliminare la trattaritva
+    '        mStrSQL = "UPDATE TRATTATIVA SET DATE_DELETED_OWNER = NOW() " & _
+    '              " WHERE TRATTATIVA_ID = " & trattativaId
+    '    End If
 
-        Me.mExecuteNoQuery(mStrSQL)
+    '    Me.mExecuteNoQuery(mStrSQL)
 
-        Return True
-    End Function
+    '    Return True
 
 
-    Public Function deleteTrattativaLogic(ByVal trattativaId As Long, ByVal userId As Long, ByVal causale As MyManager.MercatinoManager.StatoTrattativa) As Boolean
-        deleteTrattativaLogic(trattativaId, userId)
-        updateStatoTrattativa(trattativaId, causale)
-        Return True
-    End Function
+    'End Function
+
+
+    'Public Function deleteTrattativaLogicByAnnuncio(ByVal trattativaId As Long) As Boolean
+    '    'l'annuncio è stato cancellato e forzo la cancellazione della trattativa 
+
+    '    mStrSQL = "UPDATE TRATTATIVA SET DATE_DELETED = NOW() " &
+    '                " WHERE TRATTATIVA_ID = " & trattativaId
+
+    '    Me.mExecuteNoQuery(mStrSQL)
+
+    '    Return True
+    'End Function
+
+    'Public Function deleteTrattativaLogic(ByVal trattativaId As Long, ByVal userId As Long, ByVal causale As MyManager.MercatinoManager.StatoTrattativa) As Boolean
+    '    deleteTrattativaLogic(trattativaId, userId)
+    '    updateStatoTrattativa(trattativaId, causale)
+    '    Return True
+    'End Function
 
     Public Function updateStatoTrattativa(ByVal trattativaId As Long, ByVal causale As MyManager.MercatinoManager.StatoTrattativa) As Boolean
         mStrSQL = "UPDATE TRATTATIVA SET STATO = '" & causale.ToString & "' " & _
@@ -464,48 +479,48 @@ Public Class MercatinoManager
 
 
 
-    Public Function deleteAnnuncioLogic(ByVal annuncioId As Long, ByVal causale As MyManager.MercatinoManager.StatoAnnuncio _
-                                        , ByVal absoluteServerPath As String) As Boolean
-        mStrSQL = "UPDATE ANNUNCIO SET DATE_DELETED = NOW() , MY_STATO = '" & causale.ToString & "' WHERE ANNUNCIO_ID = " & annuncioId
-        Me.mExecuteNoQuery(mStrSQL)
+    'Public Function deleteAnnuncioLogic(ByVal annuncioId As Long, ByVal causale As MyManager.MercatinoManager.StatoAnnuncio _
+    '                                    , ByVal absoluteServerPath As String) As Boolean
+    '    mStrSQL = "UPDATE ANNUNCIO SET DATE_DELETED = NOW() , MY_STATO = '" & causale.ToString & "' WHERE ANNUNCIO_ID = " & annuncioId
+    '    Me.mExecuteNoQuery(mStrSQL)
 
-        'Dim statoTrattativa As MyManager.MercatinoManager.StatoTrattativa
+    '    'Dim statoTrattativa As MyManager.MercatinoManager.StatoTrattativa
 
-        'If causale = StatoAnnuncio.ConclusoConSuccesso Then
-        'StatoTrattativa = MercatinoManager.StatoTrattativa.AnnuncioRimosso
-        'End If
+    '    'If causale = StatoAnnuncio.ConclusoConSuccesso Then
+    '    'StatoTrattativa = MercatinoManager.StatoTrattativa.AnnuncioRimosso
+    '    'End If
 
-        'tutte le trattative collegate all'annuncio vengono notificate 
-        mStrSQL = "UPDATE TRATTATIVA SET STATO = '" & MercatinoManager.StatoTrattativa.AnnuncioRimosso.ToString & "' " & _
-            " WHERE FK_ANNUNCIO_ID = " & annuncioId
-        Me.mExecuteNoQuery(mStrSQL)
+    '    'tutte le trattative collegate all'annuncio vengono notificate 
+    '    mStrSQL = "UPDATE TRATTATIVA SET STATO = '" & MercatinoManager.StatoTrattativa.AnnuncioRimosso.ToString & "' " & _
+    '        " WHERE FK_ANNUNCIO_ID = " & annuncioId
+    '    Me.mExecuteNoQuery(mStrSQL)
 
 
-        If Not String.IsNullOrEmpty(absoluteServerPath) Then
-            Dim photo As New MyManager.PhotoManager(Me.mConnection)
+    '    If Not String.IsNullOrEmpty(absoluteServerPath) Then
+    '        Dim photo As New MyManager.PhotoManager(Me.mConnection)
 
-            mStrSQL = "SELECT PHOTO_ID FROM PHOTO WHERE FK_EXTERNAL_ID=" & annuncioId
-            Dim dt As Data.DataTable
-            dt = mFillDataTable(mStrSQL)
+    '        mStrSQL = "SELECT PHOTO_ID FROM PHOTO WHERE FK_EXTERNAL_ID=" & annuncioId
+    '        Dim dt As Data.DataTable
+    '        dt = mFillDataTable(mStrSQL)
 
-            For Each row As Data.DataRow In dt.Rows
-                photo.deletePhoto(row("PHOTO_ID"), absoluteServerPath)
-            Next
+    '        For Each row As Data.DataRow In dt.Rows
+    '            photo.deletePhoto(row("PHOTO_ID"), absoluteServerPath)
+    '        Next
 
-            'cancello la directory!
-            Dim folder As String
-            folder = System.Configuration.ConfigurationManager.AppSettings("mercatino.images.folder")
-            folder = absoluteServerPath & folder.Replace("~", "") & annuncioId & "/"
-            If IO.Directory.Exists(folder) Then
-                Try
-                    IO.Directory.Delete(folder, True)
-                Catch ex As Exception
-                    'lo ignoro
-                End Try
-            End If
-        End If
-        Return True
-    End Function
+    '        'cancello la directory!
+    '        Dim folder As String
+    '        folder = System.Configuration.ConfigurationManager.AppSettings("mercatino.images.folder")
+    '        folder = absoluteServerPath & folder.Replace("~", "") & annuncioId & "/"
+    '        If IO.Directory.Exists(folder) Then
+    '            Try
+    '                IO.Directory.Delete(folder, True)
+    '            Catch ex As Exception
+    '                'lo ignoro
+    '            End Try
+    '        End If
+    '    End If
+    '    Return True
+    'End Function
 
     Public Function isOwner(ByVal annuncioId As Long, ByVal userId As Long) As Boolean
         mStrSQL = "SELECT COUNT(*) as TOT " & _
@@ -522,7 +537,7 @@ Public Class MercatinoManager
     End Function
 
     Public Function countMyAnnunciSourceExternal(ByVal userId As Long) As Long
-        mStrSQL = "SELECT Count(*) AS tot FROM ANNUNCIO WHERE date_deleted Is Null and source_id is not null and FK_user_ID = " & userId & " AND MY_STATO = '" & StatoAnnuncio.Pubblicato.ToString & "' "
+        mStrSQL = "SELECT Count(*) AS tot FROM ANNUNCIO WHERE date_deleted Is Null and source_id is not null and FK_user_ID = " & userId & " AND MY_STATO = '" & Annunci.AnnunciManager.StatoAnnuncio.Pubblicato.ToString & "' "
 
         Return mExecuteScalar(mStrSQL)
     End Function

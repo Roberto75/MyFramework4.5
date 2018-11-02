@@ -283,31 +283,7 @@ namespace Annunci
         }
 
 
-
-        public void annuncioAddClick(long annuncioId)
-        {
-            AnnunciManager m = new AnnunciManager(mConnection);
-            m.annuncioAddClick(annuncioId);
-        }
-
-        public void resetContatoreParziale(long annuncioId)
-        {
-            AnnunciManager m = new AnnunciManager(mConnection);
-            m.resetContatoreParziale(annuncioId);
-        }
-
-
-        public int updateAnnuncioDescrizione(long annuncioId, string descrizione, bool test_mode)
-        {
-            AnnunciManager m = new AnnunciManager(mConnection);
-            return m.updateAnnuncioDescrizione(annuncioId, descrizione, test_mode);
-        }
-
-        public int updateAnnuncioPrezzo(long annuncioId, decimal prezzo, bool test_mode)
-        {
-            AnnunciManager m = new AnnunciManager(mConnection);
-            return m.updateAnnuncioPrezzo(annuncioId, prezzo, test_mode);
-        }
+              
 
 
 
@@ -317,9 +293,7 @@ namespace Annunci
             return mFillDataTable(mStrSQL);
         }
 
-
-
-      
+             
 
 
 
@@ -791,41 +765,8 @@ namespace Annunci
 
 
 
-
-
         
-
-
-
-
-
-
-
-
-        public Models.Risposta getRisposta(long rispostaId)
-        {
-            mStrSQL = "select UTENTI.user_id, UTENTI.my_login, UTENTI.customer_id, RISPOSTA.fk_trattativa_id, RISPOSTA.testo, RISPOSTA.risposta_id, RISPOSTA.fk_risposta_id,   RISPOSTA.date_added " + " FROM RISPOSTA  LEFT JOIN UTENTI ON RISPOSTA.FK_user_ID = UTENTI.USER_ID WHERE RISPOSTA_ID =" + rispostaId;
-            mDt = mFillDataTable(mStrSQL);
-
-            return new Models.Risposta(mDt.Rows[0], -1);
-        }
-
-        public long insertTrattativa(long annuncioId, long userId)
-        {
-            mStrSQL = "INSERT INTO TRATTATIVA ( FK_USER_ID , FK_ANNUNCIO_ID, STATO )" + " VALUES ( @USER_ID , @ANNUNCIO_ID , @STATO )";
-
-            System.Data.Common.DbCommand command;
-            command = mConnection.CreateCommand();
-            command.CommandText = mStrSQL;
-
-            mAddParameter(command, "@USER_ID", userId);
-            mAddParameter(command, "@ANNUNCIO_ID", annuncioId);
-            mAddParameter(command, "@STATO", TrattativaManager.StatoTrattativa.Attiva.ToString());
-
-            mExecuteNoQuery(command);
-            return mGetIdentity();
-        }
-
+      
         #endregion
     }
 

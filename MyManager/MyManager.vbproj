@@ -287,6 +287,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyAnnunciManager\MyAnnunci.csproj">
+      <Project>{CEE27564-2C50-49A8-B388-9963C6776F83}</Project>
+      <Name>MyAnnunci</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
