@@ -30,7 +30,9 @@ namespace Annunci.Models
         }
 
 
-        public Immobile filter = new Immobile();
+        public Immobile filter { get; set; }
+        public MyManagerCSharp.ManagerDB.Days? days { get; set; }
+
         public List<MyManagerCSharp.Models.MyItem> comboRegioni { get; set; }
         public List<MyManagerCSharp.Models.MyItem> comboProvince { get; set; }
         public List<MyManagerCSharp.Models.MyItem> comboComuni { get; set; }
@@ -65,6 +67,7 @@ namespace Annunci.Models
             comboProvince = new List<MyManagerCSharp.Models.MyItem>();
             comboComuni = new List<MyManagerCSharp.Models.MyItem>();
 
+            filter = new Immobile();
 
         }
 
