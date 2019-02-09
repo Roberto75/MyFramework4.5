@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Annunci.Libri
 {
-    public class LibriMailMessageManager : AnnunciMailMessageManager {
-        public LibriMailMessageManager(string applicationName, string http) 
-            :base(applicationName, http)
+    public class LibriMailMessageManager : AnnunciMailMessageManager
+    {
+
+        public LibriMailMessageManager(string applicationName, string http)
+            : base(applicationName, http)
         {
 
             mIV = LibriSecurityManager.IV;
@@ -16,7 +18,7 @@ namespace Annunci.Libri
         }
 
 
-       
+
 
 
     }
