@@ -43,25 +43,25 @@ namespace Annunci
         }
 
 
-/*
-        public List<Models.Immobile> getList()
-        {
-            List<Models.Immobile> risultato;
-            risultato = new List<Models.Immobile>();
+        /*
+                public List<Models.Immobile> getList()
+                {
+                    List<Models.Immobile> risultato;
+                    risultato = new List<Models.Immobile>();
 
-            mStrSQL = _sqlElencoImmobili;
-            mStrSQL += " WHERE ANNUNCIO.date_deleted Is Null ";
+                    mStrSQL = _sqlElencoImmobili;
+                    mStrSQL += " WHERE ANNUNCIO.date_deleted Is Null ";
 
-            mDt = mFillDataTable(mStrSQL);
+                    mDt = mFillDataTable(mStrSQL);
 
-            foreach (DataRow row in mDt.Rows)
-            {
-                risultato.Add(new Models.Immobile(row, Models.Immobile.SelectFileds.Lista));
-            }
+                    foreach (DataRow row in mDt.Rows)
+                    {
+                        risultato.Add(new Models.Immobile(row, Models.Immobile.SelectFileds.Lista));
+                    }
 
-            return risultato;
-        }
-        */
+                    return risultato;
+                }
+                */
 
 
         public void getList(Models.SearchImmobili model)
@@ -71,7 +71,7 @@ namespace Annunci
             risultato = new List<Models.Immobile>();
 
             mStrSQL = _sqlElencoImmobili;
-          
+
             System.Data.Common.DbCommand command;
             command = mConnection.CreateCommand();
 
@@ -88,10 +88,10 @@ namespace Annunci
                         strWHERE += String.Format(" AND (DAY({0})={1} AND  MONTH({0})={2} AND YEAR({0})={3}) ", "ANNUNCIO.date_added", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
                         break;
                     case Models.SearchImmobili.EnumTempo.UltimaSettimana:
-                        strWHERE += "AND ( FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") <= '" + DateTime.Now.ToString("yyyy-MM-dd") + "' AND  FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") >= '" + DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") + "')";
+                        strWHERE += " AND ( FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") <= '" + DateTime.Now.ToString("yyyy-MM-dd") + "' AND  FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") >= '" + DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") + "')";
                         break;
                     case Models.SearchImmobili.EnumTempo.UltimoMese:
-                        strWHERE += "AND ( FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") <= '" + DateTime.Now.ToString("yyyy-MM-dd") + "' AND  FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") >= '" + DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd") + "')";
+                        strWHERE += " AND ( FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") <= '" + DateTime.Now.ToString("yyyy-MM-dd") + "' AND  FORMAT (ANNUNCIO.date_added,\"yyyy-MM-dd\") >= '" + DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd") + "')";
                         break;
                 }
 
@@ -125,9 +125,9 @@ namespace Annunci
                 }
 
 
-                if (model.TipoAnnuncio != null && model.TipoAnnuncio.Count < 2)
+                if (model.TipoAnnuncio != null && model.TipoAnnuncio.Count == 1)
                 {
-
+                    
                     if (model.TipoAnnuncio.Contains(Models.SearchImmobili.EnumTipoAnnuncio.Agenzia))
                     {
                         strWHERE += " AND (UTENTI.customer_id IS NOT NULL ) ";
@@ -140,7 +140,7 @@ namespace Annunci
 
                 }
 
-                
+
                 if (model.filter.ascensore != null && model.filter.ascensore != -1)
                 {
                     strWHERE += " AND ascensore = " + model.filter.ascensore;
@@ -184,7 +184,7 @@ namespace Annunci
             }
 
 
-        
+
 
 
             command.CommandText = mStrSQL;
@@ -210,7 +210,7 @@ namespace Annunci
                     risultato.Add(new Models.Immobile(row, Models.Immobile.SelectFileds.Lista));
                 }
             }
-            model.Immobili= risultato;
+            model.Immobili = risultato;
         }
 
 
@@ -220,11 +220,11 @@ namespace Annunci
 
             switch (modelSort)
             {
-                
+
                 case "dataInserimento":
                     sortField = "ANNUNCIO.DATE_ADDED";
                     break;
-                
+
                 default:
                     sortField = modelSort;
                     break;
@@ -283,7 +283,7 @@ namespace Annunci
         }
 
 
-              
+
 
 
 
@@ -293,7 +293,7 @@ namespace Annunci
             return mFillDataTable(mStrSQL);
         }
 
-             
+
 
 
 
@@ -302,18 +302,18 @@ namespace Annunci
             mStrSQL = "SELECT count(*) from  ANNUNCIO where  ANNUNCIO.fk_user_id = " + userId;
             return int.Parse(mExecuteScalar(mStrSQL));
         }
-    /*    public System.Collections.Hashtable countAnnunciByStato()
-        {
-            AnnunciManager m = new AnnunciManager (mConnection);
-            return m.countAnnunciByStato();
-        }
+        /*    public System.Collections.Hashtable countAnnunciByStato()
+            {
+                AnnunciManager m = new AnnunciManager (mConnection);
+                return m.countAnnunciByStato();
+            }
 
-        public System.Collections.Hashtable countAnnunciByStato(long userId)
-        {
-            AnnunciManager m = new AnnunciManager(mConnection);
-            return m.countAnnunciByStato(userId);
-        }
-        */
+            public System.Collections.Hashtable countAnnunciByStato(long userId)
+            {
+                AnnunciManager m = new AnnunciManager(mConnection);
+                return m.countAnnunciByStato(userId);
+            }
+            */
 
 
 
@@ -765,8 +765,8 @@ namespace Annunci
 
 
 
-        
-      
+
+
         #endregion
     }
 

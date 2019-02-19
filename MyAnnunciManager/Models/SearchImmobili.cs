@@ -40,9 +40,11 @@ namespace Annunci.Models
 
         public EnumTempo Tempo { get; set; }
         public EnumTipoVista TipoVista { get; set; }
-        public List<EnumTipoAnnuncio> TipoAnnuncio { get; set; }
+        public IList<EnumTipoAnnuncio> TipoAnnuncio { get; set; }
+        //public IList<string> TipoAnnuncio { get; set; }
 
-
+        //public bool? TipoAnnuncioAgenzia { get; set; }
+        //public bool? TipoAnnuncioPrivato { get; set; }
 
         public int? prezzoMax { get; set; }
         public int? mqMin { get; set; }
@@ -57,13 +59,15 @@ namespace Annunci.Models
             TipoAnnuncio.Add(Models.SearchImmobili.EnumTipoAnnuncio.Privato);
             TipoAnnuncio.Add(Models.SearchImmobili.EnumTipoAnnuncio.Agenzia);
 
+            //TipoAnnuncio = new List<string>();
+
             TipoVista = EnumTipoVista.Elenco;
             Tempo = EnumTempo.Tutti;
 
             prezzoMax = null;
             mqMin = null;
 
-            
+
             comboProvince = new List<MyManagerCSharp.Models.MyItem>();
             comboComuni = new List<MyManagerCSharp.Models.MyItem>();
 
@@ -86,8 +90,9 @@ namespace Annunci.Models
             }*/
 
 
-            if (TipoAnnuncio != null)
+            if (TipoAnnuncio != null && TipoAnnuncio.Count == 1)
             {
+
                 conta++;
             }
 
