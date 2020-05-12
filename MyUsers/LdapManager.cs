@@ -16,10 +16,7 @@ namespace MyUsers
         string _password;
         string _container;
 
-        //string _server = "RSDCCTM201.corp.sanpaoloimi.com";
-        //string _login = "CORP\\Administrator";
-        //string _password = "Passw0rd1";
-
+       
         public LdapManager(string server, string login, string password, string container)
         {
             _server = server;
@@ -27,9 +24,7 @@ namespace MyUsers
             _password = password;
             _container = container;
 
-            //container = "DC=corp,DC=sanpaoloimi,DC=com";
-            //container = "DC=techub,DC=lan";
-
+         
             string domainPath;
             domainPath = String.Format("LDAP://{0}/{1}", _server, container);
 
