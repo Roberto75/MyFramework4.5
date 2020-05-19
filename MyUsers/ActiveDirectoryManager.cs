@@ -15,19 +15,14 @@ namespace MyUsers
         public ActiveDirectoryManager()
         {
             // create your domain context
-            //ctx = new PrincipalContext(ContextType.Domain, "RSDCCTM201.CORP.SANPAOLOIMI.COM");
-
             ctx = new PrincipalContext(ContextType.Domain);
-            //ctx = new PrincipalContext(ContextType.Domain, " 192.168.87.73","CORP\\Administrator","Passw0rd1");
+            //ctx = new PrincipalContext(ContextType.Domain, " 123.123.123.123","CORP\\Administrator","PASSWORD");
 
-            //ctx = new PrincipalContext(ContextType.Domain, "RSDCCTM201.corp.sanpaoloimi.com", "Administrator", "Passw0rd");
-
-
-            //ctx = new PrincipalContext(ContextType.Domain, "LDAP://RSDCCTM201.corp.sanpaoloimi.com/DC=corp,DC=sanpaoloimi,DC=com");
+            //ctx = new PrincipalContext(ContextType.Domain, "xxxxx.com", "USER", "PASSWORD");
 
 
             //bool esito;
-            //esito = ctx.ValidateCredentials("CORP\u024950", "Passw0rd");
+            //esito = ctx.ValidateCredentials("CORP\user", "PASSWORD");
         }
 
 
